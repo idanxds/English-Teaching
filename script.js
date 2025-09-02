@@ -1,3 +1,4 @@
+// rebuild trigger
 document.addEventListener('DOMContentLoaded', () => {
     // State Management
     let currentGrade = null;
