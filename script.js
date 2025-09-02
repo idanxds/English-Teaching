@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // REPLACE WITH THIS ENTIRE BLOCK:
 if (pageType === 'verbs-examples-page') {
     const verbs = [
-        "Eat – לאכול", "drink - לשתות", "walk - ללכת", "run - לרוץ", "sit - לשבת", "lie - לשכב", "stand - לעמוד", "fall - ליפול", "laugh - לצחוק", "speak - לדבר", "cry - לבכות", "answer - לענות", "ask - לשאול", "see - לראות", "hear - לשמוע", "break - לשבור", "feel - להרגיש", "fix - לתקן", "drive - לנהוג", "ride - לרכב", "swim - לשחות", "jump - לקפוץ", "climb - לטפס", "fly - לעוף", "push - לדחוף", "pull - למשוך", "throw - לזרוק", "catch - לתפוס", "cut - לחתוך", "cook - לבשל"
+        "Eat – לאכול", "drink – לשתות", "walk – ללכת", "run – לרוץ", "sit – לשבת", "lie – לשכב", "stand – לעמוד", "fall – ליפול", "laugh – לצחוק", "speak – לדבר", "cry – לבכות", "answer – לענות", "ask – לשאול", "see – לראות", "hear – לשמוע", "break – לשבור", "feel – להרגיש", "fix – לתקן", "drive – לנהוג", "ride – לרכב", "swim – לשחות", "jump – לקפוץ", "climb – לטפס", "fly – לעוף", "push – לדחוף", "pull – למשוך", "throw – לזרוק", "catch – לתפוס", "cut – לחתוך", "cook – לבשל"
     ];
     // The headers are set up for RTL, so "באנגלית" is the first column (right) and "תרגום" is the second (left).
     let gridHtml = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; font-size: 1.1em;"><div><b>באנגלית</b></div><div><b>תרגום</b></div>';
