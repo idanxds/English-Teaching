@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (pageType === 'verbs-examples-page') {
             const verbs = [
-                "Eat – לאכול", "drink - לשתות", "walk - ללכת", "run - לרוץ", "sit - לשבת", "lie - לשכב", "stand - לעמוד", "fall - ליפול", "laugh - לצחוק", "speak - לדבר", "cry - לבכות", "answer - לענות", "ask - לשאול", "see - לראות", "hear - לשמוע", "break - לשבור", "feel - להרגיש", "fix - לתקן", "drive - לנהוג", "ride - לרכב", "swim - לשחות", "jump - לקפוץ", "climb - לטפס", "fly - לעוף", "push - לדחוף", "pull - למשוך", "throw - לזרוק", "catch - לתפוס", "cut - לחתוך", "cook - לבשל"
+                "Eat – לאכול", "drink –  לשתות", "walk –  ללכת", "run –  לרוץ", "sit –  לשבת", "lie –  לשכב", "stand –  לעמוד", "fall –  ליפול", "laugh –  לצחוק", "speak –  לדבר", "cry –  לבכות", "answer –  לענות", "ask –  לשאול", "see –  לראות", "hear –  לשמוע", "break –  לשבור", "feel –  להרגיש", "fix –  לתקן", "drive –  לנהוג", "ride –  לרכב", "swim –  לשחות", "jump –  לקפוץ", "climb –  לטפס", "fly –  לעוף", "push –  לדחוף", "pull –  למשוך", "throw –  לזרוק", "catch –  לתפוס", "cut –  לחתוך", "cook –  לבשל"
             ];
             let gridHtml = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; font-size: 1.1em;"><div><b>באנגלית</b></div><div><b>תרגום</b></div>';
             verbs.forEach(v => {
