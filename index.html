@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אתר למידה באנגלית</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="points-counter" class="hidden">נקודות: 0</div>
+    <div id="app">
+        <section id="home-page">
+            <div class="grades-container">
+                <button class="grade-button" data-grade="2">כיתה ב</button>
+                <button class="grade-button" data-grade="3">כיתה ג</button>
+                <button class="grade-button" data-grade="6">כיתה ו</button>
+                <button class="grade-button" data-grade="4">כיתה ד</button>
+                <button class="grade-button" data-grade="5">כיתה ה</button>
+            </div>
+        </section>
+
+        <section id="grade-page" class="hidden">
+            <h1 id="grade-title"></h1>
+            <button id="back-to-home" class="back-button">חזרה לבחירת כיתה</button>
+            <div class="assignments-grid">
+                <div id="abc-assignment-box" class="assignment-box hidden" data-assignment="abc">
+                    <h3>הא-ב האנגלי: ABC</h3>
+                    <p>בחלק הזה תלמדו את אותיות ה-ABC.</p>
+                    <button class="start-assignment-btn" data-target="abc-video-page">התחל</button>
+                </div>
+                <div id="future-simple-assignment-box" class="assignment-box" data-assignment="future-simple">
+                    <h3>עתיד פשוט</h3>
+                    <p>בחלק הזה תלמדו על עתיד פשוט</p>
+                    <button class="start-assignment-btn" data-target="future-simple-explanation-page">עתיד פשוט</button>
+                </div>
+                <div id="verbs-assignment-box" class="assignment-box" data-assignment="verbs">
+                    <h3>פעלים</h3>
+                    <p>בחלק הזה תלמדו פעלים</p>
+                    <button class="start-assignment-btn" data-target="verbs-explanation-page">פעלים</button>
+                </div>
+                <div id="simple-past-assignment-box" class="assignment-box" data-assignment="simple-past">
+                    <h3>זמן פשוט (עבר)</h3>
+                    <p>בחלק הזה תלמדו זמן פשוט</p>
+                    <button class="start-assignment-btn" data-target="simple-past-explanation-page">זמן פשוט</button>
+                </div>
+                <div class="assignment-box placeholder"></div>
+                <div class="assignment-box placeholder"></div>
+            </div>
+        </section>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
