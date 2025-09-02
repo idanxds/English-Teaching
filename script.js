@@ -1,4 +1,6 @@
 // rebuild trigger
+// rebuild trigger again cuz ts pmo
+
 document.addEventListener('DOMContentLoaded', () => {
     // State Management
     let currentGrade = null;
