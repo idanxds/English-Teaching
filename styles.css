@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Assistant', sans-serif;
-    background-color: #f0f8ff;
+    background: linear-gradient(to top, #F0FFFF, #87CEFA);
     color: #333;
     margin: 0;
     padding: 20px;
@@ -51,7 +51,7 @@ body {
 }
 
 .grade-button {
-    background-color: #007bff;
+    background: linear-gradient(to bottom, #87CEEB, #4682B4);
     color: white;
     border: none;
     padding: 20px;
@@ -64,7 +64,7 @@ body {
 }
 
     .grade-button:hover {
-        background-color: #0056b3;
+        background: linear-gradient(to bottom, #87CEEB, #4682B4);
         transform: translateY(-5px);
     }
 
@@ -170,7 +170,7 @@ body {
 
 /* Generic Button Styles */
 .start-assignment-btn, .action-button {
-    background-color: #28a745;
+    background: linear-gradient(to right, #7CFC00, #228B22);
     color: white;
     border: none;
     padding: 12px 25px;
