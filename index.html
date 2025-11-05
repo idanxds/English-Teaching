@@ -72,6 +72,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             animation: fadeIn 0.3s ease-in-out;
+            position: relative; /* For back button positioning */
         }
 
         @keyframes fadeIn {
@@ -124,6 +125,7 @@
             position: absolute;
             top: 15px;
             left: 15px;
+            z-index: 10;
         }
         .back-button:hover { background-color: #34495e; }
 
@@ -226,7 +228,7 @@
         /* --- YouTube Page --- */
         .youtube-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 10px;
         }
         .youtube-grid .action-button {
@@ -277,6 +279,10 @@
         }
         #task-content .text-passage p {
             margin-bottom: 5px;
+        }
+        #task-content .action-button {
+            margin-right: 10px;
+            margin-top: 10px;
         }
 
         /* --- Quiz Page --- */
@@ -383,6 +389,7 @@
         </section>
 
         <section id="assignment-hub-page" class="page hidden">
+            <button class="back-button" data-target="home-page">חזרה</button>
             <h1>משימות למידה</h1>
             <div class="assignments-grid">
                 <button class="assignment-box" data-assignment="reading">
@@ -753,14 +760,17 @@
             isReviewRound = false;
             
             // Add back button to quiz page
-            if (!document.querySelector('#quiz-page .back-button')) {
-                const backBtn = document.createElement('button');
-                backBtn.className = 'back-button';
-                backBtn.textContent = 'חזרה למשימות';
-                backBtn.dataset.target = 'assignment-hub-page';
-                backBtn.addEventListener('click', () => showPage('assignment-hub-page'));
-                document.getElementById('quiz-page').prepend(backBtn);
+            const existingBackBtn = document.querySelector('#quiz-page .back-button');
+            if (existingBackBtn) {
+                existingBackBtn.remove(); // Remove old one if it exists
             }
+            
+            const backBtn = document.createElement('button');
+            backBtn.className = 'back-button';
+            backBtn.textContent = 'חזרה למשימות';
+            backBtn.dataset.target = 'assignment-hub-page';
+            backBtn.addEventListener('click', () => showPage('assignment-hub-page'));
+            document.getElementById('quiz-page').prepend(backBtn);
             
             showPage('quiz-page');
             loadQuestion();
@@ -899,7 +909,7 @@
         }
 
         
-        // --- QUIZ DATABASE ---
+        // --- QUIZ DATABASE (FIXED) ---
         const quizData = {
             'whQuestions': [
                 { q: "___ are you going to the party tonight? (When)", o: ["When", "Where", "Who"], a: "When" },
@@ -983,7 +993,7 @@
                 { q: "___ he always do that?", o: ["Do", "Does"], a: "Does" },
                 { q: "___ they like dogs?", o: ["Do", "Does"], a: "Do" },
                 { q: "___ your father speak German?", o: ["Do", "Does"], a: "Does" },
-                { q: "___ your wife/husband come from Argentina?", o: ["Do",A: "Does" },
+                { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" },
                 { q: "___ Chileans like Tango?", o: ["Do", "Does"], a: "Do" },
                 { q: "___ he sing in the shower?", o: ["Do", "Does"], a: "Does" },
                 { q: "___ your grandmother have a dog?", o: ["Do", "Does"], a: "Does" },
@@ -1049,7 +1059,7 @@
                 { q: "Where did Jake and Mia find the cave?", o: ["In the school", "In the park", "In the forest"], a: "In the forest" },
                 { q: "How did Mia feel about going inside?", o: ["Only scared", "Only excited", "Excited and a little scared"], a: "Excited and a little scared" },
                 { q: "What did they find inside the cave?", o: ["A small animal", "A small treasure chest", "Their teacher"], a: "A small treasure chest" },
-                { q: "What happened after they opened the chest?", o: ["The cave started shaking", "They found gold", "A noise stopped"], a:Videos: "The cave started shaking" }
+                { q: "What happened after they opened the chest?", o: ["The cave started shaking", "They found gold", "A noise stopped"], a: "The cave started shaking" }
             ],
             'reading5': [
                 { q: "Who was Captain Moshco?", o: ["A famous soldier", "A famous pirate", "A famous captain"], a: "A famous pirate" },
@@ -1072,7 +1082,7 @@
     (function(){
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
     s1.async=true;
-    s1.src='https://embed.tawk.to/690b64f3418b98195b55049c/1j9a84lpt';
+    s1.src='httpsG://embed.tawk.to/690b64f3418b98195b55049c/1j9a84lpt';
     s1.charset='UTF-8';
     s1.setAttribute('crossorigin','*');
     s0.parentNode.insertBefore(s1,s0);
