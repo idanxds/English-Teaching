@@ -4,52 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>אתר למידה באנגלית</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<!-- comment here -->
-<div id="points-counter" class="hidden">נקודות: 0</div>
+    
+    <nav class="main-nav">
+        <div class="nav-links">
+            <button class="nav-button" data-target="youtube-page">סרטוני YouTube</button>
+            <button class="nav-button" data-target="podcast-page">פודקאסט</button>
+        </div>
+        <div class="nav-brand">
+            <button class="nav-button" data-target="home-page">עמוד הבית</button>
+        </div>
+    </nav>
+
     <div id="app">
-        <section id="home-page">
-            <div class="grades-container">
-                <button class="grade-button" data-grade="2">כיתה ב</button>
-                <button class="grade-button" data-grade="3">כיתה ג</button>
-                <button class="grade-button" data-grade="6">כיתה ו</button>
-                <button class="grade-button" data-grade="4">כיתה ד</button>
-                <button class="grade-button" data-grade="5">כיתה ה</button>
+        <section id="home-page" class="page">
+            <div class="home-container">
+                <h1>ברוכים הבאים לאתר הלמידה</h1>
+                <p>מוכנים להתחיל ללמוד אנגלית?</p>
+                <button id="login-button" class="action-button large">כניסה</button>
+                
+                <div class="translator-box">
+                    <h3>מילון / תרגום (ממשק בלבד)</h3>
+                    <div class="translator-inputs">
+                        <textarea placeholder="הקלד מילה באנגלית..."></textarea>
+                        <textarea placeholder="הקלד מילה בעברית..."></textarea>
+                    </div>
+                    <div class="translator-buttons">
+                        <button class="action-button small">תרגם</button>
+                        <button class="action-button small">הגדר מילה</button>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section id="grade-page" class="hidden">
-            <h1 id="grade-title"></h1>
-            <button id="back-to-home" class="back-button">חזרה לבחירת כיתה</button>
+        <section id="assignment-hub-page" class="page hidden">
+            <h1>משימות למידה</h1>
             <div class="assignments-grid">
-                <div id="abc-assignment-box" class="assignment-box hidden" data-assignment="abc">
-                    <h3>הא-ב האנגלי: ABC</h3>
-                    <p>בחלק הזה תלמדו את אותיות ה-ABC.</p>
-                    <button class="start-assignment-btn" data-target="abc-video-page">התחל</button>
-                </div>
-                <div id="future-simple-assignment-box" class="assignment-box" data-assignment="future-simple">
-                    <h3>עתיד פשוט</h3>
-                    <p>בחלק הזה תלמדו על עתיד פשוט</p>
-                    <button class="start-assignment-btn" data-target="future-simple-explanation-page">עתיד פשוט</button>
-                </div>
-                <div id="verbs-assignment-box" class="assignment-box" data-assignment="verbs">
-                    <h3>פעלים</h3>
-                    <p>בחלק הזה תלמדו פעלים</p>
-                    <button class="start-assignment-btn" data-target="verbs-explanation-page">פעלים</button>
-                </div>
-                <div id="simple-past-assignment-box" class="assignment-box" data-assignment="simple-past">
-                    <h3>זמן פשוט (עבר)</h3>
-                    <p>בחלק הזה תלמדו זמן פשוט</p>
-                    <button class="start-assignment-btn" data-target="simple-past-explanation-page">זמן פשוט</button>
-                </div>
-                <div class="assignment-box placeholder"></div>
-                <div class="assignment-box placeholder"></div>
+                <button class="assignment-box" data-assignment="reading">
+                    <h3>קריאה (Reading)</h3>
+                    <p>תרגול קטעי קריאה ברמות שונות.</p>
+                </button>
+                <button class="assignment-box" data-assignment="grammar">
+                    <h3>דקדוק (Grammar)</h3>
+                    <p>לימוד ותרגול WH, Present Simple ועוד.</p>
+                </button>
+                <button class="assignment-box" data-assignment="writing">
+                    <h3>כתיבה (Writing)</h3>
+                    <p>למדו לתאר, להשוות ולכתוב פסקאות.</p>
+                </button>
+                <button class="assignment-box" data-assignment="speaking">
+                    <h3>דיבור (Speaking)</h3>
+                    <p>תרגול זיהוי שגיאות וקריאה נכונה.</p>
+                </button>
+                <button class="assignment-box" data-assignment="adjectives">
+                    <h3>שמות תואר (Adjectives)</h3>
+                    <p>תרגול שמות תואר ותואר הפועל.</p>
+                </button>
             </div>
         </section>
 
-    </div>
+        <section id="podcast-page" class="page hidden">
+            <button class="back-button" data-target="home-page">חזרה</button>
+            <h1>פודקאסטים</h1>
+            <div class="podcast-grid">
+                <div class="podcast-player">
+                    <h3>פודקאסט 1</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_1.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 2</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_2.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 3</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_3.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 4</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_4.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 5</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_5.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 6</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_6.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 7</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_7.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 8</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_8.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 9</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_9.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 10</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_10.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+                <div class="podcast-player">
+                    <h3>פודקאסט 11</h3>
+                    <audio controls src="YOUR_AUDIO_FILE_11.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                </div>
+            </div>
+        </section>
+
+        <section id="youtube-page" class="page hidden">
+            <button class="back-button" data-target="home-page">חזרה</button>
+            <h1>סרטוני YouTube</h1>
+            <div class="youtube-grid">
+                </div>
+        </section>
+
+        <section id="video-player-page" class="page hidden">
+            <button class="back-button" data-target="youtube-page">חזרה לסרטונים</button>
+            <h1 id="video-player-title"></h1>
+            <div class="video-container">
+                <iframe id="youtube-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <section id="task-page" class="page hidden">
+            <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
+            <div id="task-content">
+                </div>
+        </section>
+        
+        <section id="quiz-page" class="page hidden">
+             <div id="quiz-container">
+                <div id="quiz-progress"></div>
+                <div id="quiz-question" class="ltr"></div>
+                <div id="quiz-options"></div>
+                <div id="quiz-feedback"></div>
+                <button id="quiz-next-btn" class="action-button hidden">המשך</button>
+            </div>
+        </section>
+
+    </div> <aside class="chat-sidebar">
+        <div class="chat-header">
+            <h3>צ'אט תמיכה (ממשק בלבד)</h3>
+        </div>
+        <div class="chat-messages">
+            <div class="message received">
+                <p>שלום! איך אפשר לעזור?</p>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="הקלד הודעה...">
+            <button>שלח</button>
+        </div>
+    </aside>
+
     <script src="script.js"></script>
 </body>
 </html>
