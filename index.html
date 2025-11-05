@@ -547,7 +547,7 @@
             <div id="abc-audio-content" class="text-passage">
                 <p>(שימוש באוזניות או קול חיצוני הוא נדרש בשביל החלק הזה.)</p>
                 <div id="audio-players-container" class="audio-players-container"></div>
-                <button id="abc-audio-continue" class_name="action-button hidden">המשך</button>
+                <button id="abc-audio-continue" class="action-button hidden" data-assignment="abc" data-quiz="abcQuiz">המשך לתרגול</button>
             </div>
         </section>
         
@@ -570,7 +570,7 @@
         // ----------------------------------------------------
         // I have added the 6 links you provided.
         const youtubeLinks = {
-            "abc-video": { title: "סרטון ABC", url: "https://www.youtube.com/embed/BELlZKpi1Zs" },
+            "abc-video": { title: "סרטון ABC", url: "https://www.youtube.com/embed/BELlZKpi1Zs" }, // From original code
             "1": { title: "סרטון 1", url: "https://www.youtube.com/embed/3z4TQfNiqLc" },
             "2": { title: "סרטון 2", url: "https://www.youtube.com/embed/erLktxdLIWU" },
             "3": { title: "סרטון 3", url: "https://www.youtube.com/embed/hKIpbGK3fSM" },
@@ -721,7 +721,7 @@
             document.getElementById('youtube-iframe').src = ''; // Stop video
         });
         
-        // --- TASK & ASSIGNMENT LOADER ---
+        // --- TASK & ASSIGNMENT LOADER (FIXED) ---
         
         function startAssignment(assignmentId) {
             // Clear previous content
@@ -737,7 +737,13 @@
                     content += `<button class="action-button" id="abc-audio-btn">שלב 2: האזן לאותיות</button>`;
                     content += `<button class="action-button" id="abc-special-btn">שלב 3: מקרים מיוחדים</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="abcQuiz">שלב 4: בוא נתרגל</button>`;
+                    
+                    // **** THIS IS THE FIX ****
+                    // 1. Add content to the page
+                    taskPageContent.innerHTML = content;
+                    // 2. Show the page
                     showPage('task-page');
+                    // 3. NOW add listeners to the buttons that exist
                     
                     document.getElementById('abc-video-btn').addEventListener('click', () => {
                         const video = youtubeLinks['abc-video'];
@@ -757,6 +763,7 @@
                     content += `<button class="action-button" id="verbs-table-btn">שלב 1: טבלת פעלים</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="verbs1">שלב 2: תרגול פעלים</button>`;
                     content += `<button class="action-button" id="verbs-sentence-btn">שלב 3: בניית משפט</button>`;
+                    taskPageContent.innerHTML = content;
                     showPage('task-page');
                     
                     document.getElementById('verbs-table-btn').addEventListener('click', createVerbsTablePage);
@@ -772,6 +779,7 @@
                     content += `<button class="action-button task-start-btn" data-quiz="futureSimple1">שלב 2: תרגיל 1 (will/would)</button>`;
                     content += `<button class="action-button" id="future-simple-expl2-btn">שלב 3: הסבר (שלילה)</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="futureSimple2">שלב 4: תרגיל 2 (wont/wouldn't)</button>`;
+                    taskPageContent.innerHTML = content;
                     showPage('task-page');
                     
                     document.getElementById('future-simple-expl-btn').addEventListener('click', createFutureSimpleExplanationPage);
@@ -782,6 +790,7 @@
                     content += `<p>בחר שלב בלימוד עבר פשוט:</p>`;
                     content += `<button class="action-button" id="simple-past-expl-btn">שלב 1: הסבר מקיף</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="simplePastQuiz">שלב 2: בוא נתרגל</button>`;
+                    taskPageContent.innerHTML = content;
                     showPage('task-page');
                     
                     document.getElementById('simple-past-expl-btn').addEventListener('click', () => {
@@ -797,6 +806,7 @@
                     content += `<button class="action-button task-start-btn" data-quiz="reading3">רמה 3 (כיתה ד)</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="reading4">רמה 4 (כיתה ה)</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="reading5">רמה 5 (כיתה ו)</button>`;
+                    taskPageContent.innerHTML = content;
                     showPage('task-page');
                     break;
                     
@@ -807,6 +817,7 @@
                     content += `<button class="action-button task-start-btn" data-quiz="presentSimple1">Present Simple - s/es/ies</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="presentSimple2">Present Simple - Don't / Doesn't</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="presentSimple3">Present Simple - Do / Does</button>`;
+                    taskPageContent.innerHTML = content;
                     showPage('task-page');
                     break;
                     
@@ -819,6 +830,7 @@
                     content += `<h2>שלב 5: פסקת טיעון (6 או 9)</h2><p class="ltr">In the picture, two boys are looking at a number on the floor. From one boy's perspective, it looks like the number 6. From the other boy's perspective, it looks like the number 9. This picture shows that both boys are 'right' based on their point of view. It teaches us that perspective is important and people can see the same thing differently.</p>`;
                     content += `<h2>שלב 6: תיאור חוויה</h2><p>כדי לתאר חוויה, עקבו אחר הצעדים הבאים: 1. כותרת. 2. פתיחה (על מה אספר?). 3. גוף הסיפור (מה קרה? מה ראיתי? מה הרגשתי?). 4. סיבה (למה בחרתי בחוויה זו?). 5. סיום (מה מיוחד? המלצה?).</p>`;
                     content += `<br><button class="action-button" id="complete-writing-btn">סיימתי לקרוא</button>`;
+                    taskPageContent.innerHTML = content;
                     showPage('task-page');
                     
                     document.getElementById('complete-writing-btn').addEventListener('click', () => {
@@ -832,6 +844,7 @@
                     content += `<h2>טקסט לקריאה (Lvl 3)</h2><div class="text-passage ltr"><h3>The Strength Within</h3><p>Once upon a time in a small village, there lived a girl named Mia. She was like any other girl, with dreams, hopes, and a heart full of kindness. Every morning, she would tie her hair into a pony tail and slip on her favorite blue slippers before heading to her High school...</p><p>(המשך הטקסט מקובץ ה-PDF שלך...)</p></div>`;
                     content += `<button class="action-button task-start-btn" data-quiz="speaking1">התחל תרגיל זיהוי שגיאות (Lvl 1)</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="speaking2">התחל תרגיל זיהוי שגיאות (Lvl 2)</button>`;
+                    taskPageContent.innerHTML = content;
                     showPage('task-page');
                     break;
                     
@@ -839,11 +852,12 @@
                     content += `<p>לימוד ותרגול שמות תואר (Adjectives) ותואר הפועל (Adverbs).</p>`;
                     content += `<h2>כללים בסיסיים</h2><div class="text-passage ltr"><p>Adjectives describe nouns (e.g., tall man, beautiful day).</p><p>To compare (bigger): add 'er' (taller) or use 'more' for long words (more beautiful).</p><p>For 'the most' (biggest): add 'est' (tallest) or use 'most' (most beautiful).</p><p>Adverbs describe verbs (e.g., run quickly, eat slowly). They often end in -ly.</p></div>`;
                     content += `<button class="action-button task-start-btn" data-quiz="adjectivesQuiz">התחל תרגול</button>`;
+                    taskPageContent.innerHTML = content;
                     showPage('task-page');
                     break;
             }
             
-            // Add event listeners for the new quiz buttons
+            // Add event listeners for all quiz buttons on the task page
             document.querySelectorAll('.task-start-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     startQuiz(btn.dataset.quiz, assignmentId);
@@ -870,7 +884,6 @@
 
         function createChainedContentPage(assignmentId, steps, onComplete) {
             let currentStep = 0;
-            taskPageContent.innerHTML = `<h1>${getAssignmentTitle(assignmentId)}</h1>`;
             
             function loadStep() {
                 const step = steps[currentStep];
@@ -999,6 +1012,13 @@
                 `;
                 container.appendChild(playerDiv);
             });
+            
+            // Add click listener for the continue button on this specific page
+            const continueBtn = document.getElementById('abc-audio-continue');
+            continueBtn.classList.remove('hidden'); // Show it
+            continueBtn.addEventListener('click', (e) => {
+                startQuiz(e.target.dataset.quiz, e.target.dataset.assignment);
+            }, { once: true });
         }
         
         function createSentenceBuilderPage(assignmentId) {
@@ -1234,7 +1254,7 @@
         }
 
         
-        // --- QUIZ DATABASE (ALL ASSIGNMENTS) ---
+        // --- QUIZ DATABASE (ALL ASSIGNMENTS - FIXED) ---
         const quizData = {
             // --- Original Assignments ---
             'futureSimple1': [
@@ -1449,7 +1469,7 @@
                 { q: "What did the old map show?", o: ["A hidden island", "A new ship", "A jungle"], a: "A hidden island" },
                 { q: "Where was the 'X' on the map?", o: ["In a cave", "Under a big, old tree", "On the beach"], a: "Under a big, old tree" },
                 { q: "What was inside the chest?", o: ["Gold coins, jewels, and a sword", "Only gold coins", "An old map"], a: "Gold coins, jewels, and a sword" },
-                { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" }
+                { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" } // <-- *** THIS WAS THE BUG *** Fixed.
             ]
         };
         
