@@ -1,549 +1,568 @@
-// rebuild trigger
-// rebuild trigger again cuz ts pmo
-
 document.addEventListener('DOMContentLoaded', () => {
-    // State Management
-    let currentGrade = null;
-    let points = 0;
-    const completedAssignments = new Set();
 
-    // DOM Elements
+    // --- STATE MANAGEMENT ---
+    let appState = {
+        currentPage: 'home-page',
+        points: 0,
+        completedAssignments: JSON.parse(localStorage.getItem('completedAssignments')) || []
+    };
+    
+    // --- YOUTUBE CONFIG ---
+    // !!! מדריך YOUTUBE !!!
+    // החלף את הקישורים בקישורי ה-EMBED שלך מ-YouTube.
+    // כדי לקבל קישור embed:
+    // 1. פתח את הסרטון ב-YouTube
+    // 2. לחץ על "Share" (שיתוף)
+    // 3. לחץ על "Embed" (הטמעה)
+    // 4. העתק את ה-URL מתוך תג ה-iframe (רק את מה שבתוך src="")
+    // למשל: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    const youtubeLinks = {
+        "1": { title: "סרטון 1", url: "https://www.youtube.com/embed/your-video-id-1" },
+        "2": { title: "סרטון 2", url: "https://www.youtube.com/embed/your-video-id-2" },
+        "3": { title: "סרטון 3", url: "https://www.youtube.com/embed/your-video-id-3" },
+        "4": { title: "סרטון 4", url: "https://www.youtube.com/embed/your-video-id-4" },
+        "5": { title: "סרטון 5", url: "https://www.youtube.com/embed/your-video-id-5" },
+        "6": { title: "סרטון 6", url: "https://www.youtube.com/embed/your-video-id-6" },
+        "7": { title: "סרטון 7", url: "https://www.youtube.com/embed/your-video-id-7" },
+        "8": { title: "סרטון 8", url: "https://www.youtube.com/embed/your-video-id-8" },
+        "9": { title: "סרטון 9", url: "https://www.youtube.com/embed/your-video-id-9" },
+        "10": { title: "סרטון 10", url: "https://www.youtube.com/embed/your-video-id-10" },
+        "11": { title: "סרטון 11", url: "https://www.youtube.com/embed/your-video-id-11" },
+        "12": { title: "סרטון 12", url: "https://www.youtube.com/embed/your-video-id-12" },
+        "13": { title: "סרטון 13", url: "https://www.youtube.com/embed/your-video-id-13" },
+        "14": { title: "סרטון 14", url: "https://www.youtube.com/embed/your-video-id-14" },
+        "15": { title: "סרטון 15", url: "https://www.youtube.com/embed/your-video-id-15" },
+        "16": { title: "סרטון 16", url: "https://www.youtube.com/embed/your-video-id-16" },
+        "17": { title: "סרטון 17", url: "https://www.youtube.com/embed/your-video-id-17" },
+        "18": { title: "סרטון 18", url: "https://www.youtube.com/embed/your-video-id-18" },
+        "19": { title: "סרטון 19", url: "https://www.youtube.com/embed/your-video-id-19" },
+        "20": { title: "סרטון 20", url: "https://www.youtube.com/embed/your-video-id-20" },
+        "21": { title: "סרטון 21", url: "https://www.youtube.com/embed/your-video-id-21" },
+        "22": { title: "סרטון 22", url: "https://www.youtube.com/embed/your-video-id-22" },
+        "23": { title: "סרטון 23", url: "https://www.youtube.com/embed/your-video-id-23" },
+        "24": { title: "סרטון 24", url: "https://www.youtube.com/embed/your-video-id-24" },
+        "25": { title: "סרטון 25", url: "https://www.youtube.com/embed/your-video-id-25" },
+        "26": { title: "סרטון 26", url: "https://www.youtube.com/embed/your-video-id-26" },
+        "27": { title: "סרטון 27", url: "https://www.youtube.com/embed/your-video-id-27" },
+        "28": { title: "סרטון 28", url: "https://www.youtube.com/embed/your-video-id-28" },
+        "29": { title: "סרטון 29", url: "https://www.youtube.com/embed/your-video-id-29" },
+        "30": { title: "סרטון 30", url: "https://www.youtube.com/embed/your-video-id-30" },
+        "31": { title: "סרטון 31", url: "https://www.youtube.com/embed/your-video-id-31" },
+        "32": { title: "סרטון 32", url: "https://www.youtube.com/embed/your-video-id-32" },
+        "33": { title: "סרטון 33", url: "https://www.youtube.com/embed/your-video-id-33" },
+        "34": { title: "סרטון 34", url: "https://www.youtube.com/embed/your-video-id-34" },
+        "35": { title: "סרטון 35", url: "https://www.youtube.com/embed/your-video-id-35" },
+        "36": { title: "סרטון 36", url: "https://www.youtube.com/embed/your-video-id-36" },
+    };
+
+    // --- DOM ELEMENTS ---
     const app = document.getElementById('app');
-    const pointsCounter = document.getElementById('points-counter');
+    const allPages = document.querySelectorAll('.page');
 
-    // Page Navigation Logic
+    // --- NAVIGATION ---
     function showPage(pageId) {
-        document.querySelectorAll('#app > section').forEach(section => {
-            section.classList.add('hidden');
+        allPages.forEach(page => {
+            page.classList.add('hidden');
         });
-        const page = document.getElementById(pageId);
-        if (page) {
-            page.classList.remove('hidden');
-        } else {
-            console.error(`Page with id ${pageId} not found.`);
-        }
-    }
-
-    function updatePointsDisplay() {
-        pointsCounter.textContent = `נקודות: ${points}`;
-    }
-
-    function showPopup(message, duration = 2000) {
-        const popup = document.createElement('div');
-        popup.className = 'popup';
-        popup.textContent = message;
-        document.body.appendChild(popup);
-        setTimeout(() => popup.classList.add('show'), 10);
-        setTimeout(() => {
-            popup.classList.remove('show');
-            setTimeout(() => document.body.removeChild(popup), 500);
-        }, duration);
-    }
-    
-    function addPoint() {
-        points++;
-        updatePointsDisplay();
-        showPopup('+1 נקודה!');
-    }
-
-    // --- HOME PAGE LOGIC ---
-    document.querySelectorAll('.grade-button').forEach(button => {
-        button.addEventListener('click', () => {
-            currentGrade = button.dataset.grade;
-            points = 0;
-            updatePointsDisplay();
-            pointsCounter.classList.remove('hidden');
-            
-            const gradeTitle = document.getElementById('grade-title');
-            const hebrewGrades = { '2': 'ב', '3': 'ג', '4': 'ד', '5': 'ה', '6': 'ו' };
-            gradeTitle.textContent = `כיתה ${hebrewGrades[currentGrade]} - Grade ${currentGrade}`;
-            
-            const abcBox = document.getElementById('abc-assignment-box');
-            if (['2', '3', '4'].includes(currentGrade)) {
-                abcBox.classList.remove('hidden');
-            } else {
-                abcBox.classList.add('hidden');
-            }
-
-             document.querySelectorAll('.assignment-box').forEach(box => {
-                const assignmentName = box.dataset.assignment;
-                if (completedAssignments.has(`${currentGrade}-${assignmentName}`)) {
-                    box.classList.add('completed');
-                } else {
-                    box.classList.remove('completed');
-                }
-            });
-
-            showPage('grade-page');
-        });
-    });
-    
-    document.getElementById('back-to-home').addEventListener('click', () => {
-        pointsCounter.classList.add('hidden');
-        showPage('home-page');
-    });
-
-    // --- ASSIGNMENT NAVIGATION ---
-    document.querySelectorAll('.start-assignment-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const targetPageFunc = button.dataset.target;
-            createAssignmentPage(targetPageFunc);
-        });
-    });
-    
-    function markAssignmentAsCompleted(assignmentName) {
-        const key = `${currentGrade}-${assignmentName}`;
-        completedAssignments.add(key);
-        const box = document.querySelector(`.assignment-box[data-assignment="${assignmentName}"]`);
-        if (box) {
-            box.classList.add('completed');
-        }
-    }
-
-    function createAndShowPage(id, content, titleText) {
-        let page = document.getElementById(id);
-        if (page) page.remove();
-
-        page = document.createElement('section');
-        page.id = id;
-        page.className = 'assignment-page';
-        page.innerHTML = `
-            <h1>${titleText}</h1>
-            <button class="back-button" onclick="window.showPage('grade-page')">חזרה לבית המשימות</button>
-            ${content}
-        `;
-        app.appendChild(page);
-        showPage(id);
-        return page;
-    }
-
-    // --- DYNAMIC PAGE CREATION FOR ALL ASSIGNMENTS ---
-    function createAssignmentPage(pageType) {
-        // --- Future Simple Assignment ---
-        if (pageType === 'future-simple-explanation-page') {
-            const content = `<div class="content-box"><p id="fs-explanation-text" class="hidden">זמן עתיד הוא זמן פשוט להבנה. כל הגופים משתמשים ב- will ו- would, אך מה ההבדל ביניהם? <br> משתמשים ב- will כאשר אנחנו רוצים להגיד משהו שקשור אך ורק לעתיד, ואילו משתמשים ב- would כאשר משהו נאמר בעבר אבל אמור להתרחש בעתיד. יש פעמים שמשתמשים ב- would כדי לבטא בקשה מנומסת שתתרחש לרוב בעתיד. חשוב לזכור ש would זה לא תחליף ל- will. <br> בוא נתרגל את מה שלמדנו:</p><button id="fs-start-explanation-btn" class="action-button">התחל הסבר</button></div>`;
-            const page = createAndShowPage(pageType, content, "עתיד פשוט");
-            page.querySelector('#fs-start-explanation-btn').addEventListener('click', (e) => {
-                e.target.style.display = 'none';
-                page.querySelector('#fs-explanation-text').classList.remove('hidden');
-                setTimeout(() => {
-                    const taskBtn = document.createElement('button');
-                    taskBtn.className = 'action-button';
-                    taskBtn.textContent = 'התחל משימה';
-                    taskBtn.onclick = () => createAssignmentPage('future-simple-task1');
-                    page.querySelector('.content-box').appendChild(taskBtn);
-                }, 6000);
-            });
-        }
-        if (pageType === 'future-simple-task1') {
-            const questions = [
-                { q: "I __ go to the mall tomorrow", a: "כלום לא מתאים", o: ["will", "would", "כלום לא מתאים"] },
-                { q: "___ your sister come to the movie theater tonight?", a: "will", o: ["will", "would", "כלום לא מתאים"] },
-                { q: "How __ we go to the school event this weekend?", a: "will", o: ["will", "would", "כלום לא מתאים"] },
-                { q: "__ you want to come to my house today?", a: "would", o: ["will", "would", "כלום לא מתאים"] },
-                { q: "Ali __ take Maya to school tomorrow.", a: "will", o: ["will", "would", "כלום לא מתאים"] },
-                { q: "My dog __ eat his food tonight.", a: "will", o: ["will", "would", "כלום לא מתאים"] },
-                { q: "Tomorrow me and my family __ go to eat in a restaurant.", a: "will", o: ["will", "would", "כלום לא מתאים"] },
-                { q: "__ you like to come to my house tomorrow?", a: "would", o: ["will", "would", "כלום לא מתאים"] }
-            ];
-            createQuizPage('fs-task1', 'תרגיל 1 - השלם את החסר', questions, () => createAssignmentPage('future-simple-explanation-task2'));
-        }
-        if (pageType === 'future-simple-explanation-task2') {
-             const content = `<div class="content-box"><p>נכון שיש לנו את הגופים? אז כאשר אנחנו רוצים לכתוב את המשפט בצורה שלילית, במקום will ו- would משתמשים ב- wont ו- wouldn't. הם מייצגים would-not ו- will not. <br> בוא נתרגל את הנושא הזה.</p><button id="fs-start-task2-btn" class="action-button">התחל תרגיל</button></div>`;
-            const page = createAndShowPage(pageType, content, "תרגיל 2 - השלם את החסר");
-            page.querySelector('#fs-start-task2-btn').addEventListener('click', () => createAssignmentPage('future-simple-task2'));
-        }
-        if (pageType === 'future-simple-task2') {
-            const questions = [
-                 { q: "I __ eat fast food next week", a: "wont", o: ["wouldn't", "wont"] },
-                 { q: "Noya is sick, she __ come to the party tonight", a: "wont", o: ["wouldn't", "wont"] },
-                 { q: "My parents and I __ open our business tomorrow.", a: "wouldn't", o: ["wouldn't", "wont"] },
-                 { q: "My sister __ come to the trip next week.", a: "wont", o: ["wouldn't", "wont"] },
-                 { q: "I think she __ like the present that I will give her next week.", a: "wont", o: ["wouldn't", "wont"] },
-                 { q: "I think I __ be able to visit your family next week.", a: "wouldn't", o: ["wouldn't", "wont"] },
-                 { q: "I ___ do that if I were you.", a: "wouldn't", o: ["wouldn't", "wont"] }
-            ];
-            createQuizPage('fs-task2', 'תרגיל 2 - השלם את החסר', questions, () => {
-                markAssignmentAsCompleted('future-simple');
-                createAndShowPage('fs-complete', '<button class="action-button" onclick="window.showPage(\'grade-page\')">בחזרה לבית התרגילים</button>', 'כל הכבוד!');
-            });
-        }
-
-        // --- Verbs Assignment ---
-        if (pageType === 'verbs-explanation-page') {
-             const content = `<div class="content-box"><p>פעלים הם מילים המתארות פעולות, מחשבות, רגשות אם מצבים. הם חשובים כי הם מראים מה קורה במשפט.<br>הנה כמה פעלים ותרגומם:</p><button id="verbs-continue-btn" class="action-button hidden">המשך לדוגמאות</button></div>`;
-             const page = createAndShowPage(pageType, content, "פעלים");
-             setTimeout(() => {
-                 const btn = page.querySelector('#verbs-continue-btn');
-                 btn.classList.remove('hidden');
-                 btn.onclick = () => createAssignmentPage('verbs-examples-page');
-             }, 2000);
-        }
-        if (pageType === 'verbs-examples-page') {
-    const verbs = [
-        ["Eat", "לאכול"], ["drink", "לשתות"], ["walk", "ללכת"], ["run", "לרוץ"],
-        ["sit", "לשבת"], ["lie", "לשכב"], ["stand", "לעמוד"], ["fall", "ליפול"],
-        ["laugh", "לצחוק"], ["speak", "לדבר"], ["cry", "לבכות"], ["answer", "לענות"],
-        ["ask", "לשאול"], ["see", "לראות"], ["hear", "לשמוע"], ["break", "לשבור"],
-        ["feel", "להרגיש"], ["fix", "לתקן"], ["drive", "לנהוג"], ["ride", "לרכב"],
-        ["swim", "לשחות"], ["jump", "לקפוץ"], ["climb", "לטפס"], ["fly", "לעוף"],
-        ["push", "לדחוף"], ["pull", "למשוך"], ["throw", "לזרוק"], ["catch", "לתפוס"],
-        ["cut", "לחתוך"], ["cook", "לבשל"]
-    ];
-
-    let gridHtml = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;font-size:1.1em;">
-        <div><b>באנגלית</b></div>
-        <div><b>תרגום</b></div>
-    `;
-
-    verbs.forEach(([en, he]) => {
-        gridHtml += `<div dir="ltr">${en}</div><div dir="rtl">${he}</div>`;
-    });
-
-    gridHtml += `</div>
-      <button id="verbs-task-btn" class="action-button hidden" style="margin-top:20px;">לתרגול</button>`;
-
-    const page = createAndShowPage(pageType, `<div class="content-box">${gridHtml}</div>`, "דוגמאות");
-
-    setTimeout(() => {
-        const btn = page.querySelector('#verbs-task-btn');
-        btn.classList.remove('hidden');
-        btn.onclick = () => createAssignmentPage('verbs-task1-page');
-    }, 5000);
-}
-
-        if (pageType === 'verbs-task1-page') {
-            const questions = [
-                { q: 'מה המשמעות של "jump"?', a: 'לקפוץ', o: ['לשבת', 'לקפוץ', 'לחשוב'] },
-                { q: 'מה המשמעות של "write"?', a: 'לכתוב', o: ['לקרוא', 'לכתוב', 'ללכת'] },
-                { q: 'אני __ מים כל יום', a: 'drink', o: ['cook', 'look', 'drink'] },
-                { q: 'היא __ סיפור במחברתה', a: 'writes', o: ['writes', 'walks', 'runs'] },
-                { q: 'אני __ לבית הספר כל יום', a: 'walk', o: ['learn', 'fish', 'walk'] },
-                { q: 'היא __ לחנות', a: 'goes', o: ['teaches', 'climbs', 'goes'] },
-                { q: 'אנחנו __ ארוחת ערב בשעה', a: 'eat', o: ['cook', 'eat', 'ride'] },
-                { q: 'הוא __ ספר בספרייה', a: 'reads', o: ['lives', 'lies', 'reads'] }
-            ];
-            createQuizPage('verbs-task1', 'פעלים - תרגיל 1', questions, () => createAssignmentPage('verbs-task2-intro'));
-        }
-        if(pageType === 'verbs-task2-intro') {
-            const content = `<div class="content-box"><h2>בניית משפט</h2><p>היו לכם 9 אפשרויות של מילים למען בניית המשפט, בחרו את המילים לפי הסדר המתאים, אם המילה הבאה שבחרתם לא באה בסדר הנכון תבחרו אחת אחרת ותזכרו, המילה שמתחילה באות גדולה באה ראשונה!</p><button id="verbs-task2-btn" class="action-button hidden">המשך לתרגיל</button></div>`;
-            const page = createAndShowPage(pageType, content, "פעלים - תרגיל 2");
-             setTimeout(() => {
-                const btn = page.querySelector('#verbs-task2-btn');
-                btn.classList.remove('hidden');
-                btn.onclick = () => createAssignmentPage('verbs-task2-builder');
-            }, 2000);
-        }
-        if(pageType === 'verbs-task2-builder') {
-             createSentenceBuilderPage();
-        }
-
-        // --- ABC Assignment ---
-        if (pageType === 'abc-video-page') {
-            const content = `<div class="content-box">
-                <div class="video-container"><iframe src="https://www.youtube.com/embed/BELlZKpi1Zs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-                <button id="abc-continue-btn" class="action-button hidden">המשך</button>
-            </div>`;
-            const page = createAndShowPage(pageType, content, "הא-ב האנגלי: ABC");
-            setTimeout(() => {
-                const btn = page.querySelector('#abc-continue-btn');
-                btn.classList.remove('hidden');
-                btn.onclick = () => createAssignmentPage('abc-audio-page');
-            }, 60000); // 1 minute
-        }
-
-        if (pageType === 'abc-audio-page') {
-            createAbcAudioPage();
-        }
-        if (pageType === 'abc-special-cases') {
-            const steps = [
-                {
-                    title: "אותיות שורקות",
-                    text: "האותיות השורקות הם מקרה מיוחד של שילוב אותיות שיוצרות צלילים שונים, שגם יכולים לחקות אותיות מסוימות.",
-                    delay: 2000,
-                    button: "המשך"
-                },
-                {
-                    title: "E הקסומה",
-                    text: 'e בסוף מילה נקראת "magic e" כיוון שהיא גורמת לאות הניקוד שבאה לפניה לשנות את הצליל, כך שהוא נשמע כמו השם שלה ולאחר מכן הצליל נשמע ארוך יותר.',
-                    delay: 2000,
-                    button: "המשך לסרטון הסבר"
-                },
-                {
-                    content: '<div class="video-container"><iframe src="https://www.youtube.com/embed/gp1UmVSlLJ4" frameborder="0" allowfullscreen></iframe></div>',
-                    delay: 30000,
-                    button: "המשך"
-                },
-                {
-                    title: "אותיות ניקוד",
-                    text: "מספר אותיות הניקוד במילה משפיע על הצליל שלהן כאשר יש למילה אות ניקוד אחת, הצליל של האות הניקוד יהיה קצר. כאשר יש למילה יותר מאות ניקוד אחת, הצליל של האות הניקוד יהיה ארוך ומעוגל יותר",
-                    delay: 2000,
-                    button: "המשך"
-                },
-                {
-                    content: '<div class="video-container"><iframe src="https://www.youtube.com/embed/RUSCz41aDug" frameborder="0" allowfullscreen></iframe></div>',
-                    delay: 45000,
-                    button: "המשך"
-                },
-                {
-                    title: "אותיות שקטות",
-                    text: "אותיות שותקות אלו אותיות שיופיע כחלק מהמילה עצמה וחייבות להכתב עם המילה אך הן אינן מושמעות בהגיית המילה",
-                    delay: 2000,
-                    button: "המשך"
-                },
-                {
-                    content: '<div class="video-container"><iframe src="https://www.youtube.com/embed/A2Pl9Usl5Pg" frameborder="0" allowfullscreen></iframe></div>',
-                    delay: 80000,
-                    button: "המשך למשימה"
-                }
-            ];
-            createChainedContentPage('abc-special', "מקרים מיוחדים", steps, () => createAssignmentPage('abc-quiz-page'));
-        }
-        if (pageType === 'abc-quiz-page') {
-            const questions = [
-                { q: "איזה אות באה אחרי K?", a: "L", o: ["A", "L", "Z"] },
-                { q: "איזה אות באה אחרי C?", a: "D", o: ["D", "Y", "M"] },
-                { q: "איזה אות באה אחרי S?", a: "T", o: ["T", "C", "O"] },
-                { q: "איזה אות באה אחרי W?", a: "X", o: ["K", "B", "X"] },
-                { q: "איזה אות באה אחרי Q?", a: "R", o: ["R", "E", "L"] },
-                { q: "מהי האות האחרונה בסדר האלף - בית באנגלית?", a: "Z", o: ["Q", "Z", "V"] },
-                { q: "כמה אותיות יש באלף - בית של אנגלית?", a: "26", o: ["22", "23", "26"] }
-            ];
-            createQuizPage('abc-quiz', 'תרגול', questions, () => {
-                markAssignmentAsCompleted('abc');
-                createAndShowPage('abc-complete', '<button class="action-button" onclick="window.showPage(\'grade-page\')">חזרה לבית המשימות</button>', 'כל הכבוד!');
-            });
+        const pageToShow = document.getElementById(pageId);
+        if (pageToShow) {
+            pageToShow.classList.remove('hidden');
+            appState.currentPage = pageId;
+            window.scrollTo(0, 0);
         }
         
-        // --- Simple Past Assignment ---
-        if (pageType === 'simple-past-explanation-page') {
-             const steps = [
-                { text: "הזמן הפשוט הוא היבט בסיסי של דקדוק האנגלית המשמש לתיאור פעולות שהושלמו בעבר. הנה כמה כללים חשובים המתארים את השימוש בו", delay: 2000, button: "המשך" },
-                { text: 'פעלים רגילים: עבור פעלים רגילים, עבר פשוט נוצר על ידי הוספת "-ed" לצורת הבסיס של הפועל. כלל זה חל על רוב הפעלים.<br>- Watch → watched (צופה ←צפה)<br>- ask → asked (שואל ← שאל)<br>-clean → cleaned (מנקה ← ניקה)', delay: 2000, button: "המשך" },
-                { text: 'אם הפועל מסתיים באות e מוסיפים רק את האות "d" ולא "ed", דוגמאות:<br>- like → liked (מחבב ← חיבב)<br>- arrive → arrived<br>- decide → decided', delay: 2000, button: "המשך" },
-                { text: 'אם הפועל מסתיים באות עיצור, אות ניקוד, אות עיצור (cvc), הכפל את האות האחרונה האחרון לפני הוספת "-ed". אך אם במילה יש יותר מהעברה אחת אז cvc לא מתקיים. חוץ מכמה יוצאי דופן שלא מכפילים כגון: x,y,w ולפעמים k.<br>דוגמאות למילים:<br>- play → played (משחק ← שיחק)<br>- stop → stopped (עצור ← עצר)', delay: 2000, button: "המשך" },
-                { text: "פעלים לא רגילים: בניגוד לכך, פעלים לא סדירים אינם פועלים לפי תבנית קבועה כאשר יוצרים את זמן העבר שלהם. לכן, חשוב לזכור את הצורות העבריות של הפעלים הללו.<br>דוגמאות למילים:<br>- go → went (הולך ← הלך)<br>- see → saw (רואה ← ראה)<br>- eat → ate (אוכל ← אכל)<br>- know → knew (יודע ← ידע)", delay: 2000, button: "המשך" },
-                { text: 'משפטים שליליים: כדי ליצור משפטים שליליים בזמן עבר פשוט, השתמשו ב-"did not" (או הצורה המקוצרת "didn\'t") ואחריה הצורה הבסיסית של הפועל. מבנה זה מעביר ביעילות שהפעולה לא התרחשה בעבר.<br>דוגמאות למשפטים:<br>- I didn\'t walk to school today. (אני לא הלכתי לבית ספר היום)<br>- She didn\'t finish her homework. (היא לא סיימה את שיעורי הבית שלה)', delay: 2000, button: "המשך" },
-                { text: 'שאלות: כאשר יוצרים שאלות בזמן עבר פשוט, התחילו ב-"Did" או ב-"Were" או ב-"Was", ואחריו הנושא וצורת הבסיס של הפועל. פורמט זה חיוני להשגת מידע על פעולות בעבר.<br><b>דוגמאות:</b><br>1.What did you do yesterday? (מה עשית אתמול?)<br>2.Where did you go last weekend? (לאן הלכת בסוף השבוע האחרון?)<br>3.Did you play any sports last week? (האם שיחקת בספורט בשבוע שעבר?)', delay: 7000, button: "המשך למשימה" },
-            ];
-             createChainedContentPage('simple-past-expl', "זמן פשוט", steps, () => createAssignmentPage('simple-past-quiz-page'));
+        // Special logic for assignment hub
+        if (pageId === 'assignment-hub-page') {
+            updateAssignmentHub();
         }
-        if (pageType === 'simple-past-quiz-page') {
-            const questions = [
-                { q: "She _____ (speak) to her boss about the project yesterday", a: "spoke", o: ["spoke", "speaks", "speaked"] },
-                { q: "We _____ (drive) to the mountains last weekend", a: "drove", o: ["drived", "drive", "drove"] },
-                { q: "The cat _____ (sleep) on the sofa all day", a: "slept", o: ["sleeping", "slept", "sleeped"] },
-                { q: "I _____ (read) an interesting book last month", a: "read(red)", o: ["read(red)", "readen", "readed"] },
-                { q: "They _____ (swim) in the lake during their vacation", a: "swam", o: ["swimming", "swom", "swam"] },
-                { q: "He _____ (break) his arm while skiing two weeks ago", a: "broke", o: ["breaking", "broke", "breaken"] },
-                { q: "The children _____ (bake) cookies with their grandmother", a: "baked", o: ["baked", "bake", "baking"] },
-                { q: "We _____ (fly) to Paris for our anniversary last year", a: "flew", o: ["flought", "flying", "flew"] },
-                { q: "The teacher _____ (give) us a lot of homework yesterday", a: "gave", o: ["gave", "given", "giving"] },
-                { q: "I _____ (lose) my keys at the supermarket this morning", a: "lost", o: ["lose", "losing", "lost"] },
-                { q: "She _____ (dance) beautifully at the party last night", a: "danced", o: ["dancing", "danced", "donce"] },
-                { q: "They _____ (build) a treehouse in their backyard last summer", a: "built", o: ["built", "building", "build"] },
-                { q: "He _____ (tell) us an exciting story about his travels", a: "told", o: ["told", "telling", "telled"] },
-                { q: "We _____ (meet) our new neighbors at the community barbecue", a: "met", o: ["meeting", "met", "meet"] },
-                { q: "The movie _____ (begin) late because of technical issue", a: "begun", o: ["begginning", "begin", "begun"] }
-            ];
-            createQuizPage('simple-past-quiz', 'תרגול', questions, () => {
-                markAssignmentAsCompleted('simple-past');
-                createAndShowPage('sp-complete', '<button class="action-button" onclick="window.showPage(\'grade-page\')">בחזרה לבית המשימות</button>', 'כל הכבוד!');
+    }
+
+    // Main navigation (top bar)
+    document.querySelectorAll('.nav-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetPage = button.dataset.target;
+            showPage(targetPage);
+        });
+    });
+
+    // Back buttons
+    document.querySelectorAll('.back-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetPage = button.dataset.target;
+            showPage(targetPage);
+        });
+    });
+    
+    // Home page "כניסה" button
+    document.getElementById('login-button').addEventListener('click', () => {
+        showPage('assignment-hub-page');
+    });
+
+    // --- ASSIGNMENT HUB ---
+    function updateAssignmentHub() {
+        document.querySelectorAll('.assignment-box').forEach(box => {
+            const assignmentId = box.dataset.assignment;
+            if (appState.completedAssignments.includes(assignmentId)) {
+                box.classList.add('completed');
+            } else {
+                box.classList.remove('completed');
+            }
+        });
+    }
+
+    document.querySelectorAll('.assignment-box').forEach(box => {
+        box.addEventListener('click', () => {
+            const assignmentId = box.dataset.assignment;
+            startAssignment(assignmentId);
+        });
+    });
+
+    function markAssignmentAsCompleted(assignmentId) {
+        if (!appState.completedAssignments.includes(assignmentId)) {
+            appState.completedAssignments.push(assignmentId);
+            localStorage.setItem('completedAssignments', JSON.stringify(appState.completedAssignments));
+        }
+    }
+
+    // --- YOUTUBE PAGE ---
+    function initYouTubePage() {
+        const grid = document.querySelector('#youtube-page .youtube-grid');
+        grid.innerHTML = ''; // Clear old buttons
+        for (let i = 1; i <= 36; i++) {
+            const video = youtubeLinks[i.toString()];
+            if (video) {
+                const button = document.createElement('button');
+                button.className = 'action-button';
+                button.textContent = video.title;
+                button.dataset.url = video.url;
+                button.dataset.title = video.title;
+                button.addEventListener('click', () => {
+                    playVideo(video.url, video.title);
+                });
+                grid.appendChild(button);
+            }
+        }
+    }
+
+    function playVideo(url, title) {
+        document.getElementById('video-player-title').textContent = title;
+        document.getElementById('youtube-iframe').src = url;
+        showPage('video-player-page');
+    }
+
+    // Stop video when going back
+    document.querySelector('#video-player-page .back-button').addEventListener('click', () => {
+        document.getElementById('youtube-iframe').src = ''; // Stop video
+    });
+    
+    // --- TASK & ASSIGNMENT LOADER ---
+    const taskPageContent = document.getElementById('task-content');
+
+    function startAssignment(assignmentId) {
+        // Clear previous content
+        taskPageContent.innerHTML = '';
+        
+        let content = `<h1>${getAssignmentTitle(assignmentId)}</h1>`;
+        
+        // This function builds the introduction page for each assignment
+        // and provides buttons to start the quizzes.
+        
+        switch(assignmentId) {
+            case 'reading':
+                content += `<p>בחר את רמת הקריאה לתרגול:</p>`;
+                content += `<button class="action-button task-start-btn" data-quiz="reading1">רמה 1 (כיתה ב)</button>`;
+                content += `<button class="action-button task-start-btn" data-quiz="reading2">רמה 2 (כיתה ג)</button>`;
+                content += `<button class="action-button task-start-btn" data-quiz="reading3">רמה 3 (כיתה ד)</button>`;
+                content += `<button class="action-button task-start-btn" data-quiz="reading4">רמה 4 (כיתה ה)</button>`;
+                content += `<button class="action-button task-start-btn" data-quiz="reading5">רמה 5 (כיתה ו)</button>`;
+                break;
+                
+            case 'grammar':
+                content += `<p>בחר את הנושא לתרגול:</p>`;
+                content += `<button class="action-button task-start-btn" data-quiz="whQuestions">שאלות WH (השלם את החסר)</button>`;
+                content += `<button class="action-button task-start-btn" data-quiz="prepositions">מילות יחס (Prepositions)</button>`;
+                content += `<button class="action-button task-start-btn" data-quiz="presentSimple1">Present Simple - s/es/ies</button>`;
+                content += `<button class="action-button task-start-btn" data-quiz="presentSimple2">Present Simple - Don't / Doesn't</button>`;
+                content += `<button class="action-button task-start-btn" data-quiz="presentSimple3">Present Simple - Do / Does</button>`;
+                break;
+                
+            case 'writing':
+                content += `<p>במשימה זו תלמדו לתאר אובייקטים, להשוות ביניהם ולכתוב פסקאות טיעון. המשימה מבוססת על קובץ הכתיבה שסיפקת.</p>`;
+                content += `<h2>שלב 1: תיאור לימון</h2><p class="ltr">A lemon is a yellow fruit. It is often oval in shape. It tastes sour. It has a bright color and a textured rind.</p>`;
+                content += `<h2>שלב 2: השוואת בתים</h2><p class="ltr">The first picture shows a traditional, stone house with a calm feeling. The second picture shows a funny, upside-down red house. The first house is normal, while the second house is an unusual tourist attraction.</p>`;
+                content += `<h2>שלב 3: תיאור והשוואת עטים</h2><p class="ltr">The first pen is a fancy, red and gold fountain pen. It looks very expensive and decorative. The second pen is a simple, modern, blue ballpoint pen. It looks sleek and practical. The main difference is style: one is classic and ornate, the other is modern and minimalist.</p>`;
+                content += `<h2>שלב 4: תיאור רגשות</h2><p class="ltr">The first man (with steam) looks extremely angry or furious. The second man (with fists) looks very happy and triumphant. The third man (crying) looks very sad or distressed.</p>`;
+                content += `<h2>שלב 5: פסקת טיעון (6 או 9)</h2><p class="ltr">In the picture, two boys are looking at a number on the floor. From one boy's perspective, it looks like the number 6. From the other boy's perspective, it looks like the number 9. This picture shows that both boys are 'right' based on their point of view. It teaches us that perspective is important and people can see the same thing differently.</p>`;
+                content += `<h2>שלב 6: תיאור חוויה</h2><p>כדי לתאר חוויה, עקבו אחר הצעדים הבאים: 1. כותרת. 2. פתיחה (על מה אספר?). 3. גוף הסיפור (מה קרה? מה ראיתי? מה הרגשתי?). 4. סיבה (למה בחרתי בחוויה זו?). 5. סיום (מה מיוחד? המלצה?).</p>`;
+                content += `<br><button class="action-button" id="complete-writing-btn">סיימתי לקרוא</button>`;
+                break;
+                
+            case 'speaking':
+                content += `<p>במשימה זו תתרגלו זיהוי שגיאות וקריאה בקול.</p>`;
+                content += `<h2>טקסט לקריאה (Lvl 3)</h2><div class="text-passage ltr"><h3>The Strength Within</h3><p>Once upon a time in a small village, there lived a girl named Mia. She was like any other girl, with dreams, hopes, and a heart full of kindness. Every morning, she would tie her hair into a pony tail and slip on her favorite blue slippers before heading to her High school...</p><p>(המשך הטקסט מקובץ ה-PDF שלך...)</p></div>`;
+                content += `<button class="action-button task-start-btn" data-quiz="speaking1">התחל תרגיל זיהוי שגיאות (Lvl 1)</button>`;
+                content += `<button class="action-button task-start-btn" data-quiz="speaking2">התחל תרגיל זיהוי שגיאות (Lvl 2)</button>`;
+                break;
+                
+            case 'adjectives':
+                content += `<p>לימוד ותרגול שמות תואר (Adjectives) ותואר הפועל (Adverbs).</p>`;
+                content += `<h2>כללים בסיסיים</h2><div class="text-passage ltr"><p>Adjectives describe nouns (e.g., tall man, beautiful day).</p><p>To compare (bigger): add 'er' (taller) or use 'more' for long words (more beautiful).</p><p>For 'the most' (biggest): add 'est' (tallest) or use 'most' (most beautiful).</p><p>Adverbs describe verbs (e.g., run quickly, eat slowly). They often end in -ly.</p></div>`;
+                content += `<button class="action-button task-start-btn" data-quiz="adjectivesQuiz">התחל תרגול</button>`;
+                break;
+        }
+        
+        showPage('task-page');
+        
+        // Add event listeners for the new buttons
+        document.querySelectorAll('.task-start-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                startQuiz(btn.dataset.quiz, assignmentId);
+            });
+        });
+        
+        if (document.getElementById('complete-writing-btn')) {
+            document.getElementById('complete-writing-btn').addEventListener('click', () => {
+                markAssignmentAsCompleted('writing');
+                showPage('assignment-hub-page');
             });
         }
     }
     
-    // --- HELPER FUNCTIONS FOR COMPLEX PAGES ---
+    function getAssignmentTitle(assignmentId) {
+        const titles = {
+            'reading': 'קריאה',
+            'grammar': 'דקדוק',
+            'writing': 'כתיבה',
+            'speaking': 'דיבור',
+            'adjectives': 'שמות תואר'
+        };
+        return titles[assignmentId] || 'משימה';
+    }
 
-    function createQuizPage(id, title, questions, onComplete) {
-        let currentQuestionIndex = 0;
-        const content = `<div class="content-box"><div id="quiz-container"><div id="quiz-question" class="quiz-question"></div><div id="quiz-options" class="quiz-options"></div><p id="feedback-message"></p></div></div>`;
-        const page = createAndShowPage(id, content, title);
-        const questionEl = page.querySelector('#quiz-question');
-        const optionsEl = page.querySelector('#quiz-options');
-        const feedbackEl = page.querySelector('#feedback-message');
 
-        function loadQuestion() {
-            feedbackEl.textContent = '';
-            const question = questions[currentQuestionIndex];
-            const formattedQuestion = `${currentQuestionIndex + 1}. ${question.q.replace(/_____/g, '<span style="text-decoration: underline;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>')}`;
-            questionEl.innerHTML = formattedQuestion;
-            optionsEl.innerHTML = '';
-            setTimeout(() => {
-                question.o.forEach(option => {
-                    const button = document.createElement('button');
-                    button.className = 'quiz-option-btn';
-                    button.textContent = option;
-                    button.addEventListener('click', () => checkAnswer(option, button));
-                    optionsEl.appendChild(button);
-                });
-            }, 2000);
+    // --- QUIZ ENGINE ---
+    let currentQuiz = [];
+    let currentQuestionIndex = 0;
+    let wrongAnswers = [];
+    let isReviewRound = false;
+    let currentQuizId = '';
+    let parentAssignmentId = '';
+
+    const quizContainer = document.getElementById('quiz-container');
+    const questionEl = document.getElementById('quiz-question');
+    const optionsEl = document.getElementById('quiz-options');
+    const feedbackEl = document.getElementById('quiz-feedback');
+    const nextBtn = document.getElementById('quiz-next-btn');
+
+    function startQuiz(quizId, assignmentId) {
+        currentQuizId = quizId;
+        parentAssignmentId = assignmentId;
+        currentQuiz = shuffleArray([...quizData[quizId]]); // Get a shuffled copy
+        currentQuestionIndex = 0;
+        wrongAnswers = [];
+        isReviewRound = false;
+        
+        // Add back button to quiz page
+        if (!document.querySelector('#quiz-page .back-button')) {
+            const backBtn = document.createElement('button');
+            backBtn.className = 'back-button';
+            backBtn.textContent = 'חזרה למשימות';
+            backBtn.dataset.target = 'assignment-hub-page';
+            backBtn.addEventListener('click', () => showPage('assignment-hub-page'));
+            document.getElementById('quiz-page').prepend(backBtn);
         }
-
-        function checkAnswer(selectedOption, button) {
-            const correctAnwer = questions[currentQuestionIndex].a;
-            if (selectedOption === correctAnwer) {
-                addPoint();
-                currentQuestionIndex++;
-                if (currentQuestionIndex < questions.length) {
-                    loadQuestion();
-                } else {
-                    onComplete();
-                }
-            } else {
-                feedbackEl.textContent = 'תשובה שגויה, נסה שוב!';
-                button.classList.add('incorrect');
-                setTimeout(() => {
-                     button.classList.remove('incorrect');
-                     feedbackEl.textContent = '';
-                }, 3000);
-            }
-        }
+        
+        showPage('quiz-page');
         loadQuestion();
     }
 
-    function createChainedContentPage(id, title, steps, onComplete) {
-        let currentStep = 0;
-        const content = `<div class="content-box" id="chained-content-box"></div>`;
-        const page = createAndShowPage(id, content, title);
-        const contentBox = page.querySelector('#chained-content-box');
+    function loadQuestion() {
+        // Clear previous state
+        feedbackEl.textContent = '';
+        feedbackEl.className = '';
+        nextBtn.classList.add('hidden');
+        optionsEl.innerHTML = '';
 
-        function loadStep() {
-            const step = steps[currentStep];
-            let html = '';
-            if (step.title) html += `<h2>${step.title}</h2>`;
-            if (step.text) html += `<p>${step.text}</p>`;
-            if (step.content) html += step.content;
-            html += `<button class="action-button hidden">${step.button}</button>`;
-            contentBox.innerHTML = html;
-
-            setTimeout(() => {
-                const btn = contentBox.querySelector('button');
-                btn.classList.remove('hidden');
-                btn.onclick = () => {
-                    currentStep++;
-                    if (currentStep < steps.length) {
-                        loadStep();
-                    } else {
-                        onComplete();
-                    }
-                };
-            }, step.delay);
+        if (currentQuestionIndex >= currentQuiz.length) {
+            finishQuiz();
+            return;
         }
-        loadStep();
+
+        const question = currentQuiz[currentQuestionIndex];
+        document.getElementById('quiz-progress').textContent = `שאלה ${currentQuestionIndex + 1} מתוך ${currentQuiz.length}`;
+        questionEl.textContent = question.q;
+        
+        // Ensure LTR/RTL direction
+        if (/[a-zA-Z]/.test(question.q)) { // If question contains English
+             questionEl.className = 'ltr';
+        } else {
+             questionEl.className = 'rtl';
+        }
+
+        const options = shuffleArray([...question.o]); // Shuffle options
+        options.forEach(option => {
+            const button = document.createElement('button');
+            button.className = 'quiz-option-btn';
+            button.textContent = option;
+            
+            if (/[a-zA-Z]/.test(option)) { // If option contains English
+                button.classList.add('ltr');
+            } else {
+                button.classList.add('rtl');
+            }
+            
+            button.addEventListener('click', () => selectAnswer(button, option, question.a));
+            optionsEl.appendChild(button);
+        });
     }
-    
-    function createSentenceBuilderPage() {
-        const correctOrder = ["He", "won't", "go", "to", "the", "mall", "tomorrow"];
-        const words = ["won't", "tomorrow", "apple", "mall", "He", "to", "rise", "go", "the"].sort(() => Math.random() - 0.5);
-        const incorrectWords = ["apple", "rise"];
-        let builtSentence = [];
 
-        const content = `<div class="content-box">
-            <div id="built-sentence-container" style="min-height: 50px; border-bottom: 2px solid #ccc; margin-bottom: 20px; font-size: 1.5em; direction: ltr; text-align: left; padding: 10px;"></div>
-            <div id="word-options" class="quiz-options"></div>
-            <p id="feedback-message"></p>
-        </div>`;
-        const page = createAndShowPage('sentence-builder', "בניית משפט", content);
-        const sentenceEl = page.querySelector('#built-sentence-container');
-        const optionsEl = page.querySelector('#word-options');
-        const feedbackEl = page.querySelector('#feedback-message');
+    function selectAnswer(button, selectedOption, correctAnswer) {
+        // Disable all buttons
+        optionsEl.querySelectorAll('.quiz-option-btn').forEach(btn => {
+            btn.disabled = true;
+            // Highlight correct/incorrect
+            if (btn.textContent === correctAnswer) {
+                btn.classList.add('correct');
+            } else if (btn.textContent === selectedOption) {
+                btn.classList.add('incorrect');
+            }
+        });
 
-        function renderWords() {
+        if (selectedOption === correctAnswer) {
+            feedbackEl.textContent = 'תשובה נכונה!';
+            feedbackEl.className = 'correct';
+        } else {
+            feedbackEl.textContent = `תשובה שגויה. הנכונה היא: ${correctAnswer}`;
+            feedbackEl.className = 'incorrect';
+            // Add to wrong answers list
+            if (!isReviewRound) {
+                wrongAnswers.push(currentQuiz[currentQuestionIndex]);
+            }
+        }
+
+        nextBtn.classList.remove('hidden');
+    }
+
+    nextBtn.addEventListener('click', () => {
+        currentQuestionIndex++;
+        loadQuestion();
+    });
+
+    function finishQuiz() {
+        if (wrongAnswers.length > 0 && !isReviewRound) {
+            // Start review round
+            isReviewRound = true;
+            currentQuiz = shuffleArray([...wrongAnswers]);
+            wrongAnswers = [];
+            currentQuestionIndex = 0;
+            questionEl.textContent = 'בואו נעבור שוב על הטעויות...';
             optionsEl.innerHTML = '';
-            words.forEach(word => {
-                const button = document.createElement('button');
-                button.className = 'quiz-option-btn';
-                button.textContent = word;
-                button.onclick = () => handleWordClick(word, button);
-                optionsEl.appendChild(button);
+            feedbackEl.textContent = '';
+            nextBtn.textContent = 'התחל סבב תיקון';
+            nextBtn.classList.remove('hidden');
+            // Remove the event listener to avoid recursive calls
+            const newNextBtn = nextBtn.cloneNode(true);
+            nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+            newNextBtn.addEventListener('click', loadQuestion);
+
+        } else {
+            // Quiz truly finished
+            questionEl.textContent = 'כל הכבוד! סיימת את המשימה.';
+            optionsEl.innerHTML = '';
+            feedbackEl.textContent = '';
+            nextBtn.textContent = 'חזור למשימות';
+            nextBtn.classList.remove('hidden');
+            // Remove the event listener
+            const newNextBtn = nextBtn.cloneNode(true);
+            nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+            newNextBtn.addEventListener('click', () => {
+                // Check if this was the last quiz for the assignment
+                checkAssignmentCompletion();
+                showPage('assignment-hub-page');
             });
         }
-
-        function handleWordClick(word, button) {
-            feedbackEl.textContent = '';
-            if (incorrectWords.includes(word)) {
-                feedbackEl.textContent = 'המילה הזו לא שייכת למשפט!';
-                button.style.backgroundColor = '#dc3545'; // red
-                button.disabled = true;
-                return;
-            }
-
-            const nextCorrectWord = correctOrder[builtSentence.length];
-            if (word === nextCorrectWord) {
-                builtSentence.push(word);
-                sentenceEl.textContent = builtSentence.join(' ');
-                button.style.backgroundColor = '#28a745'; // green
-                button.disabled = true;
-                
-                if (builtSentence.length === correctOrder.length) {
-                    feedbackEl.textContent = 'עבודה טובה!';
-                    optionsEl.innerHTML = '<button class="action-button" onclick="window.showPage(\'grade-page\')">בחזרה לבית המשימות</button>';
-                    markAssignmentAsCompleted('verbs');
-                }
-            } else {
-                const prevWord = builtSentence.length > 0 ? builtSentence[builtSentence.length - 1] : 'התחלה';
-                feedbackEl.textContent = `המילה הזו לא באה אחרי "${prevWord}", חשבו על מילה אחרת`;
-                button.classList.add('incorrect');
-                setTimeout(() => button.classList.remove('incorrect'), 500);
-            }
-        }
-        renderWords();
     }
     
-    function createAbcAudioPage() {
-        const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
-        let revealedCount = 0;
-
-        const content = `<div class="content-box">
-            <p>(שימוש באוזניות או קול חיצוני הוא נדרש בשביל החלק הזה, אם אין לכם גישה לזאת, לחצו על כפתור המשך ללא הקשבה.) <button id="abc-skip-audio" class="action-button">המשך ללא הקשבה</button></p>
-            <div id="audio-players-container" class="audio-players-container"></div>
-            <button id="abc-audio-continue" class="action-button hidden">המשך</button>
-        </div>`;
-        const page = createAndShowPage('abc-audio', "האותיות", content);
-        const container = page.querySelector('#audio-players-container');
-        const continueBtn = page.querySelector('#abc-audio-continue');
-        
-        page.querySelector('#abc-skip-audio').onclick = () => createAssignmentPage('abc-special-cases');
-        continueBtn.onclick = () => createAssignmentPage('abc-special-cases');
-
-        function revealNextLetter() {
-            if (revealedCount < letters.length) {
-                const letter = letters[revealedCount];
-                const playerDiv = document.createElement('div');
-                playerDiv.className = 'audio-player';
-                // NOTE: You need to have audio files named a.mp3, b.mp3, etc. in a folder called 'audio'
-                // Since I cannot provide files, I am using a placeholder. The logic works if files are present.
-                playerDiv.innerHTML = `
-                    <h3>האות ${letter.toUpperCase()}</h3>
-                    <audio controls id="audio-${letter}">
-                        <source src="https://upload.wikimedia.org/wikipedia/commons/d/de/En-us-a.ogg" type="audio/ogg">
-                        Your browser does not support the audio element.
-                    </audio>
-                `;
-                container.appendChild(playerDiv);
-                
-                const audioEl = playerDiv.querySelector('audio');
-                audioEl.onplay = () => {
-                     // Use 'onended' to ensure the user listens to most of it
-                     audioEl.onended = () => {
-                         if (playerDiv.dataset.revealed !== 'true') {
-                             playerDiv.dataset.revealed = 'true';
-                             revealNextLetter();
-                         }
-                     };
-                };
-                 revealedCount++;
-            } else {
-                 continueBtn.classList.remove('hidden');
-            }
+    function checkAssignmentCompletion() {
+        // This is a simple check. For a multi-quiz assignment, this needs more logic.
+        // For now, completing any quiz marks the parent assignment as complete.
+        if (parentAssignmentId) {
+            markAssignmentAsCompleted(parentAssignmentId);
         }
-        
-        revealNextLetter(); // Start with the first letter
     }
 
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 
-    // Make showPage globally accessible for inline onclicks
-    window.showPage = showPage;
+    // --- QUIZ DATABASE ---
+    // All questions imported from your files
+    const quizData = {
+        'whQuestions': [
+            { q: "___ are you going to the party tonight? (When)", o: ["When", "Where", "Who"], a: "When" },
+            { q: "___ is your favorite color?", o: ["What", "Where", "Who"], a: "What" },
+            { q: "___ does she live?", o: ["When", "Where", "Why"], a: "Where" },
+            { q: "___ is the capital of France?", o: ["Who", "What", "Why"], a: "What" },
+            { q: "___ do you usually do on weekends?", o: ["What", "Where", "Who"], a: "What" },
+            { q: "___ is your brother's name?", o: ["What", "Why", "How"], a: "What" },
+            { q: "___ did you arrive at the airport?", o: ["When", "Who", "What"], a: "When" },
+            { q: "___ do you want for lunch?", o: ["Where", "What", "Why"], a: "What" },
+            { q: "___ is your favorite movie?", o: ["What", "How", "Who"], a: "What" },
+            { q: "___ do you study English?", o: ["Why", "Who", "What"], a: "Why" },
+            { q: "___ are they coming to the meeting?", o: ["When", "Where", "What"], a: "When" },
+            { q: "___ is your best friend?", o: ["What", "Who", "Why"], a: "Who" },
+            { q: "___ is your birthday?", o: ["When", "Where", "How"], a: "When" },
+            { q: "___ do you like to read?", o: ["What", "Why", "Who"], a: "What" },
+            { q: "___ do you think of this idea?", o: ["What", "Who", "Where"], a: "What" }
+        ],
+        'prepositions': [
+            { q: "The ball is ___ the table.", o: ["on", "under", "next to"], a: "on" }, // Assuming 'on' is a valid option from the doc
+            { q: "The cat is ___ the box.", o: ["in", "behind", "on"], a: "in" },
+            { q: "The book is ___ the bed.", o: ["under", "in front of", "next to"], a: "under" },
+            { q: "The chair is ___ the desk.", o: ["on", "behind", "under"], a: "behind" },
+            { q: "The dog is ___ the door.", o: ["next to", "in", "on"], a: "next to" },
+            { q: "The shoes are ___ the floor.", o: ["on", "under", "in front of"], a: "on" },
+            { q: "The picture is ___ the wall.", o: ["in", "on", "under"], a: "on" },
+            { q: "The boy is sitting ___ the chair.", o: ["under", "on", "next to"], a: "on" },
+            { q: "The bag is ___ the table.", o: ["on", "in", "behind"], a: "on" },
+            { q: "The bird is ___ the tree.", o: ["in", "under", "next to"], a: "in" },
+            { q: "The toys are ___ the box.", o: ["in", "on", "behind"], a: "in" },
+            { q: "The car is parked ___ the house.", o: ["next to", "behind", "in"], a: "next to" }, // All could be right, chose one
+            { q: "The keys are ___ the drawer.", o: ["in", "on", "under"], a: "in" },
+            { q: "The children are playing ___ the park.", o: ["in", "on", "behind"], a: "in" },
+            { q: "The lamp is ___ the table, not under it.", o: ["on", "next to", "in"], a: "on" },
+            { q: "The school bag is ___ the chair and the desk.", o: ["between", "next to", "under"], a: "between" },
+            { q: "The clock is hanging ___ the wall above the TV.", o: ["on", "under", "in front of"], a: "on" },
+            { q: "The cat is hiding ___ the sofa because it is scared.", o: ["behind", "on", "in"], a: "behind" },
+            { q: "The books are neatly placed ___ the shelf.", o: ["on", "under", "in front of"], a: "on" },
+            { q: "The bike is leaning ___ the wall in the garage.", o: ["next to", "on", "under"], a: "next to" } // 'against' would be better, but 'next to' fits
+        ],
+        'presentSimple1': [ // s/es/ies
+            { q: "fix (he)", o: ["fixes", "fixs", "fixies"], a: "fixes" },
+            { q: "watch (she)", o: ["watchs", "watches", "watchies"], a: "watches" },
+            { q: "brush (he)", o: ["brushs", "brushes", "brushies"], a: "brushes" },
+            { q: "tidy (she)", o: ["tidys", "tidies", "tidyes"], a: "tidies" },
+            { q: "fly (it)", o: ["flys", "flyes", "flies"], a: "flies" },
+            { q: "go (he)", o: ["gos", "goes", "goies"], a: "goes" },
+            { q: "try (she)", o: ["trys", "tryes", "tries"], a: "tries" },
+            { q: "find (he)", o: ["finds", "findes", "findies"], a: "finds" },
+            { q: "feel (she)", o: ["feels", "feeles", "feelies"], a: "feels" },
+            { q: "make (it)", o: ["makes", "makees", "makies"], a: "makes" },
+            { q: "live (he)", o: ["lives", "livees", "livies"], a: "lives" },
+            { q: "play (she)", o: ["plays", "playes", "plaies"], a: "plays" },
+            { q: "sail (it)", o: ["sails", "sailes", "sailies"], a: "sails" },
+            { q: "copy (he)", o: ["copys", "copyes", "copies"], a: "copies" },
+            { q: "carry (she)", o: ["carrys", "carryes", "carries"], a: "carries" },
+            { q: "do (he)", o: ["dos", "does", "doies"], a: "does" },
+            { q: "hurry (she)", o: ["hurrys", "hurryes", "hurries"], a: "hurries" },
+            { q: "wash (it)", o: ["washs", "washes", "washies"], a: "washes" }
+        ],
+        'presentSimple2': [ // Don't / Doesn't
+            { q: "I ___ like chicken.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "My sister ___ eat pasta.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "You ___ buy apples.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "The dog ___ bark.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "My mum ___ read comics.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "Ann and I ___ go to school.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "Cows ___ live in the sea.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "They ___ play football.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "My cat ___ chase mice.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "Her friend ___ speak English.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "This man ___ smoke.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "It ___ run very fast.", o: ["don't", "doesn't"], a: "doesn't" }
+        ],
+        'presentSimple3': [ // Do / Does
+            { q: "___ cats play football?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ Pamela Anderson have blonde hair?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ your girl/boyfriend like swimming?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ David Beckham play football for England?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ you want to come with me?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ he always do that?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ they like dogs?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ your father speak German?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ Chileans like Tango?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ he sing in the shower?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ your grandmother have a dog?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ you want an ice cream?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ your friends like you?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ you have a lot of money?", o: ["Do", "Does"], a: "Do" }
+        ],
+        'speaking1': [ // Lvl 1
+            { q: "Where is my friend house?", o: ["Where is my friend house?", "Where is my friend's house?"], a: "Where is my friend's house?" },
+            { q: "Mike and Dan is going to the beach.", o: ["Mike and Dan is going...", "Mike and Dan are going..."], a: "Mike and Dan are going..." },
+            { q: "I have five cat.", o: ["I have five cat.", "I have five cats."], a: "I have five cats." },
+            { q: "Yesterday I were swimming.", o: ["Yesterday I were swimming.", "Yesterday I was swimming."], a: "Yesterday I was swimming." },
+            { q: "I will go hiking in the sea.", o: ["I will go hiking in the sea.", "I will go hiking in the mountains."], a: "I will go hiking in the mountains." },
+            { q: "We swims every friday.", o: ["We swims every friday.", "We swim every friday."], a: "We swim every friday." },
+            { q: "She ate water five minutes ago.", o: ["She ate water...", "She drank water..."], a: "She drank water..." },
+            { q: "Is my friend calls every day?", o: ["Is my friend calls...?", "Does my friend call...?"], a: "Does my friend call...?" },
+            { q: "We does laundry every week.", o: ["We does laundry...", "We do laundry..."], a: "We do laundry..." },
+            { q: "Amira and Lucy am ten years old.", o: ["Amira and Lucy am...", "Amira and Lucy are..."], a: "Amira and Lucy are..." }
+        ],
+        'speaking2': [ // Lvl 2
+            { q: "She ___ allergic to dairy, so she ___ drink milk.", o: ["is / don't", "are / does", "is / doesn't"], a: "is / doesn't" },
+            { q: "My grandmother is disabled. So she ___ visit us because she ___ walk.", o: ["can / can't", "can't / can't", "can / can"], a: "can't / can't" },
+            { q: "There is ___ power outage, so we ___ use a lot of electronic devices.", o: ["a / don't", "an / don't", "a / do"], a: "a / don't" },
+            { q: "Lisa wanted to ___ clean the village. She ___ many empty plastic bottles...", o: ["helped / see", "help / saw", "helping / saw"], a: "help / saw" },
+            { q: "Dana ___ Tanya to write... But Tanya replied... that it depends ___ the animal conditions.", o: ["tell / under", "told / on", "told / under"], a: "told / on" },
+            { q: "My father ___ ___ police officer, so he ___ commit crimes.", o: ["is / a / doesn't", "are / an / does", "is / an / doesn't"], a: "is / a / doesn't" },
+            { q: "I ___ to bake a cake for my friend ___ birthday, but I ran out of eggs...", o: ["wanted / friend's", "want / friend", "wanted / friend"], a: "wanted / friend's" },
+            { q: "My phone ___ down after it fell on the ___.", o: ["broke / hard concrete", "break / soft pillow", "broke / soft pillow"], a: "broke / hard concrete" }
+        ],
+        'adjectivesQuiz': [
+            { q: "1. האם צבעים הם גם תארים?", o: ["כן", "לא"], a: "כן" },
+            { q: "2. איך לומר באנגלית 'הכי רך'?", o: ["Softer", "Softest", "More soft"], a: "Softest" },
+            { q: "3. תרגם: This bag is the most expensive in that shop", o: ["התיק הזה יקר בחנות", "התיק הזה הכי יקר בחנות הזאת", "זה תיק יקר"], a: "התיק הזה הכי יקר בחנות הזאת" },
+            { q: "4. תרגם: she is the most beautiful woman in the world", o: ["היא אישה יפה בעולם", "היא האישה הכי יפה בעולם", "היא אישה יפה"], a: "היא האישה הכי יפה בעולם" },
+            { q: "5. תרגם: דן הוא הילד הכי חכם בכיתה.", o: ["Dan is a smart boy in class", "Dan is smarter in class", "Dan is the smartest boy in the class"], a: "Dan is the smartest boy in the class" },
+            { q: "6. תרגם: הכלב הכי חמוד", o: ["The cutest dog", "The cute dog", "Dog is cute"], a: "The cutest dog" },
+            { q: "7. תרגם: הפיצה הכי טעימה.", o: ["The tasty pizza", "The more tasty pizza", "The tastiest pizza"], a: "The tastiest pizza" },
+            { q: "8. מה יוצא דופן?", o: ["pink", "purple", "dog"], a: "dog" },
+            { q: "9. מה יוצא דופן?", o: ["cold", "cool", "tallest"], a: "tallest" },
+            { q: "10. מה יוצא דופן?", o: ["new", "fast", "tasty"], a: "new" } // Based on the visual grouping in the PDF
+        ],
+        // Reading Quizzes
+        'reading1': [
+            { q: "What is the dog's name?", o: ["Charlie", "Anna", "Max"], a: "Charlie" },
+            { q: "Where do they play?", o: ["In the house", "In the park", "At school"], a: "In the park" },
+            { q: "What does Anna throw for Charlie?", o: ["A stick", "A ball", "Food"], a: "A ball" },
+            { q: "What do they do when they get tired?", o: ["Go home", "Sit under a tree", "Eat chips"], a: "Sit under a tree" }
+        ],
+        'reading2': [
+            { q: "What does Tom find in his backyard?", o: ["A magic tree", "A magic paintbrush", "A rainbow"], a: "A magic paintbrush" },
+            { q: "What happens to the tree Tom paints?", o: ["It falls down", "It disappears", "It comes to life"], a: "It comes to life" },
+            { q: "What does Tom paint after the tree?", o: ["A flower", "A rainbow", "His friends"], a: "A rainbow" },
+            { q: "Who does Tom share the magic with?", o: ["His family", "His teacher", "His friends"], a: "His friends" }
+        ],
+        'reading3': [
+            { q: "What is the fox's name?", o: ["Max", "Storm", "Bird"], a: "Max" },
+            { q: "What did Max see in the tree?", o: ["A squirrel", "A bird's nest", "His family"], a: "A bird's nest" },
+            { q: "What did Max do with the nest?", o: ["He caught it and moved it", "He left it alone", "He told his family"], a: "He caught it and moved it" },
+            { q: "How did Max feel after helping?", o: ["Tired", "Proud", "Scared"], a: "Proud" },
+            { q: "Why did Max's family clap for him?", o: ["For being brave and kind", "For finding food", "For winning a race"], a: "For being brave and kind" }
+        ],
+        'reading4': [
+            { q: "Where did Jake and Mia find the cave?", o: ["In the school", "In the park", "In the forest"], a: "In the forest" },
+            { q:s: "How did Mia feel about going inside?", o: ["Only scared", "Only excited", "Excited and a little scared"], a: "Excited and a little scared" },
+            { q: "What did they find inside the cave?", o: ["A small animal", "A small treasure chest", "Their teacher"], a: "A small treasure chest" },
+            { q: "What happened after they opened the chest?", o: ["The cave started shaking", "They found gold", "A noise stopped"], a: "The cave started shaking" }
+        ],
+        'reading5': [
+            { q: "Who was Captain Moshco?", o: ["A famous soldier", "A famous pirate", "A famous captain"], a: "A famous pirate" },
+            { q: "What did the old map show?", o: ["A hidden island", "A new ship", "A jungle"], a: "A hidden island" },
+            { q: "Where was the 'X' on the map?", o: ["In a cave", "Under a big, old tree", "On the beach"], a: "Under a big, old tree" },
+            { q: "What was inside the chest?", o: ["Gold coins, jewels, and a sword", "Only gold coins", "An old map"], a: "Gold coins, jewels, and a sword" },
+            { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" }
+        ]
+    };
+    
+    // --- INITIALIZE ---
+    initYouTubePage();
+    showPage('home-page'); // Start on the home page
+
 });
