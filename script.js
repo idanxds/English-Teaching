@@ -832,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "___ he always do that?", o: ["Do", "Does"], a: "Does" },
             { q: "___ they like dogs?", o: ["Do", "Does"], a: "Do" },
             { q: "___ your father speak German?", o: ["Do", "Does"], a: "Does" },
-            { q: "___ your wife/husband come from Argentina?", o: ["Do",Do", "Does"], a: "Does" },
+            { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" }, // <-- *** THIS WAS THE BUG *** Fixed.
             { q: "___ Chileans like Tango?", o: ["Do", "Does"], a: "Do" },
             { q: "___ he sing in the shower?", o: ["Do", "Does"], a: "Does" },
             { q: "___ your grandmother have a dog?", o: ["Do", "Does"], a: "Does" },
@@ -905,7 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "What did the old map show?", o: ["A hidden island", "A new ship", "A jungle"], a: "A hidden island" },
             { q: "Where was the 'X' on the map?", o: ["In a cave", "Under a big, old tree", "On the beach"], a: "Under a big, old tree" },
             { q: "What was inside the chest?", o: ["Gold coins, jewels, and a sword", "Only gold coins", "An old map"], a: "Gold coins, jewels, and a sword" },
-            { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" } // <-- *** THIS WAS THE BUG *** Fixed.
+            { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" } // <-- *** THIS WAS THE OTHER BUG *** Fixed.
         ]
     };
     
@@ -914,18 +914,3 @@ document.addEventListener('DOMContentLoaded', () => {
     showPage('home-page'); // Start on the home page
 
 });
-</script>
-
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/690b64f3418b98195b55049c/1j9a84lpt';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    </body>
-</html>
