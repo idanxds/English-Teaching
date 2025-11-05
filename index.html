@@ -365,6 +365,33 @@
             font-size: 1.2rem;
         }
         
+        /* --- ABC Audio Page --- */
+        .audio-players-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        .audio-player {
+            text-align: center;
+        }
+        .audio-player audio {
+            margin-top: 5px;
+        }
+        
+        /* --- Sentence Builder Page --- */
+        #built-sentence-container {
+            min-height: 50px;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            direction: ltr;
+            text-align: left;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+        }
+        
     </style>
 </head>
 <body>
@@ -392,6 +419,23 @@
             <button class="back-button" data-target="home-page">חזרה</button>
             <h1>משימות למידה</h1>
             <div class="assignments-grid">
+                <button class="assignment-box" data-assignment="abc">
+                    <h3>ה-ABC האנגלי</h3>
+                    <p>לימוד אותיות, שמע ומקרים מיוחדים.</p>
+                </button>
+                <button class="assignment-box" data-assignment="verbs">
+                    <h3>פעלים (Verbs)</h3>
+                    <p>לימוד פעלים, תרגול ובניית משפטים.</p>
+                </button>
+                <button class="assignment-box" data-assignment="future-simple">
+                    <h3>עתיד פשוט (Future Simple)</h3>
+                    <p>לימוד ותרגול שימוש ב-will ו-would.</p>
+                </button>
+                <button class="assignment-box" data-assignment="simple-past">
+                    <h3>עבר פשוט (Simple Past)</h3>
+                    <p>לימוד חוקים, פעלים רגילים ויוצאי דופן.</p>
+                </button>
+                
                 <button class="assignment-box" data-assignment="reading">
                     <h3>קריאה (Reading)</h3>
                     <p>תרגול קטעי קריאה ברמות שונות.</p>
@@ -445,7 +489,7 @@
                 </div>
                 <div class="podcast-player">
                     <h3>פודקאסט 7</h3>
-                    <audio controls src="">דפדפן זה אינו תומך באודיו.</audio>
+                    <audio controls src="YOUR_AUDIO_FILE_7.mp3">דפדפן זה אינו תומך באודיו.</audio>
                 </div>
                 <div class="podcast-player">
                     <h3>פודקאסט 8</h3>
@@ -497,6 +541,26 @@
             </div>
         </section>
 
+        <section id="abc-audio-page" class="page hidden">
+            <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
+            <h1>האותיות</h1>
+            <div id="abc-audio-content" class="text-passage">
+                <p>(שימוש באוזניות או קול חיצוני הוא נדרש בשביל החלק הזה.)</p>
+                <div id="audio-players-container" class="audio-players-container"></div>
+                <button id="abc-audio-continue" class_name="action-button hidden">המשך</button>
+            </div>
+        </section>
+        
+        <section id="sentence-builder-page" class="page hidden">
+            <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
+            <h1>בניית משפט</h1>
+            <div class="text-passage">
+                <div id="built-sentence-container"></div>
+                <div id="word-options" class="quiz-options"></div>
+                <p id="sentence-feedback" class="quiz-feedback"></p>
+            </div>
+        </section>
+
     </div> <script>
     document.addEventListener('DOMContentLoaded', () => {
         
@@ -506,6 +570,7 @@
         // ----------------------------------------------------
         // I have added the 6 links you provided.
         const youtubeLinks = {
+            "abc-video": { title: "סרטון ABC", url: "https://www.youtube.com/embed/BELlZKpi1Zs" },
             "1": { title: "סרטון 1", url: "https://www.youtube.com/embed/3z4TQfNiqLc" },
             "2": { title: "סרטון 2", url: "https://www.youtube.com/embed/erLktxdLIWU" },
             "3": { title: "סרטון 3", url: "https://www.youtube.com/embed/hKIpbGK3fSM" },
@@ -557,6 +622,7 @@
         // --- DOM ELEMENTS ---
         const app = document.getElementById('app');
         const allPages = document.querySelectorAll('.page');
+        const taskPageContent = document.getElementById('task-content');
 
         // --- NAVIGATION ---
         function showPage(pageId) {
@@ -627,6 +693,7 @@
         function initYouTubePage() {
             const grid = document.querySelector('#youtube-page .youtube-grid');
             grid.innerHTML = ''; // Clear old buttons
+            // Start from 1, skip "abc-video"
             for (let i = 1; i <= 36; i++) {
                 const video = youtubeLinks[i.toString()];
                 if (video) {
@@ -655,8 +722,7 @@
         });
         
         // --- TASK & ASSIGNMENT LOADER ---
-        const taskPageContent = document.getElementById('task-content');
-
+        
         function startAssignment(assignmentId) {
             // Clear previous content
             taskPageContent.innerHTML = '';
@@ -664,6 +730,66 @@
             let content = `<h1>${getAssignmentTitle(assignmentId)}</h1>`;
             
             switch(assignmentId) {
+                // --- Original Assignments ---
+                case 'abc':
+                    content += `<p>בחר שלב בלימוד ה-ABC:</p>`;
+                    content += `<button class="action-button" id="abc-video-btn">שלב 1: צפה בסרטון</button>`;
+                    content += `<button class="action-button" id="abc-audio-btn">שלב 2: האזן לאותיות</button>`;
+                    content += `<button class="action-button" id="abc-special-btn">שלב 3: מקרים מיוחדים</button>`;
+                    content += `<button class="action-button task-start-btn" data-quiz="abcQuiz">שלב 4: בוא נתרגל</button>`;
+                    showPage('task-page');
+                    
+                    document.getElementById('abc-video-btn').addEventListener('click', () => {
+                        const video = youtubeLinks['abc-video'];
+                        playVideo(video.url, video.title);
+                    });
+                    document.getElementById('abc-audio-btn').addEventListener('click', () => {
+                        createAbcAudioPage();
+                        showPage('abc-audio-page');
+                    });
+                    document.getElementById('abc-special-btn').addEventListener('click', () => {
+                        createAbcSpecialCasesPage(assignmentId);
+                    });
+                    break;
+                
+                case 'verbs':
+                    content += `<p>בחר שלב בלימוד פעלים:</p>`;
+                    content += `<button class="action-button" id="verbs-table-btn">שלב 1: טבלת פעלים</button>`;
+                    content += `<button class="action-button task-start-btn" data-quiz="verbs1">שלב 2: תרגול פעלים</button>`;
+                    content += `<button class="action-button" id="verbs-sentence-btn">שלב 3: בניית משפט</button>`;
+                    showPage('task-page');
+                    
+                    document.getElementById('verbs-table-btn').addEventListener('click', createVerbsTablePage);
+                    document.getElementById('verbs-sentence-btn').addEventListener('click', () => {
+                        createSentenceBuilderPage(assignmentId);
+                        showPage('sentence-builder-page');
+                    });
+                    break;
+                    
+                case 'future-simple':
+                    content += `<p>בחר שלב בלימוד עתיד פשוט:</p>`;
+                    content += `<button class="action-button" id="future-simple-expl-btn">שלב 1: הסבר</button>`;
+                    content += `<button class="action-button task-start-btn" data-quiz="futureSimple1">שלב 2: תרגיל 1 (will/would)</button>`;
+                    content += `<button class="action-button" id="future-simple-expl2-btn">שלב 3: הסבר (שלילה)</button>`;
+                    content += `<button class="action-button task-start-btn" data-quiz="futureSimple2">שלב 4: תרגיל 2 (wont/wouldn't)</button>`;
+                    showPage('task-page');
+                    
+                    document.getElementById('future-simple-expl-btn').addEventListener('click', createFutureSimpleExplanationPage);
+                    document.getElementById('future-simple-expl2-btn').addEventListener('click', createFutureSimpleExplanationPage2);
+                    break;
+                    
+                case 'simple-past':
+                    content += `<p>בחר שלב בלימוד עבר פשוט:</p>`;
+                    content += `<button class="action-button" id="simple-past-expl-btn">שלב 1: הסבר מקיף</button>`;
+                    content += `<button class="action-button task-start-btn" data-quiz="simplePastQuiz">שלב 2: בוא נתרגל</button>`;
+                    showPage('task-page');
+                    
+                    document.getElementById('simple-past-expl-btn').addEventListener('click', () => {
+                        createSimplePastExplanationPage(assignmentId);
+                    });
+                    break;
+
+                // --- PDF/DOCX Assignments ---
                 case 'reading':
                     content += `<p>בחר את רמת הקריאה לתרגול:</p>`;
                     content += `<button class="action-button task-start-btn" data-quiz="reading1">רמה 1 (כיתה ב)</button>`;
@@ -671,6 +797,7 @@
                     content += `<button class="action-button task-start-btn" data-quiz="reading3">רמה 3 (כיתה ד)</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="reading4">רמה 4 (כיתה ה)</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="reading5">רמה 5 (כיתה ו)</button>`;
+                    showPage('task-page');
                     break;
                     
                 case 'grammar':
@@ -680,6 +807,7 @@
                     content += `<button class="action-button task-start-btn" data-quiz="presentSimple1">Present Simple - s/es/ies</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="presentSimple2">Present Simple - Don't / Doesn't</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="presentSimple3">Present Simple - Do / Does</button>`;
+                    showPage('task-page');
                     break;
                     
                 case 'writing':
@@ -691,6 +819,12 @@
                     content += `<h2>שלב 5: פסקת טיעון (6 או 9)</h2><p class="ltr">In the picture, two boys are looking at a number on the floor. From one boy's perspective, it looks like the number 6. From the other boy's perspective, it looks like the number 9. This picture shows that both boys are 'right' based on their point of view. It teaches us that perspective is important and people can see the same thing differently.</p>`;
                     content += `<h2>שלב 6: תיאור חוויה</h2><p>כדי לתאר חוויה, עקבו אחר הצעדים הבאים: 1. כותרת. 2. פתיחה (על מה אספר?). 3. גוף הסיפור (מה קרה? מה ראיתי? מה הרגשתי?). 4. סיבה (למה בחרתי בחוויה זו?). 5. סיום (מה מיוחד? המלצה?).</p>`;
                     content += `<br><button class="action-button" id="complete-writing-btn">סיימתי לקרוא</button>`;
+                    showPage('task-page');
+                    
+                    document.getElementById('complete-writing-btn').addEventListener('click', () => {
+                        markAssignmentAsCompleted('writing');
+                        showPage('assignment-hub-page');
+                    });
                     break;
                     
                 case 'speaking':
@@ -698,30 +832,23 @@
                     content += `<h2>טקסט לקריאה (Lvl 3)</h2><div class="text-passage ltr"><h3>The Strength Within</h3><p>Once upon a time in a small village, there lived a girl named Mia. She was like any other girl, with dreams, hopes, and a heart full of kindness. Every morning, she would tie her hair into a pony tail and slip on her favorite blue slippers before heading to her High school...</p><p>(המשך הטקסט מקובץ ה-PDF שלך...)</p></div>`;
                     content += `<button class="action-button task-start-btn" data-quiz="speaking1">התחל תרגיל זיהוי שגיאות (Lvl 1)</button>`;
                     content += `<button class="action-button task-start-btn" data-quiz="speaking2">התחל תרגיל זיהוי שגיאות (Lvl 2)</button>`;
+                    showPage('task-page');
                     break;
                     
                 case 'adjectives':
                     content += `<p>לימוד ותרגול שמות תואר (Adjectives) ותואר הפועל (Adverbs).</p>`;
                     content += `<h2>כללים בסיסיים</h2><div class="text-passage ltr"><p>Adjectives describe nouns (e.g., tall man, beautiful day).</p><p>To compare (bigger): add 'er' (taller) or use 'more' for long words (more beautiful).</p><p>For 'the most' (biggest): add 'est' (tallest) or use 'most' (most beautiful).</p><p>Adverbs describe verbs (e.g., run quickly, eat slowly). They often end in -ly.</p></div>`;
                     content += `<button class="action-button task-start-btn" data-quiz="adjectivesQuiz">התחל תרגול</button>`;
+                    showPage('task-page');
                     break;
             }
             
-            showPage('task-page');
-            
-            // Add event listeners for the new buttons
+            // Add event listeners for the new quiz buttons
             document.querySelectorAll('.task-start-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     startQuiz(btn.dataset.quiz, assignmentId);
                 });
             });
-            
-            if (document.getElementById('complete-writing-btn')) {
-                document.getElementById('complete-writing-btn').addEventListener('click', () => {
-                    markAssignmentAsCompleted('writing');
-                    showPage('assignment-hub-page');
-                });
-            }
         }
         
         function getAssignmentTitle(assignmentId) {
@@ -730,11 +857,207 @@
                 'grammar': 'דקדוק',
                 'writing': 'כתיבה',
                 'speaking': 'דיבור',
-                'adjectives': 'שמות תואר'
+                'adjectives': 'שמות תואר',
+                'abc': 'ה-ABC האנגלי',
+                'verbs': 'פעלים',
+                'future-simple': 'עתיד פשוט',
+                'simple-past': 'עבר פשוט'
             };
             return titles[assignmentId] || 'משימה';
         }
 
+        // --- HELPER FUNCTIONS FOR ORIGINAL ASSIGNMENTS ---
+
+        function createChainedContentPage(assignmentId, steps, onComplete) {
+            let currentStep = 0;
+            taskPageContent.innerHTML = `<h1>${getAssignmentTitle(assignmentId)}</h1>`;
+            
+            function loadStep() {
+                const step = steps[currentStep];
+                let html = '<div class="text-passage">';
+                if (step.title) html += `<h2>${step.title}</h2>`;
+                if (step.text) html += `<p>${step.text.replace(/\n/g, '<br>')}</p>`;
+                if (step.content) html += step.content;
+                html += `<button class="action-button" id="chain-next-btn">${step.button}</button>`;
+                html += '</div>';
+                
+                taskPageContent.innerHTML = `<h1>${getAssignmentTitle(assignmentId)}</h1>${html}`;
+                
+                document.getElementById('chain-next-btn').addEventListener('click', () => {
+                    currentStep++;
+                    if (currentStep < steps.length) {
+                        loadStep();
+                    } else {
+                        onComplete();
+                    }
+                }, { once: true });
+            }
+            loadStep();
+            showPage('task-page');
+        }
+
+        function createAbcSpecialCasesPage(assignmentId) {
+            const steps = [
+                { title: "אותיות שורקות", text: "האותיות השורקות הם מקרה מיוחד של שילוב אותיות שיוצרות צלילים שונים, שגם יכולים לחקות אותיות מסוימות.", button: "המשך" },
+                { title: "E הקסומה", text: 'e בסוף מילה נקראת "magic e" כיוון שהיא גורמת לאות הניקוד שבאה לפניה לשנות את הצליל, כך שהוא נשמע כמו השם שלה ולאחר מכן הצליל נשמע ארוך יותר.', button: "המשך" },
+                { title: "אותיות ניקוד", text: "מספר אותיות הניקוד במילה משפיע על הצליל שלהן כאשר יש למילה אות ניקוד אחת, הצליל של האות הניקוד יהיה קצר.\nכאשר יש למילה יותר מאות ניקוד אחת, הצליל של האות הניקוד יהיה ארוך ומעוגל יותר", button: "המשך" },
+                { title: "אותיות שקטות", text: "אותיות שותקות אלו אותיות שיופיע כחלק מהמילה עצמה וחייבות להכתב עם המילה אך הן אינן מושמעות בהגיית המילה", button: "המשך למשימה" }
+            ];
+            createChainedContentPage(assignmentId, steps, () => {
+                startQuiz('abcQuiz', assignmentId);
+            });
+        }
+        
+        function createSimplePastExplanationPage(assignmentId) {
+            const steps = [
+                { text: "הזמן הפשוט הוא היבט בסיסי של דקדוק האנגלית המשמש לתיאור פעולות שהושלמו בעבר. הנה כמה כללים חשובים המתארים את השימוש בו", button: "המשך" },
+                { text: 'פעלים רגילים: עבור פעלים רגילים, עבר פשוט נוצר על ידי הוספת "-ed" לצורת הבסיס של הפועל.\nכלל זה חל על רוב הפעלים.\n- Watch → watched (צופה ←צפה)\n- ask → asked (שואל ← שאל)\n-clean → cleaned (מנקה ← ניקה)', button: "המשך" },
+                { text: 'אם הפועל מסתיים באות e מוסיפים רק את האות "d" ולא "ed", דוגמאות:\n- like → liked (מחבב ← חיבב)\n- arrive → arrived\n- decide → decided', button: "המשך" },
+                { text: 'אם הפועל מסתיים באות עיצור, אות ניקוד, אות עיצור (cvc), הכפל את האות האחרונה האחרון לפני הוספת "-ed". אך אם במילה יש יותר מהעברה אחת אז cvc לא מתקיים.\nחוץ מכמה יוצאי דופן שלא מכפילים כגון: x,y,w ולפעמים k.\nדוגמאות למילים:\n- play → played (משחק ← שיחק)\n- stop → stopped (עצור ← עצר)', button: "המשך" },
+                { text: "פעלים לא רגילים: בניגוד לכך, פעלים לא סדירים אינם פועלים לפי תבנית קבועה כאשר יוצרים את זמן העבר שלהם. לכן, חשוב לזכור את הצורות העבריות של הפעלים הללו.\nדוגמאות למילים:\n- go → went (הולך ← הלך)\n- see → saw (רואה ← ראה)\n- eat → ate (אוכל ← אכל)\n- know → knew (יודע ← ידע)", button: "המשך" },
+                { text: 'משפטים שליליים: כדי ליצור משפטים שליליים בזמן עבר פשוט, השתמשו ב-"did not" (או הצורה המקוצרת "didn\'t") ואחריה הצורה הבסיסית של הפועל.\nמבנה זה מעביר ביעילות שהפעולה לא התרחשה בעבר.\nדוגמאות למשפטים:\n- I didn\'t walk to school today. (אני לא הלכתי לבית ספר היום)\n- She didn\'t finish her homework. (היא לא סיימה את שיעורי הבית שלה)', button: "המשך" },
+                { text: 'שאלות: כאשר יוצרים שאלות בזמן עבר פשוט, התחילו ב-"Did" או ב-"Were" או ב-"Was", ואחריו הנושא וצורת הבסיס של הפועל.\nפורמט זה חיוני להשגת מידע על פעולות בעבר.\nדוגמאות:\n1.What did you do yesterday? (מה עשית אתמול?)\n2.Where did you go last weekend? (לאן הלכת בסוף השבוע האחרון?)\n3.Did you play any sports last week? (האם שיחקת בספורט בשבוע שעבר?)', button: "המשך למשימה" },
+            ];
+            createChainedContentPage(assignmentId, steps, () => {
+                startQuiz('simplePastQuiz', assignmentId);
+            });
+        }
+        
+        function createFutureSimpleExplanationPage() {
+            taskPageContent.innerHTML = `<h1>עתיד פשוט</h1>
+            <div class="text-passage">
+                <p>זמן עתיד הוא זמן פשוט להבנה.
+                כל הגופים משתמשים ב- will ו- would, אך מה ההבדל ביניהם?
+                <br> משתמשים ב- will כאשר אנחנו רוצים להגיד משהו שקשור אך ורק לעתיד, ואילו משתמשים ב- would כאשר משהו נאמר בעבר אבל אמור להתרחש בעתיד.
+                יש פעמים שמשתמשים ב- would כדי לבטא בקשה מנומסת שתתרחש לרוב בעתיד.
+                חשוב לזכור ש would זה לא תחליף ל- will. <br> בוא נתרגל את מה שלמדנו:</p>
+                <button class="action-button task-start-btn" data-quiz="futureSimple1">התחל תרגיל 1</button>
+            </div>`;
+            showPage('task-page');
+            // Re-add listener since we overwrote the page
+            document.querySelector('.task-start-btn').addEventListener('click', (e) => {
+                startQuiz(e.target.dataset.quiz, 'future-simple');
+            });
+        }
+        
+        function createFutureSimpleExplanationPage2() {
+            taskPageContent.innerHTML = `<h1>עתיד פשוט - שלילה</h1>
+            <div class="text-passage">
+                <p>נכון שיש לנו את הגופים?
+                אז כאשר אנחנו רוצים לכתוב את המשפט בצורה שלילית, במקום will ו- would משתמשים ב- wont ו- wouldn't.
+                הם מייצגים would-not ו- will not. <br> בוא נתרגל את הנושא הזה.</p>
+                <button class="action-button task-start-btn" data-quiz="futureSimple2">התחל תרגיל 2</button>
+            </div>`;
+            showPage('task-page');
+            // Re-add listener
+            document.querySelector('.task-start-btn').addEventListener('click', (e) => {
+                startQuiz(e.target.dataset.quiz, 'future-simple');
+            });
+        }
+
+        function createVerbsTablePage() {
+            const verbs = [
+                ["Eat", "לאכול"], ["drink", "לשתות"], ["walk", "ללכת"], ["run", "לרוץ"],
+                ["sit", "לשבת"], ["lie", "לשכב"], ["stand", "לעמוד"], ["fall", "ליפול"],
+                ["laugh", "לצחוק"], ["speak", "לדבר"], ["cry", "לבכות"], ["answer", "לענות"],
+                ["ask", "לשאול"], ["see", "לראות"], ["hear", "לשמוע"], ["break", "לשבור"],
+                ["feel", "להרגיש"], ["fix", "לתקן"], ["drive", "לנהוג"], ["ride", "לרכב"],
+                ["swim", "לשחות"], ["jump", "לקפוץ"], ["climb", "לטפס"], ["fly", "לעוף"],
+                ["push", "לדחוף"], ["pull", "למשוך"], ["throw", "לזרוק"], ["catch", "לתפוס"],
+                ["cut", "לחתוך"], ["cook", "לבשל"]
+            ];
+            let gridHtml = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;font-size:1.1em;">
+                            <div><b>באנגלית</b></div><div><b>תרגום</b></div>`;
+            verbs.forEach(([en, he]) => {
+                gridHtml += `<div dir="ltr">${en}</div><div dir="rtl">${he}</div>`;
+            });
+            gridHtml += `</div><button class="action-button task-start-btn" data-quiz="verbs1" style="margin-top:20px;">לתרגול</button>`;
+            
+            taskPageContent.innerHTML = `<h1>טבלת פעלים</h1><div class="text-passage">${gridHtml}</div>`;
+            showPage('task-page');
+            // Re-add listener
+            document.querySelector('.task-start-btn').addEventListener('click', (e) => {
+                startQuiz(e.target.dataset.quiz, 'verbs');
+            });
+        }
+        
+        function createAbcAudioPage() {
+            const container = document.getElementById('audio-players-container');
+            container.innerHTML = ''; // Clear previous
+            const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+            
+            letters.forEach(letter => {
+                const playerDiv = document.createElement('div');
+                playerDiv.className = 'audio-player';
+                // !!! NOTE: You need to have audio files named a.mp3, b.mp3, etc. in a folder or URL path !!!
+                playerDiv.innerHTML = `
+                    <h3>האות ${letter.toUpperCase()}</h3>
+                    <audio controls>
+                        <source src="path/to/${letter}.mp3" type="audio/mpeg">
+                      Your browser does not support the audio element.
+                    </audio>
+                `;
+                container.appendChild(playerDiv);
+            });
+        }
+        
+        function createSentenceBuilderPage(assignmentId) {
+            const correctOrder = ["He", "won't", "go", "to", "the", "mall", "tomorrow"];
+            const words = ["won't", "tomorrow", "apple", "mall", "He", "to", "rise", "go", "the"].sort(() => Math.random() - 0.5);
+            const incorrectWords = ["apple", "rise"];
+            let builtSentence = [];
+
+            const sentenceEl = document.getElementById('built-sentence-container');
+            const optionsEl = document.getElementById('word-options');
+            const feedbackEl = document.getElementById('sentence-feedback');
+            
+            sentenceEl.innerHTML = '';
+            optionsEl.innerHTML = '';
+            feedbackEl.innerHTML = '';
+
+            function renderWords() {
+                optionsEl.innerHTML = '';
+                words.forEach(word => {
+                    const button = document.createElement('button');
+                    button.className = 'quiz-option-btn';
+                    button.textContent = word;
+                    button.onclick = () => handleWordClick(word, button);
+                    optionsEl.appendChild(button);
+                });
+            }
+
+            function handleWordClick(word, button) {
+                feedbackEl.textContent = '';
+                if (incorrectWords.includes(word)) {
+                    feedbackEl.textContent = 'המילה הזו לא שייכת למשפט!';
+                    feedbackEl.className = 'quiz-feedback incorrect';
+                    button.classList.add('incorrect');
+                    button.disabled = true;
+                    return;
+                }
+
+                const nextCorrectWord = correctOrder[builtSentence.length];
+                if (word === nextCorrectWord) {
+                    builtSentence.push(word);
+                    sentenceEl.textContent = builtSentence.join(' ');
+                    button.classList.add('correct');
+                    button.disabled = true;
+                    
+                    if (builtSentence.length === correctOrder.length) {
+                        feedbackEl.textContent = 'עבודה טובה!';
+                        feedbackEl.className = 'quiz-feedback correct';
+                        markAssignmentAsCompleted(assignmentId);
+                    }
+                } else {
+                    const prevWord = builtSentence.length > 0 ? builtSentence[builtSentence.length - 1] : 'התחלה';
+                    feedbackEl.textContent = `המילה הזו לא באה אחרי "${prevWord}", חשבו על מילה אחרת`;
+                    feedbackEl.className = 'quiz-feedback incorrect';
+                    button.classList.add('incorrect');
+                    setTimeout(() => button.classList.remove('incorrect'), 500);
+                }
+            }
+            renderWords();
+        }
 
         // --- QUIZ ENGINE ---
         let currentQuiz = [];
@@ -894,6 +1217,9 @@
         }
         
         function checkAssignmentCompletion() {
+            // This is a simple completion check.
+            // For multi-part assignments, it marks complete after any quiz.
+            // You could add more complex logic here if needed.
             if (parentAssignmentId) {
                 markAssignmentAsCompleted(parentAssignmentId);
             }
@@ -908,8 +1234,66 @@
         }
 
         
-        // --- QUIZ DATABASE (FIXED) ---
+        // --- QUIZ DATABASE (ALL ASSIGNMENTS) ---
         const quizData = {
+            // --- Original Assignments ---
+            'futureSimple1': [
+                { q: "I __ go to the mall tomorrow", a: "will", o: ["will", "would", "כלום לא מתאים"] }, // Corrected from "כלום לא מתאים"
+                { q: "___ your sister come to the movie theater tonight?", a: "will", o: ["will", "would", "כלום לא מתאים"] },
+                { q: "How __ we go to the school event this weekend?", a: "will", o: ["will", "would", "כלום לא מתאים"] },
+                { q: "__ you want to come to my house today?", a: "would", o: ["will", "would", "כלום לא מתאים"] },
+                { q: "Ali __ take Maya to school tomorrow.", a: "will", o: ["will", "would", "כלום לא מתאים"] },
+                { q: "My dog __ eat his food tonight.", a: "will", o: ["will", "would", "כלום לא מתאים"] },
+                { q: "Tomorrow me and my family __ go to eat in a restaurant.", a: "will", o: ["will", "would", "כלום לא מתאים"] },
+                { q: "__ you like to come to my house tomorrow?", a: "would", o: ["will", "would", "כלום לא מתאים"] }
+            ],
+            'futureSimple2': [
+                 { q: "I __ eat fast food next week", a: "wont", o: ["wouldn't", "wont"] },
+                 { q: "Noya is sick, she __ come to the party tonight", a: "wont", o: ["wouldn't", "wont"] },
+                 { q: "My parents and I __ open our business tomorrow.", a: "wont", o: ["wouldn't", "wont"] }, // Corrected from wouldn't
+                 { q: "My sister __ come to the trip next week.", a: "wont", o: ["wouldn't", "wont"] },
+                 { q: "I think she __ like the present that I will give her next week.", a: "wont", o: ["wouldn't", "wont"] },
+                 { q: "I think I __ be able to visit your family next week.", a: "wont", o: ["wouldn't", "wont"] }, // Corrected from wouldn't
+                 { q: "I ___ do that if I were you.", a: "wouldn't", o: ["wouldn't", "wont"] }
+            ],
+            'verbs1': [
+                { q: 'מה המשמעות של "jump"?', a: 'לקפוץ', o: ['לשבת', 'לקפוץ', 'לחשוב'] },
+                { q: 'מה המשמעות של "write"?', a: 'לכתוב', o: ['לקרוא', 'לכתוב', 'ללכת'] }, // This question was not in the original file but seems implied
+                { q: 'אני __ מים כל יום', a: 'drink', o: ['cook', 'look', 'drink'] },
+                { q: 'היא __ סיפור במחברתה', a: 'writes', o: ['writes', 'walks', 'runs'] },
+                { q: 'אני __ לבית הספר כל יום', a: 'walk', o: ['learn', 'fish', 'walk'] },
+                { q: 'היא __ לחנות', a: 'goes', o: ['teaches', 'climbs', 'goes'] },
+                { q: 'אנחנו __ ארוחת ערב בשעה', a: 'eat', o: ['cook', 'eat', 'ride'] },
+                { q: 'הוא __ ספר בספרייה', a: 'reads', o: ['lives', 'lies', 'reads'] }
+            ],
+            'abcQuiz': [
+                { q: "איזה אות באה אחרי K?", a: "L", o: ["A", "L", "Z"] },
+                { q: "איזה אות באה אחרי C?", a: "D", o: ["D", "Y", "M"] },
+                { q: "איזה אות באה אחרי S?", a: "T", o: ["T", "C", "O"] },
+                { q: "איזה אות באה אחרי W?", a: "X", o: ["K", "B", "X"] },
+                { q: "איזה אות באה אחרי Q?", a: "R", o: ["R", "E", "L"] },
+                { q: "מהי האות האחרונה בסדר האלף - בית באנגלית?", a: "Z", o: ["Q", "Z", "V"] },
+                { q: "כמה אותיות יש באלף - בית של אנגלית?", a: "26", o: ["22", "23", "26"] }
+            ],
+            'simplePastQuiz': [
+                { q: "She _____ (speak) to her boss about the project yesterday", a: "spoke", o: ["spoke", "speaks", "speaked"] },
+                { q: "We _____ (drive) to the mountains last weekend", a: "drove", o: ["drived", "drive", "drove"] },
+                { q: "The cat _____ (sleep) on the sofa all day", a: "slept", o: ["sleeping", "slept", "sleeped"] },
+                { q: "I _____ (read) an interesting book last month", a: "read", o: ["read", "readen", "readed"] }, // 'read' (pronounced 'red')
+                { q: "They _____ (swim) in the lake during their vacation", a: "swam", o: ["swimming", "swom", "swam"] },
+                { q: "He _____ (break) his arm while skiing two weeks ago", a: "broke", o: ["breaking", "broke", "breaken"] },
+                { q: "The children _____ (bake) cookies with their grandmother", a: "baked", o: ["baked", "bake", "baking"] },
+                { q: "We _____ (fly) to Paris for our anniversary last year", a: "flew", o: ["flought", "flying", "flew"] },
+                { q: "The teacher _____ (give) us a lot of homework yesterday", a: "gave", o: ["gave", "given", "giving"] },
+                { q: "I _____ (lose) my keys at the supermarket this morning", a: "lost", o: ["lose", "losing", "lost"] },
+                { q: "She _____ (dance) beautifully at the party last night", a: "danced", o: ["dancing", "danced", "donce"] },
+                { q: "They _____ (build) a treehouse in their backyard last summer", a: "built", o: ["built", "building", "build"] },
+                { q: "He _____ (tell) us an exciting story about his travels", a: "told", o: ["told", "telling", "telled"] },
+                { q: "We _____ (meet) our new neighbors at the community barbecue", a: "met", o: ["meeting", "met", "meet"] },
+                { q: "The movie _____ (begin) late because of technical issue", a: "began", o: ["begginning", "begin", "began"] } // Corrected from begun
+            ],
+            
+            // --- PDF/DOCX Assignments ---
             'whQuestions': [
                 { q: "___ are you going to the party tonight? (When)", o: ["When", "Where", "Who"], a: "When" },
                 { q: "___ is your favorite color?", o: ["What", "Where", "Who"], a: "What" },
@@ -1065,7 +1449,7 @@
                 { q: "What did the old map show?", o: ["A hidden island", "A new ship", "A jungle"], a: "A hidden island" },
                 { q: "Where was the 'X' on the map?", o: ["In a cave", "Under a big, old tree", "On the beach"], a: "Under a big, old tree" },
                 { q: "What was inside the chest?", o: ["Gold coins, jewels, and a sword", "Only gold coins", "An old map"], a: "Gold coins, jewels, and a sword" },
-                { q: "Who won the fight?", o: ["The enemy captain", "Captain MMoshco's crew", "Nobody"], a: "Captain Moshco's crew" }
+                { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" }
             ]
         };
         
