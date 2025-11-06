@@ -1,12 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- YOUTUBE CONFIGURATION ---
-    // ----------------------------------------------------
-    // --- !!! EDIT THIS SECTION FOR YOUTUBE VIDEOS !!! ---
-    // ----------------------------------------------------
-    // I have added the 6 links you provided.
     const youtubeLinks = {
-        "abc-video": { title: "סרטון ABC", url: "https://www.youtube.com/embed/BELlZKpi1Zs" }, // From original code
+        "abc-video": { title: "סרטון ABC", url: "https://www.youtube.com/embed/BELlZKpi1Zs" },
         "1": { title: "סרטון 1", url: "https://www.youtube.com/embed/3z4TQfNiqLc" },
         "2": { title: "סרטון 2", url: "https://www.youtube.com/embed/erLktxdLIWU" },
         "3": { title: "סרטון 3", url: "https://www.youtube.com/embed/hKIpbGK3fSM" },
@@ -44,11 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
         "35": { title: "סרטון 35", url: "https://www.youtube.com/embed/your-video-id-35" },
         "36": { title: "סרטון 36", url: "https://www.youtube.com/embed/your-video-id-36" },
     };
-    // ----------------------------------------------------
-    // --- END OF EDITABLE SECTIONS ---
-    // ----------------------------------------------------
 
-
+    // --- NEW: PRESENTATION CONFIGURATION ---
+    const presentationLinks = {
+        "1": { title: "מצגת 1", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_1" },
+        "2": { title: "מצגת 2", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_2" },
+        // Add up to 12 here
+        "12": { title: "מצגת 12", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_12" },
+    };
+    
     // --- STATE MANAGEMENT ---
     let appState = {
         currentPage: 'home-page',
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Logic for hiding sidebar
-        if (pageId === 'video-player-page') {
+        if (pageId === 'video-player-page' || pageId === 'presentation-viewer-page') {
             document.body.classList.add('video-mode');
         } else {
             document.body.classList.remove('video-mode');
@@ -162,6 +162,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Stop video when going back
     document.querySelector('#video-player-page .back-button').addEventListener('click', () => {
         document.getElementById('youtube-iframe').src = ''; // Stop video
+    });
+
+    // --- NEW: PRESENTATION PAGE ---
+    function initPresentationsPage() {
+        const grid = document.querySelector('#presentations-page .presentation-grid');
+        grid.innerHTML = '';
+        for (let i = 1; i <= 12; i++) { // Assuming max 12 presentations
+            const pres = presentationLinks[i.toString()];
+            if (pres) {
+                const button = document.createElement('button');
+                button.className = 'action-button';
+                button.textContent = pres.title;
+                button.dataset.url = pres.url;
+                button.dataset.title = pres.title;
+                button.addEventListener('click', () => {
+                    playPresentation(pres.url, pres.title);
+                });
+                grid.appendChild(button);
+            }
+        }
+    }
+
+    function playPresentation(url, title) {
+        document.getElementById('presentation-viewer-title').textContent = title;
+        document.getElementById('presentation-iframe').src = url;
+        showPage('presentation-viewer-page');
+    }
+
+    // Stop presentation when going back
+    document.querySelector('#presentation-viewer-page .back-button').addEventListener('click', () => {
+        document.getElementById('presentation-iframe').src = '';
     });
     
     // --- TASK & ASSIGNMENT LOADER (FIXED) ---
@@ -804,7 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "fix (he)", o: ["fixes", "fixs", "fixies"], a: "fixes" },
             { q: "watch (she)", o: ["watchs", "watches", "watchies"], a: "watches" },
             { q: "brush (he)", o: ["brushs", "brushes", "brushies"], a: "brushes" },
-            { q: "tidy (she)", o: ["tidys", "tidies", "tidyes"], a: "tidies" },
+            { q: "tidy (she)", o: ["tidys", "tidies","tidyes"], a: "tidies" },
             { q: "fly (it)", o: ["flys", "flyes", "flies"], a: "flies" },
             { q: "go (he)", o: ["gos", "goes", "goies"], a: "goes" },
             { q: "try (she)", o: ["trys", "tryes", "tries"], a: "tries" },
@@ -851,7 +882,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "___ your friends like you?", o: ["Do", "Does"], a: "Do" },
             { q: "___ you have a lot of money?", o: ["Do", "Does"], a: "Do" }
         ],
-        'speaking1': [ // Lvl 1
+        'speaking1': [ // Llvl 1
             { q: "Where is my friend house?", o: ["Where is my friend house?", "Where is my friend's house?"], a: "Where is my friend's house?" },
             { q: "Mike and Dan is going to the beach.", o: ["Mike and Dan is going...", "Mike and Dan are going..."], a: "Mike and Dan are going..." },
             { q: "I have five cat.", o: ["I have five cat.", "I have five cats."], a: "I have five cats." },
@@ -994,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultsContainer.innerHTML += `
                         <div class="result-block">
                             <h3>3. תרגום ההגדרה</h3>
-                            <p class."hebrew">${hebrewDefinition}</p>
+                            <p class="hebrew">${hebrewDefinition}</p>
                         </div>
                     `;
                 })
@@ -1027,6 +1058,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- INITIALIZE ---
     initYouTubePage();
+    initPresentationsPage(); // Initialize new presentation page
     showPage('home-page'); // Start on the home page
 
 });
