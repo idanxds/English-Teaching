@@ -421,6 +421,10 @@ p {
 }
 .word-tool-container h2 {
     color: var(--secondary-color);
+    font-size: 1.5rem;
+}
+.word-tool-container p {
+    font-size: 1rem;
 }
 .word-tool-controls {
     display: flex;
@@ -428,25 +432,26 @@ p {
     gap: 10px;
     margin-bottom: 15px;
 }
-#word-input-he {
+#word-input-auto {
     width: 100%;
     padding: 10px;
     font-size: 1.1rem;
     border: 1px solid var(--dark-gray-color);
     border-radius: 8px;
-    direction: rtl;
+    direction: rtl; /* Start as RTL, but user can type anything */
 }
 #word-tool-btn {
     width: 100%;
 }
 #word-tool-results {
     padding: 15px;
-    background-color: var(--light-color);
+    background-color: var(--gray-color);
     border-radius: 8px;
     min-height: 50px;
     text-align: left;
     direction: ltr;
     width: 100%;
+    word-wrap: break-word;
 }
 #word-tool-results.loading {
     text-align: center;
@@ -484,7 +489,7 @@ body.video-mode {
     padding-left: 0;
 }
 body.video-mode .translate-sidebar {
-    transform: translateX(-100%);
+    transform: translateX(calc(var(--sidebar-width) * -1));
 }
 body.video-mode .main-nav {
     left: 0;
