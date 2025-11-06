@@ -8,185 +8,188 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    
-    <nav class="main-nav">
-        <div class="nav-links">
-            <button class="nav-button" data-target="youtube-page">סרטוני YouTube</button>
-            <button class="nav-button" data-target="podcast-page">פודקאסט</button>
-        </div>
-        <div class="nav-brand">
-            <button class="nav-button" data-target="home-page">עמוד הבית</button>
-        </div>
-    </nav>
 
-    <div id="app">
-        <section id="home-page" class="page">
-            <div class="home-container">
-                <h1>ברוכים הבאים לאתר הלמידה</h1>
-                <p>מוכנים להתחיל ללמוד אנגלית?</p>
-                <button id="login-button" class="action-button large">כניסה</button>
+    <aside class="translate-sidebar">
+        <div class="word-tool-container">
+            <h2>כלי לבדיקת מילים (עברית)</h2>
+            <p>הקלד מילה בעברית לקבלת תרגום, הגדרה באנגלית, והגדרה מתורגמת:</p>
+            <div class="word-tool-controls">
+                <input type="text" id="word-input-he" placeholder="הכנס מילה בעברית..." dir="rtl">
+                <button id="word-tool-btn" class="action-button small">חפש</button>
             </div>
-
-            <div class="word-tool-container">
-                <h2>כלי לבדיקת מילים (עברית)</h2>
-                <p>הקלד מילה בעברית לקבלת תרגום, הגדרה באנגלית, והגדרה מתורגמת:</p>
-                <div class="word-tool-controls">
-                    <input type="text" id="word-input-he" placeholder="הכנס מילה בעברית..." dir="rtl">
-                    <button id="word-tool-btn" class="action-button small">חפש</button>
+            
+            <div id="word-tool-results">
                 </div>
-                
-                <div id="word-tool-results">
-                    </div>
+        </div>
+    </aside>
+    
+    <div class="main-content">
+        <nav class="main-nav">
+            <div class="nav-links">
+                <button class="nav-button" data-target="youtube-page">סרטוני YouTube</button>
+                <button class="nav-button" data-target="podcast-page">פודקאסט</button>
             </div>
+            <div class="nav-brand">
+                <button class="nav-button" data-target="home-page">עמוד הבית</button>
+            </div>
+        </nav>
+
+        <div id="app">
+            <section id="home-page" class="page">
+                <div class="home-container">
+                    <h1>ברוכים הבאים לאתר הלמידה</h1>
+                    <p>מוכנים להתחיל ללמוד אנגלית?</p>
+                    <button id="login-button" class="action-button large">כניסה</button>
+                </div>
             </section>
 
-        <section id="assignment-hub-page" class="page hidden">
-            <button class="back-button" data-target="home-page">חזרה</button>
-            <h1>משימות למידה</h1>
-            <div class="assignments-grid">
-                <button class="assignment-box" data-assignment="abc">
-                    <h3>ה-ABC האנגלי</h3>
-                    <p>לימוד אותיות, שמע ומקרים מיוחדים.</p>
-                </button>
-                <button class="assignment-box" data-assignment="verbs">
-                    <h3>פעלים (Verbs)</h3>
-                    <p>לימוד פעלים, תרגול ובניית משפטים.</p>
-                </button>
-                <button class="assignment-box" data-assignment="future-simple">
-                    <h3>עתיד פשוט (Future Simple)</h3>
-                    <p>לימוד ותרגול שימוש ב-will ו-would.</p>
-                </button>
-                <button class="assignment-box" data-assignment="simple-past">
-                    <h3>עבר פשוט (Simple Past)</h3>
-                    <p>לימוד חוקים, פעלים רגילים ויוצאי דופן.</p>
-                </button>
-                
-                <button class="assignment-box" data-assignment="reading">
-                    <h3>קריאה (Reading)</h3>
-                    <p>תרגול קטעי קריאה ברמות שונות.</p>
-                </button>
-                <button class="assignment-box" data-assignment="grammar">
-                    <h3>דקדוק (Grammar)</h3>
-                    <p>לימוד ותרגול WH, Present Simple ועוד.</p>
-                </button>
-                <button class="assignment-box" data-assignment="writing">
-                    <h3>כתיבה (Writing)</h3>
-                    <p>למדו לתאר, להשוות ולכתוב פסקאות.</p>
-                </button>
-                <button class="assignment-box" data-assignment="speaking">
-                    <h3>דיבור (Speaking)</h3>
-                    <p>תרגול זיהוי שגיאות וקריאה נכונה.</p>
-                </button>
-                <button class="assignment-box" data-assignment="adjectives">
-                    <h3>שמות תואר (Adjectives)</h3>
-                    <p>תרגול שמות תואר ותואר הפועל.</p>
-                </button>
-            </div>
-        </section>
+            <section id="assignment-hub-page" class="page hidden">
+                <button class="back-button" data-target="home-page">חזרה</button>
+                <h1>משימות למידה</h1>
+                <div class="assignments-grid">
+                    <button class="assignment-box" data-assignment="abc">
+                        <h3>ה-ABC האנגלי</h3>
+                        <p>לימוד אותיות, שמע ומקרים מיוחדים.</p>
+                    </button>
+                    <button class="assignment-box" data-assignment="verbs">
+                        <h3>פעלים (Verbs)</h3>
+                        <p>לימוד פעלים, תרגול ובניית משפטים.</p>
+                    </button>
+                    <button class="assignment-box" data-assignment="future-simple">
+                        <h3>עתיד פשוט (Future Simple)</h3>
+                        <p>לימוד ותרגול שימוש ב-will ו-would.</p>
+                    </button>
+                    <button class="assignment-box" data-assignment="simple-past">
+                        <h3>עבר פשוט (Simple Past)</h3>
+                        <p>לימוד חוקים, פעלים רגילים ויוצאי דופן.</p>
+                    </button>
+                    
+                    <button class="assignment-box" data-assignment="reading">
+                        <h3>קריאה (Reading)</h3>
+                        <p>תרגול קטעי קריאה ברמות שונות.</p>
+                    </button>
+                    <button class="assignment-box" data-assignment="grammar">
+                        <h3>דקדוק (Grammar)</h3>
+                        <p>לימוד ותרגול WH, Present Simple ועוד.</p>
+                    </button>
+                    <button class="assignment-box" data-assignment="writing">
+                        <h3>כתיבה (Writing)</h3>
+                        <p>למדו לתאר, להשוות ולכתוב פסקאות.</p>
+                    </button>
+                    <button class="assignment-box" data-assignment="speaking">
+                        <h3>דיבור (Speaking)</h3>
+                        <p>תרגול זיהוי שגיאות וקריאה נכונה.</p>
+                    </button>
+                    <button class="assignment-box" data-assignment="adjectives">
+                        <h3>שמות תואר (Adjectives)</h3>
+                        <p>תרגול שמות תואר ותואר הפועל.</p>
+                    </button>
+                </div>
+            </section>
 
-        <section id="podcast-page" class="page hidden">
-            <button class="back-button" data-target="home-page">חזרה</button>
-            <h1>פודקאסטים</h1>
-            <div class="podcast-grid">
-                <div class="podcast-player">
-                    <h3>פודקאסט 1</h3>
-                    <audio controls src="https://archive.org/download/full-podcast_202511/Full%20Podcast.mp3">דפדפן זה אינו תומך באודיו.</audio>
+            <section id="podcast-page" class="page hidden">
+                <button class="back-button" data-target="home-page">חזרה</button>
+                <h1>פודקאסטים</h1>
+                <div class="podcast-grid">
+                    <div class="podcast-player">
+                        <h3>פודקאסט 1</h3>
+                        <audio controls src="https://archive.org/download/full-podcast_202511/Full%20Podcast.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 2</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_2.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 3</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_3.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 4</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_4.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 5</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_5.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 6</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_6.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 7</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_7.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 8</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_8.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 9</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_9.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 10</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_10.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
+                    <div class="podcast-player">
+                        <h3>פודקאסט 11</h3>
+                        <audio controls src="YOUR_AUDIO_FILE_11.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                    </div>
                 </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 2</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_2.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 3</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_3.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 4</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_4.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 5</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_5.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 6</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_6.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 7</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_7.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 8</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_8.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 9</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_9.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 10</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_10.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-                <div class="podcast-player">
-                    <h3>פודקאסט 11</h3>
-                    <audio controls src="YOUR_AUDIO_FILE_11.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="youtube-page" class="page hidden">
-            <button class="back-button" data-target="home-page">חזרה</button>
-            <h1>סרטוני YouTube</h1>
-            <div class="youtube-grid">
+            <section id="youtube-page" class="page hidden">
+                <button class="back-button" data-target="home-page">חזרה</button>
+                <h1>סרטוני YouTube</h1>
+                <div class="youtube-grid">
+                    </div>
+            </section>
+
+            <section id="video-player-page" class="page hidden">
+                <button class="back-button" data-target="youtube-page">חזרה לסרטונים</button>
+                <h1 id="video-player-title"></h1>
+                <div class="video-container">
+                    <iframe id="youtube-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
-        </section>
+            </section>
 
-        <section id="video-player-page" class="page hidden">
-            <button class="back-button" data-target="youtube-page">חזרה לסרטונים</button>
-            <h1 id="video-player-title"></h1>
-            <div class="video-container">
-                <iframe id="youtube-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </section>
-
-        <section id="task-page" class="page hidden">
-            <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
-            <div id="task-content">
+            <section id="task-page" class="page hidden">
+                <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
+                <div id="task-content">
+                    </div>
+            </section>
+            
+            <section id="quiz-page" class="page hidden">
+                 <div id="quiz-container">
+                    <div id="quiz-progress"></div>
+                    <div id="quiz-question" class="ltr"></div>
+                    <div id="quiz-options"></div>
+                    <div id="quiz-feedback"></div>
+                    <button id="quiz-next-btn" class="action-button hidden">המשך</button>
                 </div>
-        </section>
-        
-        <section id="quiz-page" class="page hidden">
-             <div id="quiz-container">
-                <div id="quiz-progress"></div>
-                <div id="quiz-question" class="ltr"></div>
-                <div id="quiz-options"></div>
-                <div id="quiz-feedback"></div>
-                <button id="quiz-next-btn" class="action-button hidden">המשך</button>
-            </div>
-        </section>
+            </section>
 
-        <section id="abc-audio-page" class="page hidden">
-            <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
-            <h1>האותיות</h1>
-            <div id="abc-audio-content" class="text-passage">
-                <p>(שימוש באוזניות או קול חיצוני הוא נדרש בשביל החלק הזה.)</p>
-                <div id="audio-players-container" class="audio-players-container"></div>
-                <button id="abc-audio-continue" class="action-button hidden" data-assignment="abc" data-quiz="abcQuiz">המשך לתרגול</button>
-            </div>
-        </section>
-        
-        <section id="sentence-builder-page" class="page hidden">
-            <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
-            <h1>בניית משפט</h1>
-            <div class="text-passage">
-                <div id="built-sentence-container"></div>
-                <div id="word-options" class="quiz-options"></div>
-                <p id="sentence-feedback" class="quiz-feedback"></p>
-            </div>
-        </section>
+            <section id="abc-audio-page" class="page hidden">
+                <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
+                <h1>האותיות</h1>
+                <div id="abc-audio-content" class="text-passage">
+                    <p>(שימוש באוזניות או קול חיצוני הוא נדרש בשביל החלק הזה.)</p>
+                    <div id="audio-players-container" class="audio-players-container"></div>
+                    <button id="abc-audio-continue" class="action-button hidden" data-assignment="abc" data-quiz="abcQuiz">המשך לתרגול</button>
+                </div>
+            </section>
+            
+            <section id="sentence-builder-page" class="page hidden">
+                <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
+                <h1>בניית משפט</h1>
+                <div class="text-passage">
+                    <div id="built-sentence-container"></div>
+                    <div id="word-options" class="quiz-options"></div>
+                    <p id="sentence-feedback" class="quiz-feedback"></p>
+                </div>
+            </section>
 
-    </div> <script src="script.js"></script>
+        </div> </div> <script src="script.js"></script>
 
     <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
