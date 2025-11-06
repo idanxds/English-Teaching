@@ -10,6 +10,7 @@
     --success-color: #2ecc71;
     --error-color: #e74c3c;
     --font-family: 'Assistant', sans-serif;
+    --sidebar-width: 300px;
 }
 
 * {
@@ -27,7 +28,9 @@ body {
     background-color: var(--gray-color);
     color: var(--text-color);
     line-height: 1.6;
+    padding-left: var(--sidebar-width); /* Make space for the left sidebar */
     padding-top: 60px; /* Space for fixed nav */
+    transition: padding-left 0.3s ease; /* For video mode */
 }
 
 h1, h2, h3 {
@@ -120,20 +123,36 @@ p {
 }
 .back-button:hover { background-color: #34495e; }
 
+/* --- Left Translate Sidebar --- */
+.translate-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background-color: var(--light-color);
+    border-right: 1px solid var(--dark-gray-color);
+    z-index: 1001; /* Above nav */
+    padding: 20px;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+}
+
 /* --- Main Navigation --- */
 .main-nav {
     position: fixed;
     top: 0;
     right: 0;
-    left: 0;
-    width: 100%;
+    left: var(--sidebar-width); /* Start after sidebar */
+    width: calc(100% - var(--sidebar-width)); /* Full width minus sidebar */
     height: 60px;
     background-color: var(--secondary-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px; /* Adjusted for full width */
+    padding: 0 20px;
     z-index: 1000;
+    transition: left 0.3s ease, width 0.3s ease;
 }
 
 .main-nav .nav-button {
@@ -149,6 +168,11 @@ p {
 .main-nav .nav-brand .nav-button {
     font-size: 1.3rem;
     font-weight: 700;
+}
+
+/* --- Main Content Wrapper --- */
+.main-content {
+    width: 100%;
 }
 
 /* --- Home Page --- */
@@ -392,11 +416,7 @@ p {
 
 /* --- Word Tool Styles (New Version) --- */
 .word-tool-container {
-    max-width: 600px;
-    margin: 40px auto 0 auto;
-    padding: 20px;
-    background-color: var(--gray-color);
-    border-radius: 8px;
+    padding-top: 80px; /* Space for nav bar */
     text-align: center;
 }
 .word-tool-container h2 {
@@ -404,16 +424,20 @@ p {
 }
 .word-tool-controls {
     display: flex;
+    flex-direction: column;
     gap: 10px;
     margin-bottom: 15px;
 }
 #word-input-he {
-    flex-grow: 1;
+    width: 100%;
     padding: 10px;
     font-size: 1.1rem;
     border: 1px solid var(--dark-gray-color);
     border-radius: 8px;
     direction: rtl;
+}
+#word-tool-btn {
+    width: 100%;
 }
 #word-tool-results {
     padding: 15px;
@@ -422,6 +446,7 @@ p {
     min-height: 50px;
     text-align: left;
     direction: ltr;
+    width: 100%;
 }
 #word-tool-results.loading {
     text-align: center;
@@ -445,10 +470,23 @@ p {
 .result-block p {
     font-size: 1.2rem;
     margin-bottom: 0;
+    word-wrap: break-word;
 }
 .result-block .hebrew {
     direction: rtl;
     text-align: right;
     font-size: 1.3rem;
     font-weight: bold;
+}
+
+/* --- Video Mode (Hides Sidebar) --- */
+body.video-mode {
+    padding-left: 0;
+}
+body.video-mode .translate-sidebar {
+    transform: translateX(-100%);
+}
+body.video-mode .main-nav {
+    left: 0;
+    width: 100%;
 }
