@@ -76,6 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pageId === 'assignment-hub-page') {
             updateAssignmentHub();
         }
+
+        // Logic for hiding sidebar
+        if (pageId === 'video-player-page') {
+            document.body.classList.add('video-mode');
+        } else {
+            document.body.classList.remove('video-mode');
+        }
     }
 
     // Main navigation (top bar)
@@ -174,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 content += `<button class="action-button" id="abc-special-btn">שלב 3: מקרים מיוחדים</button>`;
                 content += `<button class="action-button task-start-btn" data-quiz="abcQuiz">שלב 4: בוא נתרגל</button>`;
                 
-                // **** THIS IS THE FIX ****
                 // 1. Add content to the page
                 taskPageContent.innerHTML = content;
                 // 2. Show the page
@@ -694,7 +700,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizData = {
         // --- Original Assignments ---
         'futureSimple1': [
-            { q: "I __ go to the mall tomorrow", a: "will", o: ["will", "would", "כלום לא מתאים"] }, // Corrected from "כלום לא מתאים"
+            { q: "I __ go to the mall tomorrow", a: "will", o: ["will", "would", "כלום לא מתאים"] },
             { q: "___ your sister come to the movie theater tonight?", a: "will", o: ["will", "would", "כלום לא מתאים"] },
             { q: "How __ we go to the school event this weekend?", a: "will", o: ["will", "would", "כלום לא מתאים"] },
             { q: "__ you want to come to my house today?", a: "would", o: ["will", "would", "כלום לא מתאים"] },
@@ -706,15 +712,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'futureSimple2': [
              { q: "I __ eat fast food next week", a: "wont", o: ["wouldn't", "wont"] },
              { q: "Noya is sick, she __ come to the party tonight", a: "wont", o: ["wouldn't", "wont"] },
-             { q: "My parents and I __ open our business tomorrow.", a: "wont", o: ["wouldn't", "wont"] }, // Corrected from wouldn't
+             { q: "My parents and I __ open our business tomorrow.", a: "wont", o: ["wouldn't", "wont"] },
              { q: "My sister __ come to the trip next week.", a: "wont", o: ["wouldn't", "wont"] },
              { q: "I think she __ like the present that I will give her next week.", a: "wont", o: ["wouldn't", "wont"] },
-             { q: "I think I __ be able to visit your family next week.", a: "wont", o: ["wouldn't", "wont"] }, // Corrected from wouldn't
+             { q: "I think I __ be able to visit your family next week.", a: "wont", o: ["wouldn't", "wont"] },
              { q: "I ___ do that if I were you.", a: "wouldn't", o: ["wouldn't", "wont"] }
         ],
         'verbs1': [
             { q: 'מה המשמעות של "jump"?', a: 'לקפוץ', o: ['לשבת', 'לקפוץ', 'לחשוב'] },
-            { q: 'מה המשמעות של "write"?', a: 'לכתוב', o: ['לקרוא', 'לכתוב', 'ללכת'] }, // This question was not in the original file but seems implied
+            { q: 'מה המשמעות של "write"?', a: 'לכתוב', o: ['לקרוא', 'לכתוב', 'ללכת'] },
             { q: 'אני __ מים כל יום', a: 'drink', o: ['cook', 'look', 'drink'] },
             { q: 'היא __ סיפור במחברתה', a: 'writes', o: ['writes', 'walks', 'runs'] },
             { q: 'אני __ לבית הספר כל יום', a: 'walk', o: ['learn', 'fish', 'walk'] },
@@ -735,7 +741,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "She _____ (speak) to her boss about the project yesterday", a: "spoke", o: ["spoke", "speaks", "speaked"] },
             { q: "We _____ (drive) to the mountains last weekend", a: "drove", o: ["drived", "drive", "drove"] },
             { q: "The cat _____ (sleep) on the sofa all day", a: "slept", o: ["sleeping", "slept", "sleeped"] },
-            { q: "I _____ (read) an interesting book last month", a: "read", o: ["read", "readen", "readed"] }, // 'read' (pronounced 'red')
+            { q: "I _____ (read) an interesting book last month", a: "read", o: ["read", "readen", "readed"] },
             { q: "They _____ (swim) in the lake during their vacation", a: "swam", o: ["swimming", "swom", "swam"] },
             { q: "He _____ (break) his arm while skiing two weeks ago", a: "broke", o: ["breaking", "broke", "breaken"] },
             { q: "The children _____ (bake) cookies with their grandmother", a: "baked", o: ["baked", "bake", "baking"] },
@@ -746,7 +752,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "They _____ (build) a treehouse in their backyard last summer", a: "built", o: ["built", "building", "build"] },
             { q: "He _____ (tell) us an exciting story about his travels", a: "told", o: ["told", "telling", "telled"] },
             { q: "We _____ (meet) our new neighbors at the community barbecue", a: "met", o: ["meeting", "met", "meet"] },
-            { q: "The movie _____ (begin) late because of technical issue", a: "began", o: ["begginning", "begin", "began"] } // Corrected from begun
+            { q: "The movie _____ (begin) late because of technical issue", a: "began", o: ["begginning", "begin", "began"] }
         ],
         
         // --- PDF/DOCX Assignments ---
@@ -827,7 +833,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "___ cats play football?", o: ["Do", "Does"], a: "Do" },
             { q: "___ Pamela Anderson have blonde hair?", o: ["Do", "Does"], a: "Does" },
             { q: "___ your girl/boyfriend like swimming?", o: ["Do", "Does"], a: "Does" },
-            { q: "___ David Beckham play football for England?", o: ["Do",Dos"], a: "Does" },
+            { q: "___ David Beckham play football for England?", o: ["Do", "Does"], a: "Does" },
             { q: "___ you want to come with me?", o: ["Do", "Does"], a: "Do" },
             { q: "___ he always do that?", o: ["Do", "Does"], a: "Does" },
             { q: "___ they like dogs?", o: ["Do", "Does"], a: "Do" },
@@ -922,7 +928,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const hebrewWord = wordInputHe.value.trim();
             if (!hebrewWord) return;
 
-            resultsContainer.innerHTML = "מתרגם לעברית...";
+            resultsContainer.innerHTML = "מתרגם לאנגלית...";
             resultsContainer.className = "loading";
             
             let englishWord = '';
@@ -956,7 +962,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     return response.json();
                 })
                 .then(defineData => {
-                    englishDefinition = defineData[0].meanings[0].definitions[0].definition;
+                    // Find the first valid definition
+                    const meaning = defineData[0].meanings.find(m => m.definitions[0]);
+                    if (!meaning) {
+                        throw new Error('לא נמצאה הגדרה');
+                    }
+                    englishDefinition = meaning.definitions[0].definition;
                     
                     resultsContainer.innerHTML = `
                         <div class="result-block">
@@ -965,7 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="result-block">
                             <h3>2. הגדרה באנגלית</h3>
-                            <p>${englishDefinition}</p>
+                            <p>(${meaning.partOfSpeech}) ${englishDefinition}</p>
                         </div>
                     `;
                     resultsContainer.innerHTML += `<p class="loading">מתרגם הגדרה לעברית...</p>`;
@@ -977,15 +988,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(finalData => {
                     const hebrewDefinition = finalData.responseData.translatedText;
                     
-                    resultsContainer.innerHTML = `
-                        <div class="result-block">
-                            <h3>1. תרגום לאנגלית</h3>
-                            <p>${englishWord}</p>
-                        </div>
-                        <div class="result-block">
-                            <h3>2. הגדרה באנגלית</h3>
-                            <p>${englishDefinition}</p>
-                        </div>
+                    resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">מתרגם הגדרה לעברית...</p>', '');
+                    resultsContainer.innerHTML += `
                         <div class="result-block">
                             <h3>3. תרגום ההגדרה</h3>
                             <p class="hebrew">${hebrewDefinition}</p>
@@ -995,14 +999,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => {
                     // This will catch any error from the chain
                     resultsContainer.className = '';
+                    resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">טוען הגדרה באנגלית...</p>', '');
+                    resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">מתרגם הגדרה לעברית...</p>', '');
+
                     if (error.message === 'לא נמצא תרגום') {
                         resultsContainer.innerHTML = "לא נמצא תרגום עבור המילה שהוכנסה.";
                     } else if (error.message === 'לא נמצאה הגדרה') {
-                         resultsContainer.innerHTML = `
-                            <div class="result-block">
-                                <h3>1. תרגום לאנגלית</h3>
-                                <p>${englishWord}</p>
-                            </div>
+                         resultsContainer.innerHTML += `
                             <p><strong>לא נמצאה הגדרה למילה "${englishWord}".</strong></p>
                         `;
                     } else {
