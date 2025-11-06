@@ -811,7 +811,112 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "find (he)", o: ["finds", "findes", "findies"], a: "finds" },
             { q: "feel (she)", o: ["feels", "feeles", "feelies"], a: "feels" },
             { q: "make (it)", o: ["makes", "makees", "makies"], a: "makes" },
-            { q: "live (he)", o: ["lives",Moshco's crew", "Nobody"], a: "Captain Moshco's crew" }
+            { q: "live (he)", o: ["lives", "livees", "livies"], a: "lives" },
+            { q: "play (she)", o: ["plays", "playes", "plaies"], a: "plays" },
+            { q: "sail (it)", o: ["sails", "sailes", "sailies"], a: "sails" },
+            { q: "copy (he)", o: ["copys", "copyes", "copies"], a: "copies" },
+            { q: "carry (she)", o: ["carrys", "carryes", "carries"], a: "carries" },
+            { q: "do (he)", o: ["dos", "does", "doies"], a: "does" },
+            { q: "hurry (she)", o: ["hurrys", "hurryes", "hurries"], a: "hurries" },
+            { q: "wash (it)", o: ["washs", "washes", "washies"], a: "washes" }
+        ],
+        'presentSimple2': [ // Don't / Doesn't
+            { q: "I ___ like chicken.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "My sister ___ eat pasta.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "You ___ buy apples.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "The dog ___ bark.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "My mum ___ read comics.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "Ann and I ___ go to school.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "Cows ___ live in the sea.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "They ___ play football.", o: ["don't", "doesn't"], a: "don't" },
+            { q: "My cat ___ chase mice.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "Her friend ___ speak English.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "This man ___ smoke.", o: ["don't", "doesn't"], a: "doesn't" },
+            { q: "It ___ run very fast.", o: ["don't", "doesn't"], a: "doesn't" }
+        ],
+        'presentSimple3': [ // Do / Does
+            { q: "___ cats play football?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ Pamela Anderson have blonde hair?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ your girl/boyfriend like swimming?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ David Beckham play football for England?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ you want to come with me?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ he always do that?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ they like dogs?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ your father speak German?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" }, // <-- *** THIS WAS THE BUG *** Fixed.
+            { q: "___ Chileans like Tango?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ he sing in the shower?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ your grandmother have a dog?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ you want an ice cream?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ your friends like you?", o: ["Do", "Does"], a: "Do" },
+            { q: "___ you have a lot of money?", o: ["Do", "Does"], a: "Do" }
+        ],
+        'speaking1': [ // Lvl 1
+            { q: "Where is my friend house?", o: ["Where is my friend house?", "Where is my friend's house?"], a: "Where is my friend's house?" },
+            { q: "Mike and Dan is going to the beach.", o: ["Mike and Dan is going...", "Mike and Dan are going..."], a: "Mike and Dan are going..." },
+            { q: "I have five cat.", o: ["I have five cat.", "I have five cats."], a: "I have five cats." },
+            { q: "Yesterday I were swimming.", o: ["Yesterday I were swimming.", "Yesterday I was swimming."], a: "Yesterday I was swimming." },
+            { q: "I will go hiking in the sea.", o: ["I will go hiking in the sea.", "I will go hiking in the mountains."], a: "I will go hiking in the mountains." },
+            { q: "We swims every friday.", o: ["We swims every friday.", "We swim every friday."], a: "We swim every friday." },
+            { q: "She ate water five minutes ago.", o: ["She ate water...", "She drank water..."], a: "She drank water..." },
+            { q: "Is my friend calls every day?", o: ["Is my friend calls...?", "Does my friend call...?"], a: "Does my friend call...?" },
+            { q: "We does laundry every week.", o: ["We does laundry...", "We do laundry..."], a: "We do laundry..." },
+            { q: "Amira and Lucy am ten years old.", o: ["Amira and Lucy am...", "Amira and Lucy are..."], a: "Amira and Lucy are..." }
+        ],
+        'speaking2': [ // Lvl 2
+            { q: "She ___ allergic to dairy, so she ___ drink milk.", o: ["is / don't", "are / does", "is / doesn't"], a: "is / doesn't" },
+            { q: "My grandmother is disabled. So she ___ visit us because she ___ walk.", o: ["can / can't", "can't / can't", "can / can"], a: "can't / can't" },
+            { q: "There is ___ power outage, so we ___ use a lot of electronic devices.", o: ["a / don't", "an / don't", "a / do"], a: "a / don't" },
+            { q: "Lisa wanted to ___ clean the village. She ___ many empty plastic bottles...", o: ["helped / see", "help / saw", "helping / saw"], a: "help / saw" },
+            { q: "Dana ___ Tanya to write... But Tanya replied... that it depends ___ the animal conditions.", o: ["tell / under", "told / on", "told / under"], a: "told / on" },
+            { q: "My father ___ ___ police officer, so he ___ commit crimes.", o: ["is / a / doesn't", "are / an / does", "is / an / doesn't"], a: "is / a / doesn't" },
+            { q: "I ___ to bake a cake for my friend ___ birthday, but I ran out of eggs...", o: ["wanted / friend's", "want / friend", "wanted / friend"], a: "wanted / friend's" },
+            { q: "My phone ___ down after it fell on the ___.", o: ["broke / hard concrete", "break / soft pillow", "broke / soft pillow"], a: "broke / hard concrete" }
+        ],
+        'adjectivesQuiz': [
+            { q: "1. האם צבעים הם גם תארים?", o: ["כן", "לא"], a: "כן" },
+            { q: "2. איך לומר באנגלית 'הכי רך'?", o: ["Softer", "Softest", "More soft"], a: "Softest" },
+            { q: "3. תרגם: This bag is the most expensive in that shop", o: ["התיק הזה יקר בחנות", "התיק הזה הכי יקר בחנות הזאת", "זה תיק יקר"], a: "התיק הזה הכי יקר בחנות הזאת" },
+            { q: "4. תרגם: she is the most beautiful woman in the world", o: ["היא אישה יפה בעולם", "היא האישה הכי יפה בעולם", "היא אישה יפה"], a: "היא האישה הכי יפה בעולם" },
+            { q: "5. תרגם: דן הוא הילד הכי חכם בכיתה.", o: ["Dan is a smart boy in class", "Dan is smarter in class", "Dan is the smartest boy in the class"], a: "Dan is the smartest boy in the class" },
+            { q: "6. תרגם: הכלב הכי חמוד", o: ["The cutest dog", "The cute dog", "Dog is cute"], a: "The cutest dog" },
+            { q: "7. תרגם: הפיצה הכי טעימה.", o: ["The tasty pizza", "The more tasty pizza", "The tastiest pizza"], a: "The tastiest pizza" },
+            { q: "8. מה יוצא דופן?", o: ["pink", "purple", "dog"], a: "dog" },
+            { q: "9. מה יוצא דופן?", o: ["cold", "cool", "tallest"], a: "tallest" },
+            { q: "10. מה יוצא דופן?", o: ["new", "fast", "tasty"], a: "new" } 
+        ],
+        // Reading Quizzes
+        'reading1': [
+            { q: "What is the dog's name?", o: ["Charlie", "Anna", "Max"], a: "Charlie" },
+            { q: "Where do they play?", o: ["In the house", "In the park", "At school"], a: "In the park" },
+            { q: "What does Anna throw for Charlie?", o: ["A stick", "A ball", "Food"], a: "A ball" },
+            { q: "What do they do when they get tired?", o: ["Go home", "Sit under a tree", "Eat chips"], a: "Sit under a tree" }
+        ],
+        'reading2': [
+            { q: "What does Tom find in his backyard?", o: ["A magic tree", "A magic paintbrush", "A rainbow"], a: "A magic paintbrush" },
+            { q: "What happens to the tree Tom paints?", o: ["It falls down", "It disappears", "It comes to life"], a: "It comes to life" },
+            { q: "What does Tom paint after the tree?", o: ["A flower", "A rainbow", "His friends"], a: "A rainbow" },
+            { q: "Who does Tom share the magic with?", o: ["His family", "His teacher", "His friends"], a: "His friends" }
+        ],
+        'reading3': [
+            { q: "What is the fox's name?", o: ["Max", "Storm", "Bird"], a: "Max" },
+            { q: "What did Max see in the tree?", o: ["A squirrel", "A bird's nest", "His family"], a: "A bird's nest" },
+            { q: "What did Max do with the nest?", o: ["He caught it and moved it", "He left it alone", "He told his family"], a: "He caught it and moved it" },
+            { q: "How did Max feel after helping?", o: ["Tired", "Proud", "Scared"], a: "Proud" },
+            { q: "Why did Max's family clap for him?", o: ["For being brave and kind", "For finding food", "For winning a race"], a: "For being brave and kind" }
+        ],
+        'reading4': [
+            { q: "Where did Jake and Mia find the cave?", o: ["In the school", "In the park", "In the forest"], a: "In the forest" },
+            { q: "How did Mia feel about going inside?", o: ["Only scared", "Only excited", "Excited and a little scared"], a: "Excited and a little scared" },
+            { q: "What did they find inside the cave?", o: ["A small animal", "A small treasure chest", "Their teacher"], a: "A small treasure chest" },
+            { q: "What happened after they opened the chest?", o: ["The cave started shaking", "They found gold", "A noise stopped"], a: "The cave started shaking" }
+        ],
+        'reading5': [
+            { q: "Who was Captain Moshco?", o: ["A famous soldier", "A famous pirate", "A famous captain"], a: "A famous pirate" },
+            { q: "What did the old map show?", o: ["A hidden island", "A new ship", "A jungle"], a: "A hidden island" },
+            { q: "Where was the 'X' on the map?", o: ["In a cave", "Under a big, old tree", "On the beach"], a: "Under a big, old tree" },
+            { q: "What was inside the chest?", o: ["Gold coins, jewels, and a sword", "Only gold coins", "An old map"], a: "Gold coins, jewels, and a sword" },
+            { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" } // <-- *** THIS WAS THE OTHER BUG *** Fixed.
         ]
     };
     
@@ -838,7 +943,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(hebrewWord)}&langpair=he|en`)
                 .then(response => response.json())
                 .then(translateData => {
-                    if (!translateData.responseData) {
+                    if (!translateData.responseData || translateData.responseData.translatedText === "") {
                         throw new Error('לא נמצא תרגום');
                     }
                     englishWord = translateData.responseData.translatedText.toLowerCase();
@@ -889,7 +994,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultsContainer.innerHTML += `
                         <div class="result-block">
                             <h3>3. תרגום ההגדרה</h3>
-                            <p class="hebrew">${hebrewDefinition}</p>
+                            <p class."hebrew">${hebrewDefinition}</p>
                         </div>
                     `;
                 })
