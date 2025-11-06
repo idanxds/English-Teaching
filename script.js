@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { text: 'אם הפועל מסתיים באות e מוסיפים רק את האות "d" ולא "ed", דוגמאות:\n- like → liked (מחבב ← חיבב)\n- arrive → arrived\n- decide → decided', button: "המשך" },
             { text: 'אם הפועל מסתיים באות עיצור, אות ניקוד, אות עיצור (cvc), הכפל את האות האחרונה האחרון לפני הוספת "-ed". אך אם במילה יש יותר מהעברה אחת אז cvc לא מתקיים.\nחוץ מכמה יוצאי דופן שלא מכפילים כגון: x,y,w ולפעמים k.\nדוגמאות למילים:\n- play → played (משחק ← שיחק)\n- stop → stopped (עצור ← עצר)', button: "המשך" },
             { text: "פעלים לא רגילים: בניגוד לכך, פעלים לא סדירים אינם פועלים לפי תבנית קבועה כאשר יוצרים את זמן העבר שלהם. לכן, חשוב לזכור את הצורות העבריות של הפעלים הללו.\nדוגמאות למילים:\n- go → went (הולך ← הלך)\n- see → saw (רואה ← ראה)\n- eat → ate (אוכל ← אכל)\n- know → knew (יודע ← ידע)", button: "המשך" },
-            { text: 'משפטים שליליים: כדי ליצור משפטים שליליים בזמן עבר פשוט, השתמשו ב-"did not" (או הצורה המקוצרת "didn\'t") ואחריה הצורה הבסיסית של הפועל.\nמבנה זה מעביר ביעילות שהפעולה לא התרחשה בעבר.\nדוגמאות למשפטים:\n- I didn\'t walk to school today. (אני לא הלכתי לבית ספר היום)\n- She didn\'t finish her homework. (היא לא סיימה את שיעורי הבית שלה)', button: "המשך" },
+            { text: 'משפטים שליליים: כדי ליצור משפטים שליליים בזמן עבר פשוט, השתמשו ב-"did not" (או הצורה המקוצרת "didn\'t") ואחריה הצורה הבסיסית של הפועל.\nמבנה זה מעביר ביעילות שהפעולה לא התרחשה בעבר.\nדוגמאות למפטים:\n- I didn\'t walk to school today. (אני לא הלכתי לבית ספר היום)\n- She didn\'t finish her homework. (היא לא סיימה את שיעורי הבית שלה)', button: "המשך" },
             { text: 'שאלות: כאשר יוצרים שאלות בזמן עבר פשוט, התחילו ב-"Did" או ב-"Were" או ב-"Was", ואחריו הנושא וצורת הבסיס של הפועל.\nפורמט זה חיוני להשגת מידע על פעולות בעבר.\nדוגמאות:\n1.What did you do yesterday? (מה עשית אתמול?)\n2.Where did you go last weekend? (לאן הלכת בסוף השבוע האחרון?)\n3.Did you play any sports last week? (האם שיחקת בספורט בשבוע שעבר?)', button: "המשך למשימה" },
         ];
         createChainedContentPage(assignmentId, steps, () => {
@@ -827,7 +827,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "___ cats play football?", o: ["Do", "Does"], a: "Do" },
             { q: "___ Pamela Anderson have blonde hair?", o: ["Do", "Does"], a: "Does" },
             { q: "___ your girl/boyfriend like swimming?", o: ["Do", "Does"], a: "Does" },
-            { q: "___ David Beckham play football for England?", o: ["Do", "Does"], a: "Does" },
+            { q: "___ David Beckham play football for England?", o: ["Do",Dos"], a: "Does" },
             { q: "___ you want to come with me?", o: ["Do", "Does"], a: "Do" },
             { q: "___ he always do that?", o: ["Do", "Does"], a: "Does" },
             { q: "___ they like dogs?", o: ["Do", "Does"], a: "Do" },
@@ -908,6 +908,109 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" } // <-- *** THIS WAS THE OTHER BUG *** Fixed.
         ]
     };
+    
+    // --- WORD TOOL (HEBREW > EN > DEFINE > HEBREW) ---
+    
+    // Check if these elements exist on the page
+    const wordToolBtn = document.getElementById('word-tool-btn');
+    const wordInputHe = document.getElementById('word-input-he');
+    const resultsContainer = document.getElementById('word-tool-results');
+
+    if (wordToolBtn && wordInputHe && resultsContainer) {
+    
+        wordToolBtn.addEventListener('click', () => {
+            const hebrewWord = wordInputHe.value.trim();
+            if (!hebrewWord) return;
+
+            resultsContainer.innerHTML = "מתרגם לעברית...";
+            resultsContainer.className = "loading";
+            
+            let englishWord = '';
+            let englishDefinition = '';
+
+            // Step 1: Translate Hebrew to English
+            fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(hebrewWord)}&langpair=he|en`)
+                .then(response => response.json())
+                .then(translateData => {
+                    if (!translateData.responseData) {
+                        throw new Error('לא נמצא תרגום');
+                    }
+                    englishWord = translateData.responseData.translatedText.toLowerCase();
+                    
+                    resultsContainer.innerHTML = `
+                        <div class="result-block">
+                            <h3>1. תרגום לאנגלית</h3>
+                            <p>${englishWord}</p>
+                        </div>
+                    `;
+                    resultsContainer.className = '';
+                    resultsContainer.innerHTML += `<p class="loading">טוען הגדרה באנגלית...</p>`;
+                    
+                    // Step 2: Fetch English Definition
+                    return fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${englishWord}`);
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('לא נמצאה הגדרה');
+                    }
+                    return response.json();
+                })
+                .then(defineData => {
+                    englishDefinition = defineData[0].meanings[0].definitions[0].definition;
+                    
+                    resultsContainer.innerHTML = `
+                        <div class="result-block">
+                            <h3>1. תרגום לאנגלית</h3>
+                            <p>${englishWord}</p>
+                        </div>
+                        <div class="result-block">
+                            <h3>2. הגדרה באנגלית</h3>
+                            <p>${englishDefinition}</p>
+                        </div>
+                    `;
+                    resultsContainer.innerHTML += `<p class="loading">מתרגם הגדרה לעברית...</p>`;
+
+                    // Step 3: Translate English Definition to Hebrew
+                    return fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(englishDefinition)}&langpair=en|he`);
+                })
+                .then(response => response.json())
+                .then(finalData => {
+                    const hebrewDefinition = finalData.responseData.translatedText;
+                    
+                    resultsContainer.innerHTML = `
+                        <div class="result-block">
+                            <h3>1. תרגום לאנגלית</h3>
+                            <p>${englishWord}</p>
+                        </div>
+                        <div class="result-block">
+                            <h3>2. הגדרה באנגלית</h3>
+                            <p>${englishDefinition}</p>
+                        </div>
+                        <div class="result-block">
+                            <h3>3. תרגום ההגדרה</h3>
+                            <p class="hebrew">${hebrewDefinition}</p>
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    // This will catch any error from the chain
+                    resultsContainer.className = '';
+                    if (error.message === 'לא נמצא תרגום') {
+                        resultsContainer.innerHTML = "לא נמצא תרגום עבור המילה שהוכנסה.";
+                    } else if (error.message === 'לא נמצאה הגדרה') {
+                         resultsContainer.innerHTML = `
+                            <div class="result-block">
+                                <h3>1. תרגום לאנגלית</h3>
+                                <p>${englishWord}</p>
+                            </div>
+                            <p><strong>לא נמצאה הגדרה למילה "${englishWord}".</strong></p>
+                        `;
+                    } else {
+                        resultsContainer.innerHTML = "אירעה שגיאה. נסה שוב.";
+                    }
+                });
+        });
+    }
     
     // --- INITIALIZE ---
     initYouTubePage();
