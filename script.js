@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+     
     // --- YOUTUBE CONFIGURATION ---
     // ----------------------------------------------------
     // --- !!! EDIT THIS SECTION FOR YOUTUBE VIDEOS !!! ---
