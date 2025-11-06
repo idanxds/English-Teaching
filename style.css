@@ -432,13 +432,13 @@ p {
     gap: 10px;
     margin-bottom: 15px;
 }
-#word-input-auto {
+#word-input-he {
     width: 100%;
     padding: 10px;
     font-size: 1.1rem;
     border: 1px solid var(--dark-gray-color);
     border-radius: 8px;
-    direction: rtl; /* Start as RTL, but user can type anything */
+    direction: rtl;
 }
 #word-tool-btn {
     width: 100%;
