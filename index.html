@@ -26,7 +26,7 @@
     <div class="main-content">
         <nav class="main-nav">
             <div class="nav-links">
-                <button class="nav-button" data-target="youtube-page">סרטוני YouTube</button>
+                <button class="nav-button" data-target="presentations-page">מצגות</button> <button class="nav-button" data-target="youtube-page">סרטוני YouTube</button>
                 <button class="nav-button" data-target="podcast-page">פודקאסט</button>
             </div>
             <div class="nav-brand">
@@ -186,6 +186,21 @@
                     <div id="built-sentence-container"></div>
                     <div id="word-options" class="quiz-options"></div>
                     <p id="sentence-feedback" class="quiz-feedback"></p>
+                </div>
+            </section>
+
+            <section id="presentations-page" class="page hidden">
+                <button class="back-button" data-target="home-page">חזרה</button>
+                <h1>מצגות</h1>
+                <div class="presentation-grid">
+                    </div>
+            </section>
+
+            <section id="presentation-viewer-page" class="page hidden">
+                <button class="back-button" data-target="presentations-page">חזרה למצגות</button>
+                <h1 id="presentation-viewer-title"></h1>
+                <div class="presentation-container">
+                    <iframe id="presentation-iframe" src="" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
                 </div>
             </section>
 
