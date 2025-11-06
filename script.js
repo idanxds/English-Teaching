@@ -890,11 +890,37 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "What is the dog's name?", o: ["Charlie", "Anna", "Max"], a: "Charlie" },
             { q: "Where do they play?", o: ["In the house", "In the park", "At school"], a: "In the park" },
             { q: "What does Anna throw for Charlie?", o: ["A stick", "A ball", "Food"], a: "A ball" },
-            { q: "What do they do when they get tired?", o: ["Go home", "Sit under a tree", "Eat chips"], a: "Sit under aMoshco's crew", "Nobody"], a: "Captain Moshco's crew" } // <-- *** THIS WAS THE OTHER BUG *** Fixed.
+            { q: "What do they do when they get tired?", o: ["Go home", "Sit under a tree", "Eat chips"], a: "Sit under a tree" }
+        ],
+        'reading2': [
+            { q: "What does Tom find in his backyard?", o: ["A magic tree", "A magic paintbrush", "A rainbow"], a: "A magic paintbrush" },
+            { q: "What happens to the tree Tom paints?", o: ["It falls down", "It disappears", "It comes to life"], a: "It comes to life" },
+            { q: "What does Tom paint after the tree?", o: ["A flower", "A rainbow", "His friends"], a: "A rainbow" },
+            { q: "Who does Tom share the magic with?", o: ["His family", "His teacher", "His friends"], a: "His friends" }
+        ],
+        'reading3': [
+            { q: "What is the fox's name?", o: ["Max", "Storm", "Bird"], a: "Max" },
+            { q: "What did Max see in the tree?", o: ["A squirrel", "A bird's nest", "His family"], a: "A bird's nest" },
+            { q: "What did Max do with the nest?", o: ["He caught it and moved it", "He left it alone", "He told his family"], a: "He caught it and moved it" },
+            { q: "How did Max feel after helping?", o: ["Tired", "Proud", "Scared"], a: "Proud" },
+            { q: "Why did Max's family clap for him?", o: ["For being brave and kind", "For finding food", "For winning a race"], a: "For being brave and kind" }
+        ],
+        'reading4': [
+            { q: "Where did Jake and Mia find the cave?", o: ["In the school", "In the park", "In the forest"], a: "In the forest" },
+            { q: "How did Mia feel about going inside?", o: ["Only scared", "Only excited", "Excited and a little scared"], a: "Excited and a little scared" },
+            { q: "What did they find inside the cave?", o: ["A small animal", "A small treasure chest", "Their teacher"], a: "A small treasure chest" },
+            { q: "What happened after they opened the chest?", o: ["The cave started shaking", "They found gold", "A noise stopped"], a: "The cave started shaking" }
+        ],
+        'reading5': [
+            { q: "Who was Captain Moshco?", o: ["A famous soldier", "A famous pirate", "A famous captain"], a: "A famous pirate" },
+            { q: "What did the old map show?", o: ["A hidden island", "A new ship", "A jungle"], a: "A hidden island" },
+            { q: "Where was the 'X' on the map?", o: ["In a cave", "Under a big, old tree", "On the beach"], a: "Under a big, old tree" },
+            { q: "What was inside the chest?", o: ["Gold coins, jewels, and a sword", "Only gold coins", "An old map"], a: "Gold coins, jewels, and a sword" },
+            { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" } // <-- *** THIS WAS THE OTHER BUG *** Fixed.
         ]
     };
     
-    // --- WORD TOOL (HEBREW > EN > DEFINE > HEBREW) ---
+    // --- WORD TOOL (ANY > EN/HE > DEFINE > HE) ---
     
     // Check if these elements exist on the page
     const wordToolBtn = document.getElementById('word-tool-btn');
@@ -922,15 +948,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!enData.responseData) throw new Error('שפה אינה נתמכת');
                     
                     detectedLang = enData.responseData.detectedLanguage;
+                    if (detectedLang === 'un' || detectedLang === 'uk') { // 'un' = unknown
+                         throw new Error('שפה אינה נתמכת');
+                    }
+                    
                     if (detectedLang === 'en') {
                         englishWord = originalWord;
+                        // Now get Hebrew translation
                         return fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalWord)}&langpair=en|he`);
                     } else if (detectedLang === 'he') {
                         hebrewWord = originalWord;
                         englishWord = enData.responseData.translatedText.toLowerCase();
-                        return { json: () => ({ responseData: { translatedText: hebrewWord } }) }; // Mock fetch response
+                        // Mock a fetch response since we already have the Hebrew word
+                        return { json: () => ({ responseData: { translatedText: hebrewWord } }) }; 
                     } else {
-                        // Language is not EN or HE
+                        // Language is not EN or HE, get both translations
                         englishWord = enData.responseData.translatedText.toLowerCase();
                         return fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalWord)}&langpair=${detectedLang}|he`);
                     }
@@ -940,14 +972,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!heData.responseData) throw new Error('שפה אינה נתמכת');
                     hebrewWord = heData.responseData.translatedText;
                     
-                    if (detectedLang === 'en') {
-                        hebrewWord = heData.responseData.translatedText;
-                    }
-                    
-                    if (detectedLang === 'un' || detectedLang === 'uk') { // 'un' = unknown, 'uk' = ukrainian (often mis-detected)
-                         throw new Error('שפה אינה נתמכת');
-                    }
-
                     // Now we have both English and Hebrew words
                     resultsContainer.innerHTML = `
                         <div class="result-block">
