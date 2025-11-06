@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-     
+    
     // --- YOUTUBE CONFIGURATION ---
     // ----------------------------------------------------
     // --- !!! EDIT THIS SECTION FOR YOUTUBE VIDEOS !!! ---
@@ -1040,7 +1040,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p><strong>לא נמצאה הגדרה למילה "${englishWord}".</strong></p>
                         `;
                     } else {
-                        resultsContainer.innerHTML = `<p style="text-align: center; font-weight:bold;">${error.message}</p>`;
+                        console.error("Full error object:", error);
+                        resultsContainer.innerHTML = `<p style="text-align: center; font-weight:bold;">אירעה שגיאה: ${error.message}</p>`;
                     }
                 });
         });
