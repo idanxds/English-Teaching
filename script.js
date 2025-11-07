@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- YOUTUBE CONFIGURATION ---
+    // I have added all 20 of your new links.
     const youtubeLinks = {
         "abc-video": { title: "סרטון ABC", url: "https://www.youtube.com/embed/BELlZKpi1Zs" },
         "1": { title: "סרטון 1", url: "https://www.youtube.com/embed/3z4TQfNiqLc" },
@@ -925,7 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         'reading2': [
             { q: "What does Tom find in his backyard?", o: ["A magic tree", "A magic paintbrush", "A rainbow"], a: "A magic paintbrush" },
-            { q. "What happens to the tree Tom paints?", o: ["It falls down", "It disappears", "It comes to life"], a: "It comes to life" },
+            { q: "What happens to the tree Tom paints?", o: ["It falls down", "It disappears", "It comes to life"], a: "It comes to life" },
             { q: "What does Tom paint after the tree?", o: ["A flower", "A rainbow", "His friends"], a: "A rainbow" },
             { q: "Who does Tom share the magic with?", o: ["His family", "His teacher", "His friends"], a: "His friends" }
         ],
