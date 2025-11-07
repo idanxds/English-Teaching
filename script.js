@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- NEW: PRESENTATION CONFIGURATION ---
     const presentationLinks = {
-        "1": { title: "מצגת 1", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_1" },
+        "1": { title: "מצגת 1", url: "https://docs.google.com/presentation/d/e/2PACX-1vR7vLvZY9TasfkVqcGfpp6mwr1K5amT4FhKUGZwH58UdBo5hVISeIgdc8jjVKoAcCjG7Oq3l1zcF5BT" },
         "2": { title: "מצגת 2", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_2" },
         // Add up to 12 here
         "12": { title: "מצגת 12", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_12" },
