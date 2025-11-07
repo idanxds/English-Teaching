@@ -18,32 +18,32 @@ document.addEventListener('DOMContentLoaded', () => {
         "13": { title: "סרטון 13", url: "https://www.youtube.com/embed/FnzAzZJDq9U" },
         "14": { title: "סרטון 14", url: "https://www.youtube.com/embed/-8-PeyfHMVA" },
         "15": { title: "סרטון 15", url: "https://www.youtube.com/embed/hGos4rKSJKI" },
-        "16": { title: "סרטון 16", url: "https://www.youtube.com/embed/" },
-        "17": { title: "סרטון 17", url: "https://www.youtube.com/embed/" },
-        "18": { title: "סרטון 18", url: "https://www.youtube.com/embed/" },
-        "19": { title: "סרטון 19", url: "https://www.youtube.com/embed/" },
-        "20": { title: "סרטון 20", url: "https://www.youtube.com/embed/" },
-        "21": { title: "סרטון 21", url: "https://www.youtube.com/embed/" },
-        "22": { title: "סרטון 22", url: "https://www.youtube.com/embed/" },
-        "23": { title: "סרטון 23", url: "https://www.youtube.com/embed/" },
-        "24": { title: "סרטון 24", url: "https://www.youtube.com/embed/" },
-        "25": { title: "סרטון 25", url: "https://www.youtube.com/embed/" },
-        "26": { title: "סרטון 26", url: "https://www.youtube.com/embed/" },
-        "27": { title: "סרטון 27", url: "https://www.youtube.com/embed/" },
-        "28": { title: "סרטון 28", url: "https://www.youtube.com/embed/" },
-        "29": { title: "סרטון 29", url: "https://www.youtube.com/embed/" },
-        "30": { title: "סרטון 30", url: "https://www.youtube.com/embed/" },
-        "31": { title: "סרטון 31", url: "https://www.youtube.com/embed/" },
-        "32": { title: "סרטון 32", url: "https://www.youtube.com/embed/" },
-        "33": { title: "סרטון 33", url: "https://www.youtube.com/embed/" },
-        "34": { title: "סרטון 34", url: "https://www.youtube.com/embed/" },
-        "35": { title: "סרטון 35", url: "https://www.youtube.com/embed/" },
-        "36": { title: "סרטון 36", url: "https://www.youtube.com/embed/" },
+        "16": { title: "סרטון 16", url: "https://www.youtube.com/embed/TCIG2XszOLo" },
+        "17": { title: "סרטון 17", url: "https://www.youtube.com/embed/FvucjOWqfrM" },
+        "18": { title: "סרטון 18", url: "https://www.youtube.com/embed/FWtJE9jzjXo" },
+        "19": { title: "סרטון 19", url: "https://www.youtube.com/embed/G8PE96MBZtU" },
+        "20": { title: "סרטון 20", url: "https://www.youtube.com/embed/nXo1LufKDgc" },
+        "21": { title: "סרטון 21", url: "https://www.youtube.com/embed/your-video-id-21" },
+        "22": { title: "סרטון 22", url: "https://www.youtube.com/embed/your-video-id-22" },
+        "23": { title: "סרטון 23", url: "https://www.youtube.com/embed/your-video-id-23" },
+        "24": { title: "סרטון 24", url: "https://www.youtube.com/embed/your-video-id-24" },
+        "25": { title: "סרטון 25", url: "https://www.youtube.com/embed/your-video-id-25" },
+        "26": { title: "סרטון 26", url: "https://www.youtube.com/embed/your-video-id-26" },
+        "27": { title: "סרטון 27", url: "https://www.youtube.com/embed/your-video-id-27" },
+        "28": { title: "סרטון 28", url: "https://www.youtube.com/embed/your-video-id-28" },
+        "29": { title: "סרטון 29", url: "https://www.youtube.com/embed/your-video-id-29" },
+        "30": { title: "סרטון 30", url: "https://www.youtube.com/embed/your-video-id-30" },
+        "31": { title: "סרטון 31", url: "https://www.youtube.com/embed/your-video-id-31" },
+        "32": { title: "סרטון 32", url: "https://www.youtube.com/embed/your-video-id-32" },
+        "33": { title: "סרטון 33", url: "https://www.youtube.com/embed/your-video-id-33" },
+        "34": { title: "סרטון 34", url: "https://www.youtube.com/embed/your-video-id-34" },
+        "35": { title: "סרטון 35", url: "https://www.youtube.com/embed/your-video-id-35" },
+        "36": { title: "סרטון 36", url: "https://www.youtube.com/embed/your-video-id-36" },
     };
 
     // --- NEW: PRESENTATION CONFIGURATION ---
     const presentationLinks = {
-        "1": { title: "מצגת 1", url: "https://docs.google.com/presentation/d/e/2PACX-1vR7vLvZY9TasfkVqcGfpp6mwr1K5amT4FhKUGZwH58UdBo5hVISeIgdc8jjVKoAcCjG7Oq3l1zcF5BT" },
+        "1": { title: "My First Presentation", url: "https://docs.google.com/presentation/d/e/2PACX-1vR7vLvZY9TasfkVqcGfpp6mwr1K5amT4FhKUGZwH58UdBo5hVISeIgdc8jjVKoAcCjG7Oq3l1zcF5BT/pubembed?start=false&loop=false&delayms=3000" },
         "2": { title: "מצגת 2", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_2" },
         // Add up to 12 here
         "12": { title: "מצגת 12", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_12" },
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = '';
         for (let i = 1; i <= 12; i++) { // Assuming max 12 presentations
             const pres = presentationLinks[i.toString()];
-            if (pres) {
+            if (pres && pres.url.startsWith("https://")) { // Only show if URL is not a placeholder
                 const button = document.createElement('button');
                 button.className = 'action-button';
                 button.textContent = pres.title;
@@ -882,7 +882,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "___ your friends like you?", o: ["Do", "Does"], a: "Do" },
             { q: "___ you have a lot of money?", o: ["Do", "Does"], a: "Do" }
         ],
-        'speaking1': [ // Llvl 1
+        'speaking1': [ // Lvl 1
             { q: "Where is my friend house?", o: ["Where is my friend house?", "Where is my friend's house?"], a: "Where is my friend's house?" },
             { q: "Mike and Dan is going to the beach.", o: ["Mike and Dan is going...", "Mike and Dan are going..."], a: "Mike and Dan are going..." },
             { q: "I have five cat.", o: ["I have five cat.", "I have five cats."], a: "I have five cats." },
@@ -925,7 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         'reading2': [
             { q: "What does Tom find in his backyard?", o: ["A magic tree", "A magic paintbrush", "A rainbow"], a: "A magic paintbrush" },
-            { q: "What happens to the tree Tom paints?", o: ["It falls down", "It disappears", "It comes to life"], a: "It comes to life" },
+            { q. "What happens to the tree Tom paints?", o: ["It falls down", "It disappears", "It comes to life"], a: "It comes to life" },
             { q: "What does Tom paint after the tree?", o: ["A flower", "A rainbow", "His friends"], a: "A rainbow" },
             { q: "Who does Tom share the magic with?", o: ["His family", "His teacher", "His friends"], a: "His friends" }
         ],
