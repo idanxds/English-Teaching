@@ -84,6 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             document.body.classList.remove('video-mode');
         }
+        
+        // Close mobile sidebar on any navigation
+        document.body.classList.remove('sidebar-open');
     }
 
     // Main navigation (top bar)
@@ -106,6 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('login-button').addEventListener('click', () => {
         showPage('assignment-hub-page');
     });
+
+    // --- NEW: MOBILE MENU ---
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', () => {
+            document.body.classList.toggle('sidebar-open');
+        });
+    }
 
     // --- ASSIGNMENT HUB ---
     function updateAssignmentHub() {
@@ -140,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Start from 1, skip "abc-video"
         for (let i = 1; i <= 36; i++) {
             const video = youtubeLinks[i.toString()];
-            if (video) {
+            if (video && video.url.includes("embed")) {
                 const button = document.createElement('button');
                 button.className = 'action-button';
                 button.textContent = video.title;
@@ -829,7 +840,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "The school bag is ___ the chair and the desk.", o: ["between", "next to", "under"], a: "between" },
             { q: "The clock is hanging ___ the wall above the TV.", o: ["on", "under", "in front of"], a: "on" },
             { q: "The cat is hiding ___ the sofa because it is scared.", o: ["behind", "on", "in"], a: "behind" },
-            { q: "The books are neatly placed ___ the shelf.", o: ["on", "under", "in front of"], a: "on" },
+            { q: "The books are neatly placed ___ the shelf.", o: ["on", "under","in front of"], a: "on" },
             { q: "The bike is leaning ___ the wall in the garage.", o: ["next to", "on", "under"], a: "next to" } 
         ],
         'presentSimple1': [ // s/es/ies
@@ -875,7 +886,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "___ he always do that?", o: ["Do", "Does"], a: "Does" },
             { q: "___ they like dogs?", o: ["Do", "Does"], a: "Do" },
             { q: "___ your father speak German?", o: ["Do", "Does"], a: "Does" },
-            { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" }, // <-- *** THIS WAS THE BUG *** Fixed.
+            { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" }, // <-- *** BUG FIXED ***
             { q: "___ Chileans like Tango?", o: ["Do", "Does"], a: "Do" },
             { q: "___ he sing in the shower?", o: ["Do", "Does"], a: "Does" },
             { q: "___ your grandmother have a dog?", o: ["Do", "Does"], a: "Does" },
