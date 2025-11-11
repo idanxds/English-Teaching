@@ -886,7 +886,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "___ he always do that?", o: ["Do", "Does"], a: "Does" },
             { q: "___ they like dogs?", o: ["Do", "Does"], a: "Do" },
             { q: "___ your father speak German?", o: ["Do", "Does"], a: "Does" },
-            { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" }, // <-- *** BUG FIXED ***
+            { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" }, // <-- *** THIS WAS THE BUG *** Fixed.
             { q: "___ Chileans like Tango?", o: ["Do", "Does"], a: "Do" },
             { q: "___ he sing in the shower?", o: ["Do", "Does"], a: "Does" },
             { q: "___ your grandmother have a dog?", o: ["Do", "Does"], a: "Does" },
@@ -963,38 +963,73 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
     
-    // --- WORD TOOL (HEBREW > EN > DEFINE > HEBREW) ---
+    // --- WORD TOOL (ANY > EN/HE > DEFINE > HE) ---
     
     // Check if these elements exist on the page
     const wordToolBtn = document.getElementById('word-tool-btn');
-    const wordInputHe = document.getElementById('word-input-he'); // Renamed for clarity
+    const wordInputAuto = document.getElementById('word-input-auto'); // Changed ID
     const resultsContainer = document.getElementById('word-tool-results');
 
-    if (wordToolBtn && wordInputHe && resultsContainer) {
+    if (wordToolBtn && wordInputAuto && resultsContainer) {
     
         wordToolBtn.addEventListener('click', () => {
-            const hebrewWord = wordInputHe.value.trim();
-            if (!hebrewWord) return;
+            const originalWord = wordInputAuto.value.trim();
+            if (!originalWord) return;
 
-            resultsContainer.innerHTML = "מתרגם לאנגלית...";
+            resultsContainer.innerHTML = "מעבד בקשה...";
             resultsContainer.className = "loading";
             
+            let detectedLang = '';
             let englishWord = '';
+            let hebrewWord = '';
             let englishDefinition = '';
 
-            // Step 1: Translate Hebrew to English
-            fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(hebrewWord)}&langpair=he|en`)
+            // Step 1: Detect language and get initial translations
+            fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalWord)}&langpair=auto|en`)
                 .then(response => response.json())
-                .then(translateData => {
-                    if (!translateData.responseData || translateData.responseData.translatedText === "") {
-                        throw new Error('לא נמצא תרגום');
+                .then(enData => {
+                    if (!enData.responseData) {
+                        throw new Error('שפה אינה נתמכת');
                     }
-                    englishWord = translateData.responseData.translatedText.toLowerCase();
                     
+                    detectedLang = enData.responseData.detectedLanguage;
+                    if (detectedLang === 'en') {
+                        englishWord = originalWord;
+                        // Now get Hebrew translation
+                        return fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalWord)}&langpair=en|he`);
+                    } else if (detectedLang === 'he') {
+                        hebrewWord = originalWord;
+                        englishWord = enData.responseData.translatedText.toLowerCase();
+                        // Mock a fetch response since we already have the Hebrew word
+                        return { json: () => ({ responseData: { translatedText: hebrewWord } }) }; 
+                    } else {
+                        // Language is not EN or HE, get both translations
+                        englishWord = enData.responseData.translatedText.toLowerCase();
+                        return fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalWord)}&langpair=${detectedLang}|he`);
+                    }
+                })
+                .then(response => response.json())
+                .then(heData => {
+                    if (!heData.responseData) {
+                         throw new Error('שפה אינה נתמכת');
+                    }
+                    
+                    // This handles the case where the input was Hebrew
+                    if (detectedLang === 'he') {
+                        hebrewWord = originalWord;
+                    } else {
+                        hebrewWord = heData.responseData.translatedText;
+                    }
+                    
+                    // Now we have both English and Hebrew words
                     resultsContainer.innerHTML = `
                         <div class="result-block">
-                            <h3>1. תרגום לאנגלית</h3>
+                            <h3>תרגום לאנגלית</h3>
                             <p>${englishWord}</p>
+                        </div>
+                        <div class="result-block">
+                            <h3>תרגום לעברית</h3>
+                            <p class="hebrew">${hebrewWord}</p>
                         </div>
                     `;
                     resultsContainer.className = '';
@@ -1020,7 +1055,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">טוען הגדרה באנגלית...</p>', '');
                     resultsContainer.innerHTML += `
                         <div class="result-block">
-                            <h3>2. הגדרה באנגלית (${meaning.partOfSpeech})</h3>
+                            <h3>הגדרה באנגלית (${meaning.partOfSpeech})</h3>
                             <p>${englishDefinition}</p>
                         </div>
                     `;
@@ -1036,7 +1071,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">מתרגם הגדרה לעברית...</p>', '');
                     resultsContainer.innerHTML += `
                         <div class="result-block">
-                            <h3>3. תרגום ההגדרה</h3>
+                            <h3>תרגום ההגדרה</h3>
                             <p class="hebrew">${hebrewDefinition}</p>
                         </div>
                     `;
@@ -1047,8 +1082,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">טוען הגדרה באנגלית...</p>', '');
                     resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">מתרגם הגדרה לעברית...</p>', '');
 
-                    if (error.message === 'לא נמצא תרגום') {
-                        resultsContainer.innerHTML = "לא נמצא תרגום עבור המילה שהוכנסה.";
+                    if (error.message === 'שפה אינה נתמכת') {
+                        resultsContainer.innerHTML = `<p class="hebrew" style="text-align: center; font-weight:bold;">שפה אינה נתמכת. נסה שפה אחרת.</p>`;
                     } else if (error.message === 'לא נמצאה הגדרה') {
                          resultsContainer.innerHTML += `
                             <p><strong>לא נמצאה הגדרה למילה "${englishWord}".</strong></p>
@@ -1061,7 +1096,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         // Allow pressing Enter to search
-        wordInputHe.addEventListener('keypress', (e) => {
+        wordInputAuto.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 wordToolBtn.click();
             }
