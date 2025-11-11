@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>אתר למידה באנגלית</title>
-    <link rel="stylesheet" href="style.css">
+
+    <meta name="theme-color" content="#2c3e50"/>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png"> <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <aside class="translate-sidebar">
         <div class="word-tool-container">
-            <h2>כלי מילים (עברית)</h2>
-            <p>הקלד מילה בעברית לקבלת תרגום, הגדרה באנגלית, והגדרה מתורגמת:</p>
+            <h2>כלי מילים אוניברסלי</h2>
+            <p>הקלד מילה (בכל שפה) לקבלת תרגומים והגדרות:</p>
             <div class="word-tool-controls">
-                <input type="text" id="word-input-he" placeholder="הכנס מילה בעברית..." dir="rtl">
+                <input type="text" id="word-input-auto" placeholder="הקלד מילה..." dir="rtl">
                 <button id="word-tool-btn" class="action-button small">חפש</button>
             </div>
             
@@ -26,12 +29,18 @@
     <div class="main-content">
         <nav class="main-nav">
             <div class="nav-links">
-                <button class="nav-button" data-target="presentations-page">מצגות</button> <button class="nav-button" data-target="youtube-page">סרטוני YouTube</button>
+                <button class="nav-button" data-target="presentations-page">מצגות</button>
+                <button class="nav-button" data-target="youtube-page">סרטוני YouTube</button>
                 <button class="nav-button" data-target="podcast-page">פודקאסט</button>
             </div>
             <div class="nav-brand">
                 <button class="nav-button" data-target="home-page">עמוד הבית</button>
             </div>
+            <button id="mobile-menu-btn" class="mobile-menu-button">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
 
         <div id="app">
@@ -207,15 +216,18 @@
         </div> </div> <script src="script.js"></script>
 
     <script type="text/javascript">
+        <!--Start of Tawk.to Script-->
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
     (function(){
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
     s1.async=true;
-    s1.src='https://embed.tawk.to/690b64f3418b98195b55049c/1j9a84lpt';
+    s1.src='https://embed.tawk.to/6912e746f9fa8f19671f5407/default';
     s1.charset='UTF-8';
     s1.setAttribute('crossorigin','*');
     s0.parentNode.insertBefore(s1,s0);
     })();
+</script>
+<!--End of Tawk.to Script-->
     </script>
     </body>
 </html>
