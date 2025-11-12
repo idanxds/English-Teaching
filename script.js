@@ -963,127 +963,89 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
     
-    // --- WORD TOOL (ANY > EN/HE > DEFINE > HE) ---
-    // This is the new, working "any language" logic
-    
+    // --- WORD TOOL (Fixed & Auto Language Detection) ---
     const wordToolBtn = document.getElementById('word-tool-btn');
-    const wordInputAuto = document.getElementById('word-input-auto'); // Changed ID
+    const wordInputAuto = document.getElementById('word-input-auto');
     const resultsContainer = document.getElementById('word-tool-results');
-
-    if (wordToolBtn && wordInputAuto && resultsContainer) {
     
-        wordToolBtn.addEventListener('click', () => {
-            const originalWord = wordInputAuto.value.trim();
-            if (!originalWord) return;
-
-            resultsContainer.innerHTML = "מעבד בקשה...";
-            resultsContainer.className = "loading";
-            
-            let englishWord = '';
-            let hebrewWord = '';
-            let englishDefinition = '';
-
-            // This function handles the API logic
-            async function getWordData() {
-                try {
-                    // Step 1: Get English Translation (and detect language)
-                    const enResponse = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalWord)}&langpair=auto|en`);
-                    const enData = await enResponse.json();
-                    
-                    if (!enData.responseData) {
-                        throw new Error('שפה אינה נתמכת');
-                    }
-                    
-                    const detectedLang = enData.responseData.detectedLanguage;
-                    
-                    if (detectedLang === 'en') {
-                        englishWord = originalWord;
-                    } else {
-                        englishWord = enData.responseData.translatedText.toLowerCase();
-                    }
-
-                    // Step 2: Get Hebrew Translation
-                    let heResponse;
-                    if (detectedLang === 'he') {
-                        hebrewWord = originalWord;
-                    } else {
-                        heResponse = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalWord)}&langpair=${detectedLang}|he`);
-                        const heData = await heResponse.json();
-                        if (!heData.responseData) throw new Error('שפה אינה נתמכת');
-                        hebrewWord = heData.responseData.translatedText;
-                    }
-
-                    // At this point, we have both. Update UI.
-                    resultsContainer.innerHTML = `
-                        <div class="result-block">
-                            <h3>תרגום לאנגלית</h3>
-                            <p>${englishWord}</p>
-                        </div>
-                        <div class="result-block">
-                            <h3>תרגום לעברית</h3>
-                            <p class="hebrew">${hebrewWord}</p>
-                        </div>
-                    `;
-                    resultsContainer.className = '';
-                    resultsContainer.innerHTML += `<p class="loading">טוען הגדרה באנגלית...</p>`;
-
-                    // Step 3: Get English Definition
-                    const defineResponse = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${englishWord.split(' ')[0]}`); // Only define first word
-                    if (!defineResponse.ok) {
-                        throw new Error('לא נמצאה הגדרה');
-                    }
-                    const defineData = await defineResponse.json();
-
-                    // Find the first valid definition
-                    const meaning = defineData[0].meanings.find(m => m.definitions[0]);
-                    if (!meaning) {
-                        throw new Error('לא נמצאה הגדרה');
-                    }
-                    englishDefinition = meaning.definitions[0].definition;
-                    
-                    resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">טוען הגדרה באנגלית...</p>', '');
-                    resultsContainer.innerHTML += `
-                        <div class="result-block">
-                            <h3>הגדרה באנגלית (${meaning.partOfSpeech})</h3>
-                            <p>${englishDefinition}</p>
-                        </div>
-                    `;
-                    resultsContainer.innerHTML += `<p class="loading">מתרגם הגדרה לעברית...</p>`;
-
-                    // Step 4: Translate English Definition to Hebrew
-                    const finalResponse = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(englishDefinition)}&langpair=en|he`);
-                    const finalData = await finalResponse.json();
-                    const hebrewDefinition = finalData.responseData.translatedText;
-                    
-                    resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">מתרגם הגדרה לעברית...</p>', '');
-                    resultsContainer.innerHTML += `
-                        <div class="result-block">
-                            <h3>תרגום ההגדרה</h3>
-                            <p class="hebrew">${hebrewDefinition}</p>
-                        </div>
-                    `;
-
-                } catch (error) {
-                    // This will catch any error from the chain
-                    resultsContainer.className = '';
-                    resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">טוען הגדרה באנגלית...</p>', '');
-                    resultsContainer.innerHTML = resultsContainer.innerHTML.replace('<p class="loading">מתרגם הגדרה לעברית...</p>', '');
-
-                    if (error.message === 'שפה אינה נתמכת') {
-                        resultsContainer.innerHTML = `<p class="hebrew" style="text-align: center; font-weight:bold;">שפה אינה נתמכת. נסה שפה אחרת.</p>`;
-                    } else if (error.message === 'לא נמצאה הגדרה') {
-                         resultsContainer.innerHTML += `
-                            <p><strong>לא נמצאה הגדרה למילה "${englishWord}".</strong></p>
-                        `;
-                    } else {
-                        console.error("Full error object:", error);
-                        resultsContainer.innerHTML = `<p style="text-align: center; font-weight:bold;">אירעה שגיאה: ${error.message}</p>`;
-                    }
-                }
+    if (wordToolBtn && wordInputAuto && resultsContainer) {
+      wordToolBtn.addEventListener('click', async () => {
+        const originalWord = wordInputAuto.value.trim();
+        if (!originalWord) return;
+    
+        resultsContainer.innerHTML = "מעבד בקשה...";
+        resultsContainer.className = "loading";
+    
+        try {
+          // Detect if the word is Hebrew or English
+          const isHebrew = /[\u0590-\u05FF]/.test(originalWord);
+          const sourceLang = isHebrew ? "he" : "en";
+          const targetLang = isHebrew ? "en" : "he";
+    
+          // Step 1: Translate the word itself
+          const translateRes = await fetch(
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalWord)}&langpair=${sourceLang}|${targetLang}`
+          );
+          const translateData = await translateRes.json();
+    
+          if (!translateData.responseData?.translatedText) {
+            throw new Error("Translation failed");
+          }
+    
+          const translatedWord = translateData.responseData.translatedText.trim();
+    
+          // Step 2: Get definition (English only)
+          let definitionText = "";
+          if (isHebrew) {
+            // If Hebrew word → first translate to English, then get English definition
+            const defRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${translatedWord}`);
+            if (defRes.ok) {
+              const defData = await defRes.json();
+              definitionText = defData[0]?.meanings?.[0]?.definitions?.[0]?.definition || "No definition found.";
+            } else {
+              definitionText = "No definition found.";
             }
+    
+            // Translate definition to Hebrew
+            const defHeRes = await fetch(
+              `https://api.mymemory.translated.net/get?q=${encodeURIComponent(definitionText)}&langpair=en|he`
+            );
+            const defHeData = await defHeRes.json();
+            definitionText = defHeData.responseData?.translatedText || definitionText;
+          } else {
+            // If English word → get definition, then translate definition to Hebrew
+            const defRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${originalWord}`);
+            if (defRes.ok) {
+              const defData = await defRes.json();
+              definitionText = defData[0]?.meanings?.[0]?.definitions?.[0]?.definition || "No definition found.";
+            } else {
+              definitionText = "No definition found.";
+            }
+    
+            const defHeRes = await fetch(
+              `https://api.mymemory.translated.net/get?q=${encodeURIComponent(definitionText)}&langpair=en|he`
+            );
+            const defHeData = await defHeRes.json();
+            definitionText = defHeData.responseData?.translatedText || definitionText;
+          }
+    
+          // Step 3: Display results
+          resultsContainer.className = "";
+          resultsContainer.innerHTML = `
+            <div class="result-block">
+              <p><b>Word:</b> ${originalWord}</p>
+              <p><b>Translation (${targetLang.toUpperCase()}):</b> ${translatedWord}</p>
+              <p><b>Definition (Hebrew):</b> ${definitionText}</p>
+            </div>
+          `;
+        } catch (error) {
+          console.error(error);
+          resultsContainer.className = "error";
+          resultsContainer.innerHTML = "שגיאה בעיבוד. ודא שהוזנה מילה תקינה.";
+        }
+      });
+    }
 
-            getWordData();
-        });
         
         // Allow pressing Enter to search
         wordInputAuto.addEventListener('keypress', (e) => {
