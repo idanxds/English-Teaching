@@ -977,7 +977,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsContainer.className = "loading";
     
         try {
-          // Detect if the word is Hebrew or English
+          // Detect if the word is Hebrew 
           const isHebrew = /[\u0590-\u05FF]/.test(originalWord);
           const sourceLang = isHebrew ? "he" : "en";
           const targetLang = isHebrew ? "en" : "he";
@@ -996,64 +996,63 @@ document.addEventListener('DOMContentLoaded', () => {
     
           // Step 2: Get definition (English only)
           let definitionText = "";
-          if (isHebrew) {
-            // If Hebrew word → first translate to English, then get English definition
-            const defRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${translatedWord}`);
-            if (defRes.ok) {
-              const defData = await defRes.json();
-              definitionText = defData[0]?.meanings?.[0]?.definitions?.[0]?.definition || "No definition found.";
-            } else {
-              definitionText = "No definition found.";
-            }
-    
-            // Translate definition to Hebrew
-            const defHeRes = await fetch(
-              `https://api.mymemory.translated.net/get?q=${encodeURIComponent(definitionText)}&langpair=en|he`
-            );
-            const defHeData = await defHeRes.json();
-            definitionText = defHeData.responseData?.translatedText || definitionText;
+          let englishWordForDefinition = isHebrew ? translatedWord : originalWord;
+
+          const defRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${englishWordForDefinition.split(' ')[0]}`);
+          if (defRes.ok) {
+            const defData = await defRes.json();
+            definitionText = defData[0]?.meanings?.[0]?.definitions?.[0]?.definition || "No definition found.";
           } else {
-            // If English word → get definition, then translate definition to Hebrew
-            const defRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${originalWord}`);
-            if (defRes.ok) {
-              const defData = await defRes.json();
-              definitionText = defData[0]?.meanings?.[0]?.definitions?.[0]?.definition || "No definition found.";
-            } else {
-              definitionText = "No definition found.";
-            }
-    
-            const defHeRes = await fetch(
-              `https://api.mymemory.translated.net/get?q=${encodeURIComponent(definitionText)}&langpair=en|he`
-            );
-            const defHeData = await defHeRes.json();
-            definitionText = defHeData.responseData?.translatedText || definitionText;
+            definitionText = "No definition found.";
           }
     
-          // Step 3: Display results
+          // Step 3: Translate definition to Hebrew
+          let hebrewDefinition = definitionText; // Default to English definition if translation fails
+          if (definitionText !== "No definition found.") {
+            const defHeRes = await fetch(
+              `https://api.mymemory.translated.net/get?q=${encodeURIComponent(definitionText)}&langpair=en|he`
+            );
+            const defHeData = await defHeRes.json();
+            hebrewDefinition = defHeData.responseData?.translatedText || definitionText;
+          }
+    
+          // Step 4: Display results
           resultsContainer.className = "";
           resultsContainer.innerHTML = `
             <div class="result-block">
-              <p><b>Word:</b> ${originalWord}</p>
-              <p><b>Translation (${targetLang.toUpperCase()}):</b> ${translatedWord}</p>
-              <p><b>Definition (Hebrew):</b> ${definitionText}</p>
+              <h3>תרגום לאנגלית</h3>
+              <p>${isHebrew ? translatedWord : originalWord}</p>
+            </div>
+            <div class="result-block">
+              <h3>תרגום לעברית</h3>
+              <p class="hebrew">${isHebrew ? originalWord : translatedWord}</p>
+            </div>
+            <div class="result-block">
+              <h3>הגדרה (באנגלית)</h3>
+              <p>${definitionText === "No definition found." ? "לא נמצאה הגדרה" : definitionText}</p>
+            </div>
+            <div class="result-block">
+              <h3>הגדרה (בעברית)</h3>
+              <p class="hebrew">${hebrewDefinition === "No definition found." ? "לא נמצאה הגדרה" : hebrewDefinition}</p>
             </div>
           `;
         } catch (error) {
           console.error(error);
-          resultsContainer.className = "error";
-          resultsContainer.innerHTML = "שגיאה בעיבוד. ודא שהוזנה מילה תקינה.";
+          resultsContainer.className = "";
+          resultsContainer.innerHTML = `<p style="text-align: center; font-weight:bold;">אירעה שגיאה. נסה שנית.</p>`;
         }
       });
     }
 
         
         // Allow pressing Enter to search
-        wordInputAuto.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                wordToolBtn.click();
-            }
-        });
-    }
+        if (wordInputAuto) {
+            wordInputAuto.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    wordToolBtn.click();
+                }
+            });
+        }
     
     // --- INITIALIZE ---
     initYouTubePage();
