@@ -1,10 +1,3 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-const SUPABASE_URL = "https://pzbgdyakdckojstksyfd.supabase.co";
-const SUPABASE_KEY = "sb_publishable__0qnbB7wyd2XNk7tFV7vAA_cu9h5Q9r";
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- YOUTUBE CONFIGURATION ---
@@ -1066,35 +1059,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initPresentationsPage(); // Initialize new presentation page
     showPage('home-page'); // Start on the home page
 
-});
-supabase.auth.onAuthStateChange(async (event, session) => {
-    if (session?.user) {
-
-        // Create profile + progress for this user
-        await Progress.ensureProfile(session.user);
-        await Progress.ensureProgress(session.user.id);
-
-        // ADMIN BUTTON
-        const isAdmin =
-            ["Carl.d.rogers@gmail.com", "Englishyourway0@gmail.com"]
-                .includes(session.user.email);
-
-        if (isAdmin && !document.getElementById("admin-button")) {
-            const btn = document.createElement("button");
-            btn.id = "admin-button";
-            btn.textContent = "Admin Panel";
-            btn.style.position = "fixed";
-            btn.style.bottom = "20px";
-            btn.style.right = "20px";
-            btn.style.zIndex = "999999";
-            btn.onclick = () => window.location.href = "admin.html";
-            document.body.appendChild(btn);
-        }
-
-    } else {
-        // Not logged in → always push user to login page
-        if (!window.location.pathname.includes("login.html")) {
-            window.location.href = "login.html";
-        }
-    }
 });
