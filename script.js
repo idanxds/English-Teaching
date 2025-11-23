@@ -1,3 +1,10 @@
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const SUPABASE_URL = "https://pzbgdyakdckojstksyfd.supabase.co";
+const SUPABASE_KEY = "sb_publishable__0qnbB7wyd2XNk7tFV7vAA_cu9h5Q9r";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- YOUTUBE CONFIGURATION ---
