@@ -1,6 +1,8 @@
 // --- 1. SUPABASE CONFIGURATION (FILL THESE IN) ---
-const supabaseUrl = 'YOUR_SUPABASE_URL'
-const supabaseKey = 'YOUR_ANON_KEY'
+const supabaseUrl = 'https://pzbgdyakdckojstksyfd.supabase.co
+'
+const supabaseKey = 'sb_publishable__0qnbB7wyd2XNk7tFV7vAA_cu9h5Q9r
+'
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
 document.addEventListener('DOMContentLoaded', () => {
