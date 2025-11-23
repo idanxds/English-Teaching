@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אתר למידה באנגלית</title>
+    <title>אתר למידה באנגלית - מערכת מחוברת</title>
 
-    <!-- PWA and Mobile Tags -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <meta name="theme-color" content="#2c3e50"/>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 
-    <!-- Links to the CSS file -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- 1. Left Sidebar for Translation -->
     <aside class="translate-sidebar">
         <div class="word-tool-container">
             <h2>כלי מילים אוניברסלי</h2>
@@ -25,27 +24,28 @@
                 <input type="text" id="word-input-auto" placeholder="הקלד מילה..." dir="rtl">
                 <button id="word-tool-btn" class="action-button small">חפש</button>
             </div>
-            
-            <!-- Results Area -->
-            <div id="word-tool-results">
-                <!-- Results will appear here -->
-            </div>
+            <div id="word-tool-results"></div>
         </div>
     </aside>
     
-    <!-- 2. Main Content Area -->
     <div class="main-content">
+      
         <nav class="main-nav">
             <div class="nav-links">
-                <button class="nav-button" data-target="tutorial-page">הדרכה לאפליקציה</button> <!-- NEW BUTTON -->
-                <button class="nav-button" data-target="presentations-page">מצגות</button>
-                <button class="nav-button" data-target="youtube-page">סרטוני YouTube</button>
-                <button class="nav-button" data-target="podcast-page">פודקאסט</button>
+                <button class="nav-button protected-route hidden" data-target="tutorial-page">הדרכה</button>
+                <button class="nav-button protected-route hidden" data-target="presentations-page">מצגות</button>
+                <button class="nav-button protected-route hidden" data-target="youtube-page">סרטונים</button>
+                <button class="nav-button protected-route hidden" data-target="podcast-page">פודקאסט</button>
             </div>
             <div class="nav-brand">
                 <button class="nav-button" data-target="home-page">עמוד הבית</button>
             </div>
-            <!-- Mobile-only Menu Button -->
+            
+            <div class="user-status hidden" id="user-status-display">
+                <span id="user-display-name">אורח</span>
+                <button id="nav-logout-btn" class="action-button small secondary">יציאה</button>
+            </div>
+
             <button id="mobile-menu-btn" class="mobile-menu-button">
                 <span></span>
                 <span></span>
@@ -54,21 +54,59 @@
         </nav>
 
         <div id="app">
-            <!-- Home Page -->
+            
             <section id="home-page" class="page">
                 <div class="home-container">
                     <h1>ברוכים הבאים לאתר הלמידה</h1>
                     <p>מוכנים להתחיל ללמוד אנגלית?</p>
-                    <button id="login-button" class="action-button large">כניסה</button>
+                    <p>התחברו למערכת כדי לגשת למשימות, סרטונים ומבחנים.</p>
+                    <button id="main-login-start-btn" class="action-button large">כניסה / הרשמה</button>
                 </div>
             </section>
 
-            <!-- Assignment Hub Page -->
+            <section id="auth-page" class="page hidden">
+                <div class="auth-container">
+                    
+                    <div id="login-section">
+                        <h2>התחברות למערכת</h2>
+                        <div class="form-group">
+                            <label for="login-email">כתובת אימייל</label>
+                            <input type="email" id="login-email" placeholder="name@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">סיסמה</label>
+                            <input type="password" id="login-password" placeholder="********">
+                        </div>
+                        <button id="btn-login-action" class="action-button full-width">התחבר</button>
+                        <p class="auth-switch-text">אין לך משתמש? <a href="#" id="go-to-signup">הרשם כאן</a></p>
+                    </div>
+
+                    <div id="signup-section" class="hidden">
+                        <h2>הרשמה למערכת</h2>
+                        <div class="form-group">
+                            <label for="signup-username">שם משתמש (לתצוגה)</label>
+                            <input type="text" id="signup-username" placeholder="ישראל ישראלי">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">כתובת אימייל</label>
+                            <input type="email" id="signup-email" placeholder="name@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">סיסמה</label>
+                            <input type="password" id="signup-password" placeholder="בחר סיסמה חזקה (מעל 6 תווים)">
+                        </div>
+                        <button id="btn-signup-action" class="action-button full-width">הרשם</button>
+                        <p class="auth-switch-text">יש לך כבר משתמש? <a href="#" id="go-to-login">התחבר כאן</a></p>
+                    </div>
+
+                    <div id="auth-message" class="auth-feedback hidden"></div>
+                </div>
+            </section>
+
             <section id="assignment-hub-page" class="page hidden">
                 <button class="back-button" data-target="home-page">חזרה</button>
                 <h1>משימות למידה</h1>
                 <div class="assignments-grid">
-                    <!-- Assignments from original script -->
                     <button class="assignment-box" data-assignment="abc">
                         <h3>ה-ABC האנגלי</h3>
                         <p>לימוד אותיות, שמע ומקרים מיוחדים.</p>
@@ -85,8 +123,6 @@
                         <h3>עבר פשוט (Simple Past)</h3>
                         <p>לימוד חוקים, פעלים רגילים ויוצאי דופן.</p>
                     </button>
-                    
-                    <!-- Assignments from PDF/DOCX files -->
                     <button class="assignment-box" data-assignment="reading">
                         <h3>קריאה (Reading)</h3>
                         <p>תרגול קטעי קריאה ברמות שונות.</p>
@@ -110,87 +146,38 @@
                 </div>
             </section>
 
-            <!-- Podcast Page -->
             <section id="podcast-page" class="page hidden">
                 <button class="back-button" data-target="home-page">חזרה</button>
                 <h1>פודקאסטים</h1>
                 <div class="podcast-grid">
                     <div class="podcast-player">
                         <h3>פודקאסט 1</h3>
-                        <audio controls src="https://archive.org/download/full-podcast_202511/Full%20Podcast.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 2</h3>
-                        <audio controls src="audio1.opus">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 3</h3>
-                        <audio controls src="audio2.opus">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 4</h3>
-                        <audio controls src="audio3.opus">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 5</h3>
-                        <audio controls src="audio4.opus">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 6</h3>
-                        <audio controls src="vid3.mp4">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 7</h3>
-                        <audio controls src="YOUR_AUDIO_FILE_7.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 8</h3>
-                        <audio controls src="YOUR_AUDIO_FILE_8.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 9</h3>
-                        <audio controls src="YOUR_AUDIO_FILE_9.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 10</h3>
-                        <audio controls src="YOUR_AUDIO_FILE_10.mp3">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 11</h3>
-                        <audio controls src="YOUR_AUDIO_FILE_11.mp3">דפדפן זה אינו תומך באודיו.</audio>
+                        <audio controls src="https://archive.org/download/full-podcast_202511/Full%20Podcast.mp3"></audio>
                     </div>
                 </div>
             </section>
 
-            <!-- YouTube Page -->
             <section id="youtube-page" class="page hidden">
                 <button class="back-button" data-target="home-page">חזרה</button>
                 <h1>סרטוני YouTube</h1>
                 <div class="youtube-grid">
-                    <!-- The 36 buttons will be generated by JavaScript -->
-                </div>
+                     </div>
             </section>
 
-            <!-- Video Player Page -->
             <section id="video-player-page" class="page hidden">
                 <button class="back-button" data-target="youtube-page">חזרה לסרטונים</button>
                 <h1 id="video-player-title"></h1>
                 <div class="video-container">
-                    <iframe id="youtube-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe id="youtube-iframe" src="" frameborder="0" allowfullscreen></iframe>
                 </div>
             </section>
 
-            <!-- Assignment Task Page (Dynamic) -->
             <section id="task-page" class="page hidden">
                 <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
-                <div id="task-content">
-                    <!-- Task content will be loaded here by JavaScript -->
-                </div>
+                <div id="task-content"></div>
             </section>
             
-            <!-- Quiz Page (Dynamic) -->
             <section id="quiz-page" class="page hidden">
-                 <!-- Back button will be added dynamically -->
                 <div id="quiz-container">
                     <div id="quiz-progress"></div>
                     <div id="quiz-question" class="ltr"></div>
@@ -200,7 +187,6 @@
                 </div>
             </section>
 
-            <!-- ABC Audio Page -->
             <section id="abc-audio-page" class="page hidden">
                 <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
                 <h1>האותיות</h1>
@@ -211,7 +197,6 @@
                 </div>
             </section>
             
-            <!-- Sentence Builder Page -->
             <section id="sentence-builder-page" class="page hidden">
                 <button class="back-button" data-target="assignment-hub-page">חזרה למשימות</button>
                 <h1>בניית משפט</h1>
@@ -222,71 +207,37 @@
                 </div>
             </section>
 
-            <!-- Presentations Page -->
             <section id="presentations-page" class="page hidden">
                 <button class="back-button" data-target="home-page">חזרה</button>
                 <h1>מצגות</h1>
-                <div class="presentation-grid">
-                    <!-- Presentation buttons will be generated by JavaScript -->
-                </div>
+                <div class="presentation-grid"></div>
             </section>
 
-            <!-- Presentation Viewer Page -->
             <section id="presentation-viewer-page" class="page hidden">
                 <button class="back-button" data-target="presentations-page">חזרה למצגות</button>
                 <h1 id="presentation-viewer-title"></h1>
                 <div class="presentation-container">
-                    <iframe id="presentation-iframe" src="" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+                    <iframe id="presentation-iframe" src="" frameborder="0" allowfullscreen></iframe>
                 </div>
             </section>
 
-            <!-- NEW: Tutorial Page -->
             <section id="tutorial-page" class="page hidden">
                 <button class="back-button" data-target="home-page">חזרה</button>
                 <h1>הדרכה להתקנת האפליקציה</h1>
                 <div class="tutorial-container">
-                    
                     <div class="tutorial-step">
                         <p><strong>שלב 1:</strong> בדפדפן כרום, לחץ על כפתור שלוש הנקודות בפינה.</p>
-                        <img src="https://i.ibb.co/bK4p0m2/Screenshot-20251111-185545-Chrome.jpg" alt="שלב 1: לחץ על התפריט">
+                        <img src="https://i.ibb.co/bK4p0m2/Screenshot-20251111-185545-Chrome.jpg" alt="שלב 1">
                     </div>
-
-                    <div class="tutorial-step">
-                        <p><strong>שלב 2:</strong> בתפריט שנפתח, בחר באפשרות "הוספה למסך הבית" או "התקנת אפליקציה".</p>
-                        <img src="https://i.ibb.co/3sN0m3t/Screenshot-20251111-185551-Chrome.jpg" alt="שלב 2: הוספה למסך הבית">
-                    </div>
-
-                    <div class="tutorial-step">
-                        <p><strong>שלב 3:</strong> בחלון שקופץ, לחץ על "התקנה" (Install).</p>
-                        <img src="https://i.ibb.co/9vjHpJ9/Screenshot-20251111-185612-Chrome.jpg" alt="שלב 3: לחץ התקנה">
-                    </div>
-
-                    <div class="tutorial-step">
-                        <p><strong>שלב 4:</strong> זהו! האפליקציה מותקנת. תוכל למצוא אותה על מסך הבית שלך.</p>
-                        <img src="https://i.ibb.co/C0f9v0b/Screenshot-20251111-185655-One-UI-Home.jpg" alt="שלב 4: האפליקציה מותקנת">
-                    </div>
-
                 </div>
             </section>
 
-        </div> <!-- /#app -->
-    </div> <!-- /.main-content -->
+        </div> </div> <script src="script.js"></script>
 
-
-    <!-- 
-    =====================================================
-    ==           JAVASCRIPT & TAWK.TO                  ==
-    =====================================================
-    -->
-    
-    <!-- This links to the external script.js file -->
-    <script src="script.js"></script>
-
-        <!--Start of Tawk.to Script-->
     <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
     (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script");
     s1.async=true;
     s1.src='https://embed.tawk.to/6912e746f9fa8f19671f5407/default';
     s1.charset='UTF-8';
@@ -294,7 +245,5 @@
     s0.parentNode.insertBefore(s1,s0);
     })();
     </script>
-    <!--End of Tawk.to Script-->
-
 </body>
 </html>
