@@ -618,3 +618,28 @@ body.sidebar-open .mobile-menu-button span:nth-child(3) {
     border-radius: 8px;
     border: 1px solid var(--dark-gray-color);
 }
+/* --- COPY THIS TO THE BOTTOM OF STYLE.CSS --- */
+
+/* Auth Page Inputs */
+.auth-input {
+    border: 2px solid var(--dark-gray-color);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.auth-input:focus {
+    border-color: var(--primary-color);
+}
+
+/* Logout Button (Nav) */
+#nav-logout-btn:hover {
+    color: #c0392b !important;
+    background-color: transparent !important;
+}
+
+/* Google Button Hover */
+#btn-signin-google:hover {
+    background-color: #357ae8 !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
