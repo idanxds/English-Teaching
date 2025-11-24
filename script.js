@@ -995,6 +995,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const supabaseUrl = 'https://pzbgdyakdckojstksyfd.supabase.co';
     const supabaseKey = 'sb_publishable__0qnbB7wyd2XNk7tFV7vAA_cu9h5Q9r'; // NOTE: This looks like a weird key format but leaving as provided
+    
+    // FIX: Using window.supabase to avoid ReferenceError
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     let currentUser = null;
