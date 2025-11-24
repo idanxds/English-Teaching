@@ -24,15 +24,15 @@
                 <input type="text" id="word-input-auto" placeholder="הקלד מילה..." dir="rtl">
                 <button id="word-tool-btn" class="action-button small">חפש</button>
             </div>
-            
-            <div id="word-tool-results">
-                </div>
+            <div id="word-tool-results"></div>
         </div>
     </aside>
     
     <div class="main-content">
         <nav class="main-nav">
             <div class="nav-links">
+                <button id="logout-btn" class="nav-button logout-style hidden">התנתק</button>
+
                 <button class="nav-button" data-target="tutorial-page">הדרכה לאפליקציה</button>
                 <button class="nav-button" data-target="presentations-page">מצגות</button>
                 <button class="nav-button" data-target="youtube-page">סרטוני YouTube</button>
@@ -53,8 +53,7 @@
                 <div class="home-container">
                     <h1>ברוכים הבאים לאתר הלמידה</h1>
                     <p>מוכנים להתחיל ללמוד אנגלית?</p>
-                    <button id="login-button" class="action-button large">כניסה</button>
-                </div>
+                    </div>
             </section>
 
             <section id="assignment-hub-page" class="page hidden">
@@ -77,7 +76,6 @@
                         <h3>עבר פשוט (Simple Past)</h3>
                         <p>לימוד חוקים, פעלים רגילים ויוצאי דופן.</p>
                     </button>
-                    
                     <button class="assignment-box" data-assignment="reading">
                         <h3>קריאה (Reading)</h3>
                         <p>תרגול קטעי קריאה ברמות שונות.</p>
@@ -109,26 +107,7 @@
                         <h3>פודקאסט 1</h3>
                         <audio controls src="https://archive.org/download/full-podcast_202511/Full%20Podcast.mp3">דפדפן זה אינו תומך באודיו.</audio>
                     </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 2</h3>
-                        <audio controls src="audio1.opus">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 3</h3>
-                        <audio controls src="audio2.opus">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 4</h3>
-                        <audio controls src="audio3.opus">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 5</h3>
-                        <audio controls src="audio4.opus">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
-                    <div class="podcast-player">
-                        <h3>פודקאסט 6</h3>
-                        <audio controls src="vid3.mp4">דפדפן זה אינו תומך באודיו.</audio>
-                    </div>
+                    <p style="text-align:center; width:100%; padding:20px;">עוד פודקאסטים יעלו בקרוב...</p>
                 </div>
             </section>
 
@@ -154,7 +133,7 @@
             </section>
             
             <section id="quiz-page" class="page hidden">
-                 <div id="quiz-container">
+                <div id="quiz-container">
                     <div id="quiz-progress"></div>
                     <div id="quiz-question" class="ltr"></div>
                     <div id="quiz-options"></div>
@@ -204,28 +183,23 @@
                 <div class="tutorial-container">
                     <div class="tutorial-step">
                         <p><strong>שלב 1:</strong> בדפדפן כרום, לחץ על כפתור שלוש הנקודות בפינה.</p>
-                        <img src="https://i.ibb.co/bK4p0m2/Screenshot-20251111-185545-Chrome.jpg" alt="שלב 1: לחץ על התפריט">
                     </div>
                     <div class="tutorial-step">
                         <p><strong>שלב 2:</strong> בתפריט שנפתח, בחר באפשרות "הוספה למסך הבית" או "התקנת אפליקציה".</p>
-                        <img src="https://i.ibb.co/3sN0m3t/Screenshot-20251111-185551-Chrome.jpg" alt="שלב 2: הוספה למסך הבית">
                     </div>
                     <div class="tutorial-step">
                         <p><strong>שלב 3:</strong> בחלון שקופץ, לחץ על "התקנה" (Install).</p>
-                        <img src="https://i.ibb.co/9vjHpJ9/Screenshot-20251111-185612-Chrome.jpg" alt="שלב 3: לחץ התקנה">
                     </div>
                     <div class="tutorial-step">
                         <p><strong>שלב 4:</strong> זהו! האפליקציה מותקנת. תוכל למצוא אותה על מסך הבית שלך.</p>
-                        <img src="https://i.ibb.co/C0f9v0b/Screenshot-20251111-185655-One-UI-Home.jpg" alt="שלב 4: האפליקציה מותקנת">
                     </div>
                 </div>
             </section>
 
             <section id="login-page" class="page hidden">
-                <button class="back-button" data-target="home-page">חזרה</button>
-                <h1>כניסה למערכת</h1>
                 <div class="tutorial-container">
                     <div class="tutorial-step">
+                        <h1>כניסה למערכת</h1>
                         <input type="email" id="login-email" placeholder="אימייל" class="auth-input">
                         <input type="password" id="login-password" placeholder="סיסמה" class="auth-input">
                         <button id="perform-login-btn" class="action-button large">התחבר</button>
@@ -238,15 +212,17 @@
             </section>
 
             <section id="signup-page" class="page hidden">
-                <button class="back-button" data-target="home-page">חזרה</button>
-                <h1>הרשמה</h1>
                 <div class="tutorial-container">
                     <div class="tutorial-step">
+                        <h1>הרשמה</h1>
                         <input type="text" id="signup-username" placeholder="שם משתמש" class="auth-input">
                         <input type="email" id="signup-email" placeholder="אימייל" class="auth-input">
                         <input type="password" id="signup-password" placeholder="סיסמה" class="auth-input">
                         <button id="perform-signup-btn" class="action-button large">הירשם</button>
                         <p id="signup-error" class="error-msg"></p>
+                        <hr style="margin: 20px 0;">
+                        <p>יש לך משתמש?</p>
+                        <button class="nav-button" style="color:var(--primary-color)" onclick="showPage('login-page')">התחבר</button>
                     </div>
                 </div>
             </section>
@@ -264,7 +240,7 @@
                 </div>
             </section>
 
-        </div> </div> <script src="script.js?v=2"></script>
+        </div> </div> <script src="script.js?v=4"></script>
 
     <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -277,5 +253,6 @@
     s0.parentNode.insertBefore(s1,s0);
     })();
     </script>
-    </body>
+
+</body>
 </html>
