@@ -995,7 +995,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     let currentUser = null;
-    const adminEmails = ['Carl.d.rogers@gmail.com', 'Englishyourway0@gmail.com'];
+    const adminEmails = ['Carl.d.rogers@gmail.com', 'Englishyourway0@gmail.com', 'abussinescookie@gmail.com'];
     const logoutBtn = document.getElementById('logout-btn');
 
     // 1. Handle Auth State Changes (The Gatekeeper)
