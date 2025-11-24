@@ -103,11 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Home page "כניסה" button
-    document.getElementById('login-button').addEventListener('click', () => {
-        showPage('assignment-hub-page');
-    });
-
     // --- NEW: MOBILE MENU ---
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     if (mobileMenuBtn) {
@@ -989,7 +984,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPresentationsPage();
     showPage('home-page'); 
 
-// ==========================================
+    // ==========================================
     // === NEW FEATURES: AUTH & ADMIN SYSTEM ===
     // ==========================================
 
@@ -1050,7 +1045,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Login Logic
+    // 3. New "Start Learning" Button Logic
+    const startBtn = document.getElementById('home-start-btn');
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            showPage('assignment-hub-page');
+        });
+    }
+
+    // 4. Login Logic
     document.getElementById('perform-login-btn').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
@@ -1071,7 +1074,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 4. Signup Logic
+    // 5. Signup Logic
     document.getElementById('perform-signup-btn').addEventListener('click', async () => {
         const email = document.getElementById('signup-email').value;
         const password = document.getElementById('signup-password').value;
