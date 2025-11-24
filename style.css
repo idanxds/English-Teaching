@@ -618,3 +618,65 @@ body.sidebar-open .mobile-menu-button span:nth-child(3) {
     border-radius: 8px;
     border: 1px solid var(--dark-gray-color);
 }
+/* --- Auth & Admin Styles --- */
+.auth-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    border: 1px solid var(--dark-gray-color);
+    border-radius: 8px;
+    font-family: var(--font-family);
+}
+
+.error-msg {
+    color: var(--error-color);
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Admin Table Styles matching assignment-box look */
+.admin-user-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--dark-gray-color);
+    direction: ltr; /* English emails look better LTR */
+}
+
+.admin-user-row:last-child {
+    border-bottom: none;
+}
+
+.admin-user-info {
+    text-align: left;
+}
+
+.admin-user-info strong {
+    color: var(--primary-color);
+    display: block;
+}
+
+.admin-controls button {
+    margin-left: 5px;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+}
+
+.admin-btn-delete {
+    background-color: var(--error-color);
+}
+.admin-btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Floating Admin Button */
+#admin-switch-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 3000;
+    background-color: var(--secondary-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
