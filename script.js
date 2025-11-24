@@ -1059,17 +1059,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initPresentationsPage(); // Initialize new presentation page
     showPage('home-page'); // Start on the home page
 
-});
 // ==========================================
 // === NEW FEATURES: AUTH & ADMIN SYSTEM ===
 // ==========================================
 
 // 1. Initialize Supabase
 // REPLACE THESE WITH YOUR ACTUAL KEYS
-const supabaseUrl = 'https://pzbgdyakdckojstksyfd.supabase.co
-';
-const supabaseKey = 'sb_publishable__0qnbB7wyd2XNk7tFV7vAA_cu9h5Q9r
-';
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 // 2. Auth State
