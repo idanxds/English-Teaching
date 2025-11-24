@@ -680,3 +680,53 @@ body.sidebar-open .mobile-menu-button span:nth-child(3) {
     background-color: var(--secondary-color);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+/* --- FORCED LOGIN OVERLAY STYLES --- */
+
+/* Make Login and Signup pages cover EVERYTHING (Sidebar + Nav) */
+#login-page, #signup-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999; /* Sit on top of everything */
+    margin: 0;
+    border-radius: 0;
+    max-width: none;
+    background-color: rgba(44, 62, 80, 0.95); /* Dark semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Center the box inside the overlay */
+#login-page .tutorial-container, 
+#signup-page .tutorial-container {
+    background: var(--light-color);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Hide the "Back" button on login page since you can't go back */
+#login-page .back-button {
+    display: none;
+}
+
+/* --- LOGOUT BUTTON STYLES --- */
+.logout-style {
+    background-color: var(--error-color) !important; /* Red */
+    color: white !important;
+    border-radius: 4px;
+    margin-right: 15px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.logout-style:hover {
+    background-color: #c0392b !important; /* Darker Red */
+    transform: translateY(-2px);
+}
