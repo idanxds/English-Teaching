@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- YOUTUBE CONFIGURATION ---
-    // I have added all 20 of your new links.
     const youtubeLinks = {
         "abc-video": { title: "סרטון ABC", url: "https://www.youtube.com/embed/BELlZKpi1Zs" },
         "1": { title: "סרטון 1", url: "https://www.youtube.com/embed/3z4TQfNiqLc" },
@@ -42,14 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
         "36": { title: "סרטון 36", url: "https://www.youtube.com/embed/your-video-id-36" },
     };
 
-    // --- NEW: PRESENTATION CONFIGURATION ---
+    // --- PRESENTATION CONFIGURATION ---
     const presentationLinks = {
         "1": { title: "My First Presentation", url: "https://docs.google.com/presentation/d/e/2PACX-1vR7vLvZY9TasfkVqcGfpp6mwr1K5amT4FhKUGZwH58UdBo5hVISeIgdc8jjVKoAcCjG7Oq3l1zcF5BT/pubembed?start=false&loop=false&delayms=3000" },
         "2": { title: "מצגת 2", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_2" },
-        // Add up to 12 here
         "12": { title: "מצגת 12", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_12" },
     };
-    
+
     // --- STATE MANAGEMENT ---
     let appState = {
         currentPage: 'home-page',
@@ -104,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showPage(targetPage);
         });
     });
-    
+
     // Home page "כניסה" button
     document.getElementById('login-button').addEventListener('click', () => {
         showPage('assignment-hub-page');
@@ -148,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function initYouTubePage() {
         const grid = document.querySelector('#youtube-page .youtube-grid');
         grid.innerHTML = ''; // Clear old buttons
-        // Start from 1, skip "abc-video"
         for (let i = 1; i <= 36; i++) {
             const video = youtubeLinks[i.toString()];
             if (video && video.url.includes("embed")) {
@@ -171,18 +168,17 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage('video-player-page');
     }
 
-    // Stop video when going back
     document.querySelector('#video-player-page .back-button').addEventListener('click', () => {
-        document.getElementById('youtube-iframe').src = ''; // Stop video
+        document.getElementById('youtube-iframe').src = ''; 
     });
 
-    // --- NEW: PRESENTATION PAGE ---
+    // --- PRESENTATION PAGE ---
     function initPresentationsPage() {
         const grid = document.querySelector('#presentations-page .presentation-grid');
         grid.innerHTML = '';
-        for (let i = 1; i <= 12; i++) { // Assuming max 12 presentations
+        for (let i = 1; i <= 12; i++) { 
             const pres = presentationLinks[i.toString()];
-            if (pres && pres.url.startsWith("https://")) { // Only show if URL is not a placeholder
+            if (pres && pres.url.startsWith("https://")) { 
                 const button = document.createElement('button');
                 button.className = 'action-button';
                 button.textContent = pres.title;
@@ -202,33 +198,24 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage('presentation-viewer-page');
     }
 
-    // Stop presentation when going back
     document.querySelector('#presentation-viewer-page .back-button').addEventListener('click', () => {
         document.getElementById('presentation-iframe').src = '';
     });
-    
-    // --- TASK & ASSIGNMENT LOADER (FIXED) ---
-    
+
+    // --- TASK & ASSIGNMENT LOADER ---
     function startAssignment(assignmentId) {
-        // Clear previous content
         taskPageContent.innerHTML = '';
-        
         let content = `<h1>${getAssignmentTitle(assignmentId)}</h1>`;
         
         switch(assignmentId) {
-            // --- Original Assignments ---
             case 'abc':
                 content += `<p>בחר שלב בלימוד ה-ABC:</p>`;
                 content += `<button class="action-button" id="abc-video-btn">שלב 1: צפה בסרטון</button>`;
                 content += `<button class="action-button" id="abc-audio-btn">שלב 2: האזן לאותיות</button>`;
                 content += `<button class="action-button" id="abc-special-btn">שלב 3: מקרים מיוחדים</button>`;
                 content += `<button class="action-button task-start-btn" data-quiz="abcQuiz">שלב 4: בוא נתרגל</button>`;
-                
-                // 1. Add content to the page
                 taskPageContent.innerHTML = content;
-                // 2. Show the page
                 showPage('task-page');
-                // 3. NOW add listeners to the buttons that exist
                 
                 document.getElementById('abc-video-btn').addEventListener('click', () => {
                     const video = youtubeLinks['abc-video'];
@@ -283,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 break;
 
-            // --- PDF/DOCX Assignments ---
             case 'reading':
                 content += `<p>בחר את רמת הקריאה לתרגול:</p>`;
                 content += `<button class="action-button task-start-btn" data-quiz="reading1">רמה 1 (כיתה ב)</button>`;
@@ -294,7 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 taskPageContent.innerHTML = content;
                 showPage('task-page');
                 break;
-                
             case 'grammar':
                 content += `<p>בחר את הנושא לתרגול:</p>`;
                 content += `<button class="action-button task-start-btn" data-quiz="whQuestions">שאלות WH (השלם את החסר)</button>`;
@@ -305,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 taskPageContent.innerHTML = content;
                 showPage('task-page');
                 break;
-                
             case 'writing':
                 content += `<p>במשימה זו תלמדו לתאר אובייקטים, להשוות ביניהם ולכתוב פסקאות טיעון. המשימה מבוססת על קובץ הכתיבה שסיפקת.</p>`;
                 content += `<h2>שלב 1: תיאור לימון</h2><p class="ltr">A lemon is a yellow fruit. It is often oval in shape. It tastes sour. It has a bright color and a textured rind.</p>`;
@@ -317,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 content += `<br><button class="action-button" id="complete-writing-btn">סיימתי לקרוא</button>`;
                 taskPageContent.innerHTML = content;
                 showPage('task-page');
-                
                 document.getElementById('complete-writing-btn').addEventListener('click', () => {
                     markAssignmentAsCompleted('writing');
                     showPage('assignment-hub-page');
@@ -332,7 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 taskPageContent.innerHTML = content;
                 showPage('task-page');
                 break;
-                
             case 'adjectives':
                 content += `<p>לימוד ותרגול שמות תואר (Adjectives) ותואר הפועל (Adverbs).</p>`;
                 content += `<h2>כללים בסיסיים</h2><div class="text-passage ltr"><p>Adjectives describe nouns (e.g., tall man, beautiful day).</p><p>To compare (bigger): add 'er' (taller) or use 'more' for long words (more beautiful).</p><p>For 'the most' (biggest): add 'est' (tallest) or use 'most' (most beautiful).</p><p>Adverbs describe verbs (e.g., run quickly, eat slowly). They often end in -ly.</p></div>`;
@@ -342,7 +324,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
         
-        // Add event listeners for all quiz buttons on the task page
         document.querySelectorAll('.task-start-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 startQuiz(btn.dataset.quiz, assignmentId);
@@ -365,11 +346,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return titles[assignmentId] || 'משימה';
     }
 
-    // --- HELPER FUNCTIONS FOR ORIGINAL ASSIGNMENTS ---
-
+    // --- HELPER FUNCTIONS ---
     function createChainedContentPage(assignmentId, steps, onComplete) {
         let currentStep = 0;
-        
         function loadStep() {
             const step = steps[currentStep];
             let html = '<div class="text-passage">';
@@ -378,9 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (step.content) html += step.content;
             html += `<button class="action-button" id="chain-next-btn">${step.button}</button>`;
             html += '</div>';
-            
             taskPageContent.innerHTML = `<h1>${getAssignmentTitle(assignmentId)}</h1>${html}`;
-            
             document.getElementById('chain-next-btn').addEventListener('click', () => {
                 currentStep++;
                 if (currentStep < steps.length) {
@@ -424,15 +401,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function createFutureSimpleExplanationPage() {
         taskPageContent.innerHTML = `<h1>עתיד פשוט</h1>
         <div class="text-passage">
-            <p>זמן עתיד הוא זמן פשוט להבנה.
-            כל הגופים משתמשים ב- will ו- would, אך מה ההבדל ביניהם?
-            <br> משתמשים ב- will כאשר אנחנו רוצים להגיד משהו שקשור אך ורק לעתיד, ואילו משתמשים ב- would כאשר משהו נאמר בעבר אבל אמור להתרחש בעתיד.
-            יש פעמים שמשתמשים ב- would כדי לבטא בקשה מנומסת שתתרחש לרוב בעתיד.
-            חשוב לזכור ש would זה לא תחליף ל- will. <br> בוא נתרגל את מה שלמדנו:</p>
+            <p>זמן עתיד הוא זמן פשוט להבנה. כל הגופים משתמשים ב- will ו- would, אך מה ההבדל ביניהם? <br> משתמשים ב- will כאשר אנחנו רוצים להגיד משהו שקשור אך ורק לעתיד, ואילו משתמשים ב- would כאשר משהו נאמר בעבר אבל אמור להתרחש בעתיד. יש פעמים שמשתמשים ב- would כדי לבטא בקשה מנומסת שתתרחש לרוב בעתיד. חשוב לזכור ש would זה לא תחליף ל- will. <br> בוא נתרגל את מה שלמדנו:</p>
             <button class="action-button task-start-btn" data-quiz="futureSimple1">התחל תרגיל 1</button>
         </div>`;
         showPage('task-page');
-        // Re-add listener since we overwrote the page
         document.querySelector('.task-start-btn').addEventListener('click', (e) => {
             startQuiz(e.target.dataset.quiz, 'future-simple');
         });
@@ -441,13 +413,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function createFutureSimpleExplanationPage2() {
         taskPageContent.innerHTML = `<h1>עתיד פשוט - שלילה</h1>
         <div class="text-passage">
-            <p>נכון שיש לנו את הגופים?
-            אז כאשר אנחנו רוצים לכתוב את המשפט בצורה שלילית, במקום will ו- would משתמשים ב- wont ו- wouldn't.
-            הם מייצגים would-not ו- will not. <br> בוא נתרגל את הנושא הזה.</p>
+            <p>נכון שיש לנו את הגופים? אז כאשר אנחנו רוצים לכתוב את המשפט בצורה שלילית, במקום will ו- would משתמשים ב- wont ו- wouldn't. הם מייצגים would-not ו- will not. <br> בוא נתרגל את הנושא הזה.</p>
             <button class="action-button task-start-btn" data-quiz="futureSimple2">התחל תרגיל 2</button>
         </div>`;
         showPage('task-page');
-        // Re-add listener
         document.querySelector('.task-start-btn').addEventListener('click', (e) => {
             startQuiz(e.target.dataset.quiz, 'future-simple');
         });
@@ -470,10 +439,8 @@ document.addEventListener('DOMContentLoaded', () => {
             gridHtml += `<div dir="ltr">${en}</div><div dir="rtl">${he}</div>`;
         });
         gridHtml += `</div><button class="action-button task-start-btn" data-quiz="verbs1" style="margin-top:20px;">לתרגול</button>`;
-        
         taskPageContent.innerHTML = `<h1>טבלת פעלים</h1><div class="text-passage">${gridHtml}</div>`;
         showPage('task-page');
-        // Re-add listener
         document.querySelector('.task-start-btn').addEventListener('click', (e) => {
             startQuiz(e.target.dataset.quiz, 'verbs');
         });
@@ -481,13 +448,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function createAbcAudioPage() {
         const container = document.getElementById('audio-players-container');
-        container.innerHTML = ''; // Clear previous
+        container.innerHTML = ''; 
         const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
-        
         letters.forEach(letter => {
             const playerDiv = document.createElement('div');
             playerDiv.className = 'audio-player';
-            // !!! NOTE: You need to have audio files named a.mp3, b.mp3, etc. in a folder or URL path !!!
             playerDiv.innerHTML = `
                 <h3>האות ${letter.toUpperCase()}</h3>
                 <audio controls>
@@ -498,9 +463,8 @@ document.addEventListener('DOMContentLoaded', () => {
             container.appendChild(playerDiv);
         });
         
-        // Add click listener for the continue button on this specific page
         const continueBtn = document.getElementById('abc-audio-continue');
-        continueBtn.classList.remove('hidden'); // Show it
+        continueBtn.classList.remove('hidden'); 
         continueBtn.addEventListener('click', (e) => {
             startQuiz(e.target.dataset.quiz, e.target.dataset.assignment);
         }, { once: true });
@@ -554,7 +518,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     markAssignmentAsCompleted(assignmentId);
                 }
             } else {
-                const prevWord = builtSentence.length > 0 ? builtSentence[builtSentence.length - 1] : 'התחלה';
+                const prevWord = builtSentence.length > 0 ?
+                builtSentence[builtSentence.length - 1] : 'התחלה';
                 feedbackEl.textContent = `המילה הזו לא באה אחרי "${prevWord}", חשבו על מילה אחרת`;
                 feedbackEl.className = 'quiz-feedback incorrect';
                 button.classList.add('incorrect');
@@ -577,24 +542,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const optionsEl = document.getElementById('quiz-options');
     const feedbackEl = document.getElementById('quiz-feedback');
     let nextBtn = document.getElementById('quiz-next-btn');
-
+    
     function startQuiz(quizId, assignmentId) {
-        // First, check if quizData[quizId] exists
         if (!quizData[quizId]) {
             console.error(`Quiz data not found for quizId: ${quizId}`);
             return;
         }
         currentQuizId = quizId;
         parentAssignmentId = assignmentId;
-        currentQuiz = shuffleArray([...quizData[quizId]]); // Get a shuffled copy
+        currentQuiz = shuffleArray([...quizData[quizId]]);
         currentQuestionIndex = 0;
         wrongAnswers = [];
         isReviewRound = false;
         
-        // Add back button to quiz page
         const existingBackBtn = document.querySelector('#quiz-page .back-button');
         if (existingBackBtn) {
-            existingBackBtn.remove(); // Remove old one if it exists
+            existingBackBtn.remove();
         }
         
         const backBtn = document.createElement('button');
@@ -609,13 +572,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadQuestion() {
-        // Clear previous state
         feedbackEl.textContent = '';
         feedbackEl.className = '';
         nextBtn.classList.add('hidden');
         optionsEl.innerHTML = '';
         
-        // Re-bind nextBtn in case it was replaced
         nextBtn = document.getElementById('quiz-next-btn');
         nextBtn.removeEventListener('click', nextQuestionHandler);
         nextBtn.addEventListener('click', nextQuestionHandler);
@@ -629,21 +590,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const question = currentQuiz[currentQuestionIndex];
         document.getElementById('quiz-progress').textContent = `שאלה ${currentQuestionIndex + 1} מתוך ${currentQuiz.length}`;
         questionEl.textContent = question.q;
-        
-        // Ensure LTR/RTL direction
-        if (/[a-zA-Z]/.test(question.q)) { // If question contains English
+        if (/[a-zA-Z]/.test(question.q)) { 
              questionEl.className = 'ltr';
         } else {
              questionEl.className = 'rtl';
         }
 
-        const options = shuffleArray([...question.o]); // Shuffle options
+        const options = shuffleArray([...question.o]);
         options.forEach(option => {
             const button = document.createElement('button');
             button.className = 'quiz-option-btn';
             button.textContent = option;
             
-            if (/[a-zA-Z]/.test(option)) { // If option contains English
+            if (/[a-zA-Z]/.test(option)) { 
                 button.classList.add('ltr');
             } else {
                 button.classList.add('rtl');
@@ -660,26 +619,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function selectAnswer(button, selectedOption, correctAnswer) {
-        // Disable all buttons
         optionsEl.querySelectorAll('.quiz-option-btn').forEach(btn => {
             btn.disabled = true;
-            // Highlight correct/incorrect
             if (btn.textContent === correctAnswer) {
                 btn.classList.add('correct');
             } else if (btn.textContent === selectedOption) {
                 btn.classList.add('incorrect');
             }
         });
-
         if (selectedOption === correctAnswer) {
             feedbackEl.textContent = 'תשובה נכונה!';
             feedbackEl.className = 'correct';
         } else {
             feedbackEl.textContent = `תשובה שגויה. הנכונה היא: ${correctAnswer}`;
             feedbackEl.className = 'incorrect';
-            // Add to wrong answers list
             if (!isReviewRound) {
-                // Only add if it's not already in the list
                 if (!wrongAnswers.includes(currentQuiz[currentQuestionIndex])) {
                      wrongAnswers.push(currentQuiz[currentQuestionIndex]);
                 }
@@ -691,10 +645,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function finishQuiz() {
         if (wrongAnswers.length > 0 && !isReviewRound) {
-            // Start review round
             isReviewRound = true;
             currentQuiz = shuffleArray([...wrongAnswers]);
-            wrongAnswers = []; // Clear for the next round
+            wrongAnswers = []; 
             currentQuestionIndex = 0;
             questionEl.textContent = 'בואו נעבור שוב על הטעויות...';
             optionsEl.innerHTML = '';
@@ -702,22 +655,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             nextBtn.textContent = 'התחל סבב תיקון';
             nextBtn.classList.remove('hidden');
-            
-            // Use a one-time listener for "Start Review"
             nextBtn.removeEventListener('click', nextQuestionHandler);
             nextBtn.addEventListener('click', loadQuestion, { once: true });
-
-
         } else {
-            // Quiz truly finished
             questionEl.textContent = 'כל הכבוד! סיימת את המשימה.';
             optionsEl.innerHTML = '';
             feedbackEl.textContent = (isReviewRound && wrongAnswers.length > 0) ? 'עדיין יש כמה טעויות, נסו שוב מאוחר יותר.' : '';
             
             nextBtn.textContent = 'חזור למשימות';
             nextBtn.classList.remove('hidden');
-            
-            // Use a one-time listener for "Back to Hub"
             nextBtn.removeEventListener('click', nextQuestionHandler);
             nextBtn.addEventListener('click', () => {
                 checkAssignmentCompletion();
@@ -727,9 +673,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function checkAssignmentCompletion() {
-        // This is a simple completion check.
-        // For multi-part assignments, it marks complete after any quiz.
-        // You could add more complex logic here if needed.
         if (parentAssignmentId) {
             markAssignmentAsCompleted(parentAssignmentId);
         }
@@ -743,10 +686,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    
-    // --- QUIZ DATABASE (ALL ASSIGNMENTS - FIXED) ---
+    // --- QUIZ DATABASE ---
     const quizData = {
-        // --- Original Assignments ---
         'futureSimple1': [
             { q: "I __ go to the mall tomorrow", a: "will", o: ["will", "would", "כלום לא מתאים"] },
             { q: "___ your sister come to the movie theater tonight?", a: "will", o: ["will", "would", "כלום לא מתאים"] },
@@ -802,8 +743,6 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "We _____ (meet) our new neighbors at the community barbecue", a: "met", o: ["meeting", "met", "meet"] },
             { q: "The movie _____ (begin) late because of technical issue", a: "began", o: ["begginning", "begin", "began"] }
         ],
-        
-        // --- PDF/DOCX Assignments ---
         'whQuestions': [
             { q: "___ are you going to the party tonight? (When)", o: ["When", "Where", "Who"], a: "When" },
             { q: "___ is your favorite color?", o: ["What", "Where", "Who"], a: "What" },
@@ -843,7 +782,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "The books are neatly placed ___ the shelf.", o: ["on", "under","in front of"], a: "on" },
             { q: "The bike is leaning ___ the wall in the garage.", o: ["next to", "on", "under"], a: "next to" } 
         ],
-        'presentSimple1': [ // s/es/ies
+        'presentSimple1': [ 
             { q: "fix (he)", o: ["fixes", "fixs", "fixies"], a: "fixes" },
             { q: "watch (she)", o: ["watchs", "watches", "watchies"], a: "watches" },
             { q: "brush (he)", o: ["brushs", "brushes", "brushies"], a: "brushes" },
@@ -863,7 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "hurry (she)", o: ["hurrys", "hurryes", "hurries"], a: "hurries" },
             { q: "wash (it)", o: ["washs", "washes", "washies"], a: "washes" }
         ],
-        'presentSimple2': [ // Don't / Doesn't
+        'presentSimple2': [ 
             { q: "I ___ like chicken.", o: ["don't", "doesn't"], a: "don't" },
             { q: "My sister ___ eat pasta.", o: ["don't", "doesn't"], a: "doesn't" },
             { q: "You ___ buy apples.", o: ["don't", "doesn't"], a: "don't" },
@@ -877,7 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "This man ___ smoke.", o: ["don't", "doesn't"], a: "doesn't" },
             { q: "It ___ run very fast.", o: ["don't", "doesn't"], a: "doesn't" }
         ],
-        'presentSimple3': [ // Do / Does
+        'presentSimple3': [ 
             { q: "___ cats play football?", o: ["Do", "Does"], a: "Do" },
             { q: "___ Pamela Anderson have blonde hair?", o: ["Do", "Does"], a: "Does" },
             { q: "___ your girl/boyfriend like swimming?", o: ["Do", "Does"], a: "Does" },
@@ -886,7 +825,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "___ he always do that?", o: ["Do", "Does"], a: "Does" },
             { q: "___ they like dogs?", o: ["Do", "Does"], a: "Do" },
             { q: "___ your father speak German?", o: ["Do", "Does"], a: "Does" },
-            { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" }, // <-- *** BUG FIXED ***
+            { q: "___ your wife/husband come from Argentina?", o: ["Do", "Does"], a: "Does" }, 
             { q: "___ Chileans like Tango?", o: ["Do", "Does"], a: "Do" },
             { q: "___ he sing in the shower?", o: ["Do", "Does"], a: "Does" },
             { q: "___ your grandmother have a dog?", o: ["Do", "Does"], a: "Does" },
@@ -894,7 +833,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "___ your friends like you?", o: ["Do", "Does"], a: "Do" },
             { q: "___ you have a lot of money?", o: ["Do", "Does"], a: "Do" }
         ],
-        'speaking1': [ // Lvl 1
+        'speaking1': [ 
             { q: "Where is my friend house?", o: ["Where is my friend house?", "Where is my friend's house?"], a: "Where is my friend's house?" },
             { q: "Mike and Dan is going to the beach.", o: ["Mike and Dan is going...", "Mike and Dan are going..."], a: "Mike and Dan are going..." },
             { q: "I have five cat.", o: ["I have five cat.", "I have five cats."], a: "I have five cats." },
@@ -906,7 +845,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "We does laundry every week.", o: ["We does laundry...", "We do laundry..."], a: "We do laundry..." },
             { q: "Amira and Lucy am ten years old.", o: ["Amira and Lucy am...", "Amira and Lucy are..."], a: "Amira and Lucy are..." }
         ],
-        'speaking2': [ // Lvl 2
+        'speaking2': [ 
             { q: "She ___ allergic to dairy, so she ___ drink milk.", o: ["is / don't", "are / does", "is / doesn't"], a: "is / doesn't" },
             { q: "My grandmother is disabled. So she ___ visit us because she ___ walk.", o: ["can / can't", "can't / can't", "can / can"], a: "can't / can't" },
             { q: "There is ___ power outage, so we ___ use a lot of electronic devices.", o: ["a / don't", "an / don't", "a / do"], a: "a / don't" },
@@ -928,7 +867,6 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "9. מה יוצא דופן?", o: ["cold", "cool", "tallest"], a: "tallest" },
             { q: "10. מה יוצא דופן?", o: ["new", "fast", "tasty"], a: "new" } 
         ],
-        // Reading Quizzes
         'reading1': [
             { q: "What is the dog's name?", o: ["Charlie", "Anna", "Max"], a: "Charlie" },
             { q: "Where do they play?", o: ["In the house", "In the park", "At school"], a: "In the park" },
@@ -959,10 +897,10 @@ document.addEventListener('DOMContentLoaded', () => {
             { q: "What did the old map show?", o: ["A hidden island", "A new ship", "A jungle"], a: "A hidden island" },
             { q: "Where was the 'X' on the map?", o: ["In a cave", "Under a big, old tree", "On the beach"], a: "Under a big, old tree" },
             { q: "What was inside the chest?", o: ["Gold coins, jewels, and a sword", "Only gold coins", "An old map"], a: "Gold coins, jewels, and a sword" },
-            { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" } // <-- *** BUG FIXED ***
+            { q: "Who won the fight?", o: ["The enemy captain", "Captain Moshco's crew", "Nobody"], a: "Captain Moshco's crew" } 
         ]
     };
-    
+
     // --- WORD TOOL (Fixed & Auto Language Detection) ---
     const wordToolBtn = document.getElementById('word-tool-btn');
     const wordInputAuto = document.getElementById('word-input-auto');
@@ -977,12 +915,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsContainer.className = "loading";
     
         try {
-          // Detect if the word is Hebrew 
           const isHebrew = /[\u0590-\u05FF]/.test(originalWord);
           const sourceLang = isHebrew ? "he" : "en";
           const targetLang = isHebrew ? "en" : "he";
     
-          // Step 1: Translate the word itself
           const translateRes = await fetch(
             `https://api.mymemory.translated.net/get?q=${encodeURIComponent(originalWord)}&langpair=${sourceLang}|${targetLang}`
           );
@@ -993,8 +929,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }
     
           const translatedWord = translateData.responseData.translatedText.trim();
-    
-          // Step 2: Get definition (English only)
           let definitionText = "";
           let englishWordForDefinition = isHebrew ? translatedWord : originalWord;
 
@@ -1006,8 +940,7 @@ document.addEventListener('DOMContentLoaded', () => {
             definitionText = "No definition found.";
           }
     
-          // Step 3: Translate definition to Hebrew
-          let hebrewDefinition = definitionText; // Default to English definition if translation fails
+          let hebrewDefinition = definitionText;
           if (definitionText !== "No definition found.") {
             const defHeRes = await fetch(
               `https://api.mymemory.translated.net/get?q=${encodeURIComponent(definitionText)}&langpair=en|he`
@@ -1016,7 +949,6 @@ document.addEventListener('DOMContentLoaded', () => {
             hebrewDefinition = defHeData.responseData?.translatedText || definitionText;
           }
     
-          // Step 4: Display results
           resultsContainer.className = "";
           resultsContainer.innerHTML = `
             <div class="result-block">
@@ -1044,243 +976,212 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-        
-        // Allow pressing Enter to search
-        if (wordInputAuto) {
-            wordInputAuto.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    wordToolBtn.click();
-                }
-            });
-        }
+    if (wordInputAuto) {
+        wordInputAuto.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                wordToolBtn.click();
+            }
+        });
+    }
     
     // --- INITIALIZE ---
     initYouTubePage();
-    initPresentationsPage(); // Initialize new presentation page
-    showPage('home-page'); // Start on the home page
+    initPresentationsPage();
+    showPage('home-page'); 
 
-// ==========================================
-// === NEW FEATURES: AUTH & ADMIN SYSTEM ===
-// ==========================================
+    // ==========================================
+    // === NEW FEATURES: AUTH & ADMIN SYSTEM ===
+    // ==========================================
 
-// 1. Initialize Supabase
-// REPLACE THESE WITH YOUR ACTUAL KEYS
-const supabaseUrl = 'https://pzbgdyakdckojstksyfd.supabase.co
-';
-const supabaseKey = 'sb_publishable__0qnbB7wyd2XNk7tFV7vAA_cu9h5Q9r
-';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseUrl = 'https://pzbgdyakdckojstksyfd.supabase.co';
+    const supabaseKey = 'sb_publishable__0qnbB7wyd2XNk7tFV7vAA_cu9h5Q9r'; // NOTE: This looks like a weird key format but leaving as provided
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-// 2. Auth State
-let currentUser = null;
-const adminEmails = ['Carl.d.rogers@gmail.com', 'Englishyourway0@gmail.com'];
+    let currentUser = null;
+    const adminEmails = ['Carl.d.rogers@gmail.com', 'Englishyourway0@gmail.com'];
 
-// 3. Connect Login Button on Home Page
-// (Modifying the existing listener logic by overwriting the behavior safely)
-const originalLoginBtn = document.getElementById('login-button');
-if (originalLoginBtn) {
-    // Clone node to strip existing event listeners (cleanest way to replace functionality without editing old code)
-    const newLoginBtn = originalLoginBtn.cloneNode(true);
-    originalLoginBtn.parentNode.replaceChild(newLoginBtn, originalLoginBtn);
-    
-    newLoginBtn.addEventListener('click', () => {
-        if (currentUser) {
-            // If logged in, go to hub
-            showPage('assignment-hub-page');
-        } else {
-            // If not logged in, go to login page
-            showPage('login-page');
-        }
-    });
-    
-    // Update button text based on state
-    supabase.auth.onAuthStateChange((event, session) => {
-        currentUser = session?.user || null;
-        if (currentUser) {
-            newLoginBtn.textContent = 'המשך ללמידה';
-            handleAdminCheck();
-            loadUserProgress();
-        } else {
-            newLoginBtn.textContent = 'כניסה';
-            document.getElementById('admin-switch-btn')?.remove(); // Remove admin btn if exists
-        }
-    });
-}
-
-// 4. Login Logic
-document.getElementById('perform-login-btn').addEventListener('click', async () => {
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    const errorEl = document.getElementById('login-error');
-    
-    errorEl.textContent = 'מתחבר...';
-    
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password
-    });
-
-    if (error) {
-        errorEl.textContent = 'שגיאה: ' + error.message;
-    } else {
-        errorEl.textContent = '';
-        showPage('assignment-hub-page');
-    }
-});
-
-// 5. Signup Logic
-document.getElementById('perform-signup-btn').addEventListener('click', async () => {
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-    const username = document.getElementById('signup-username').value;
-    const errorEl = document.getElementById('signup-error');
-
-    if (!username) {
-        errorEl.textContent = 'נא להזין שם משתמש';
-        return;
-    }
-
-    errorEl.textContent = 'נרשם...';
-
-    // Check username uniqueness via Supabase Select
-    const { data: existingUser } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('username', username)
-        .single();
-
-    if (existingUser) {
-        errorEl.textContent = 'שם המשתמש תפוס.';
-        return;
-    }
-
-    const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-            data: { username: username }
-        }
-    });
-
-    if (error) {
-        errorEl.textContent = 'שגיאה: ' + error.message;
-    } else {
-        errorEl.textContent = 'הרשמה הצליחה! אנא התחבר.';
-        setTimeout(() => showPage('login-page'), 1500);
-    }
-});
-
-// 6. Data Sync Logic
-async function loadUserProgress() {
-    if (!currentUser) return;
-
-    const { data, error } = await supabase
-        .from('profiles')
-        .select('progress')
-        .eq('id', currentUser.id)
-        .single();
-
-    if (data && data.progress) {
-        // Merge DB progress with App progress
-        appState.completedAssignments = data.progress;
-        localStorage.setItem('completedAssignments', JSON.stringify(appState.completedAssignments));
-        updateAssignmentHub(); // Refresh UI
-    }
-}
-
-async function syncProgress() {
-    if (!currentUser) return;
-    
-    await supabase
-        .from('profiles')
-        .update({ progress: appState.completedAssignments })
-        .eq('id', currentUser.id);
-}
-
-// 7. Admin Logic
-function handleAdminCheck() {
-    if (currentUser && adminEmails.includes(currentUser.email)) {
-        if (!document.getElementById('admin-switch-btn')) {
-            const btn = document.createElement('button');
-            btn.id = 'admin-switch-btn';
-            btn.className = 'action-button small';
-            btn.textContent = 'Admin Panel';
-            btn.onclick = () => {
-                loadAdminUsers();
-                showPage('admin-page');
-            };
-            document.body.appendChild(btn);
-        }
-    }
-}
-
-async function loadAdminUsers() {
-    const listEl = document.getElementById('admin-users-list');
-    listEl.innerHTML = 'טוען...';
-
-    const { data: users, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('email', { ascending: true });
-
-    if (error) {
-        listEl.innerHTML = 'שגיאה בטעינת נתונים';
-        return;
-    }
-
-    listEl.innerHTML = '';
-    
-    if (users.length === 0) {
-        listEl.innerHTML = '<p>אין משתמשים רשומים.</p>';
-        return;
-    }
-
-    users.forEach(user => {
-        // Calculate progress percentage or count
-        const progressCount = Array.isArray(user.progress) ? user.progress.length : 0;
+    const originalLoginBtn = document.getElementById('login-button');
+    if (originalLoginBtn) {
+        const newLoginBtn = originalLoginBtn.cloneNode(true);
+        originalLoginBtn.parentNode.replaceChild(newLoginBtn, originalLoginBtn);
         
-        const row = document.createElement('div');
-        row.className = 'admin-user-row';
-        row.innerHTML = `
-            <div class="admin-user-info">
-                <strong>${user.username || 'No Name'}</strong>
-                <span>${user.email}</span>
-                <br>
-                <span style="font-size:0.8em; color:#7f8c8d;">Progress: ${progressCount} tasks</span>
-            </div>
-            <div class="admin-controls">
-                <button class="action-button small admin-btn-delete">Disable</button>
-            </div>
-        `;
-
-        // Delete/Disable Logic
-        row.querySelector('.admin-btn-delete').addEventListener('click', async () => {
-            if(confirm('האם אתה בטוח שברצונך למחוק/להשבית משתמש זה?')) {
-                // We delete from profiles table as requested (logic proxy for disable)
-                const { error } = await supabase
-                    .from('profiles')
-                    .delete()
-                    .eq('id', user.id);
-                
-                if (!error) {
-                    row.remove();
-                } else {
-                    alert('Error: ' + error.message);
-                }
+        newLoginBtn.addEventListener('click', () => {
+            if (currentUser) {
+                showPage('assignment-hub-page');
+            } else {
+                showPage('login-page');
             }
         });
 
-        listEl.appendChild(row);
-    });
-}
+        supabase.auth.onAuthStateChange((event, session) => {
+            currentUser = session?.user || null;
+            if (currentUser) {
+                newLoginBtn.textContent = 'המשך ללמידה';
+                handleAdminCheck();
+                loadUserProgress();
+            } else {
+                newLoginBtn.textContent = 'כניסה';
+                document.getElementById('admin-switch-btn')?.remove(); 
+            }
+        });
+    }
 
-// 8. Hook into Completion (Strictly required modification)
-// We save the original function reference
-const originalMarkComplete = markAssignmentAsCompleted;
-// We overwrite it to add the sync capability while keeping original logic
-markAssignmentAsCompleted = function(assignmentId) {
-    // Run original logic exactly as is
-    originalMarkComplete(assignmentId);
-    // Add new sync logic
-    syncProgress();
-};
+    document.getElementById('perform-login-btn').addEventListener('click', async () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const errorEl = document.getElementById('login-error');
+        
+        errorEl.textContent = 'מתחבר...';
+        
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            errorEl.textContent = 'שגיאה: ' + error.message;
+        } else {
+            errorEl.textContent = '';
+            showPage('assignment-hub-page');
+        }
+    });
+
+    document.getElementById('perform-signup-btn').addEventListener('click', async () => {
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const username = document.getElementById('signup-username').value;
+        const errorEl = document.getElementById('signup-error');
+
+        if (!username) {
+            errorEl.textContent = 'נא להזין שם משתמש';
+            return;
+        }
+
+        errorEl.textContent = 'נרשם...';
+
+        const { data: existingUser } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('username', username)
+            .single();
+
+        if (existingUser) {
+            errorEl.textContent = 'שם המשתמש תפוס.';
+            return;
+        }
+
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: { username: username }
+            }
+        });
+
+        if (error) {
+            errorEl.textContent = 'שגיאה: ' + error.message;
+        } else {
+            errorEl.textContent = 'הרשמה הצליחה! אנא התחבר.';
+            setTimeout(() => showPage('login-page'), 1500);
+        }
+    });
+
+    async function loadUserProgress() {
+        if (!currentUser) return;
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('progress')
+            .eq('id', currentUser.id)
+            .single();
+        if (data && data.progress) {
+            appState.completedAssignments = data.progress;
+            localStorage.setItem('completedAssignments', JSON.stringify(appState.completedAssignments));
+            updateAssignmentHub(); 
+        }
+    }
+
+    async function syncProgress() {
+        if (!currentUser) return;
+        await supabase
+            .from('profiles')
+            .update({ progress: appState.completedAssignments })
+            .eq('id', currentUser.id);
+    }
+
+    function handleAdminCheck() {
+        if (currentUser && adminEmails.includes(currentUser.email)) {
+            if (!document.getElementById('admin-switch-btn')) {
+                const btn = document.createElement('button');
+                btn.id = 'admin-switch-btn';
+                btn.className = 'action-button small';
+                btn.textContent = 'Admin Panel';
+                btn.onclick = () => {
+                    loadAdminUsers();
+                    showPage('admin-page');
+                };
+                document.body.appendChild(btn);
+            }
+        }
+    }
+
+    async function loadAdminUsers() {
+        const listEl = document.getElementById('admin-users-list');
+        listEl.innerHTML = 'טוען...';
+
+        const { data: users, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .order('email', { ascending: true });
+        if (error) {
+            listEl.innerHTML = 'שגיאה בטעינת נתונים';
+            return;
+        }
+
+        listEl.innerHTML = '';
+        
+        if (users.length === 0) {
+            listEl.innerHTML = '<p>אין משתמשים רשומים.</p>';
+            return;
+        }
+
+        users.forEach(user => {
+            const progressCount = Array.isArray(user.progress) ? user.progress.length : 0;
+            
+            const row = document.createElement('div');
+            row.className = 'admin-user-row';
+            row.innerHTML = `
+                <div class="admin-user-info">
+                    <strong>${user.username || 'No Name'}</strong>
+                    <span>${user.email}</span>
+                    <br>
+                    <span style="font-size:0.8em; color:#7f8c8d;">Progress: ${progressCount} tasks</span>
+                </div>
+                <div class="admin-controls">
+                    <button class="action-button small admin-btn-delete">Disable</button>
+                </div>
+            `;
+
+            row.querySelector('.admin-btn-delete').addEventListener('click', async () => {
+                if(confirm('האם אתה בטוח שברצונך למחוק/להשבית משתמש זה?')) {
+                    const { error } = await supabase
+                        .from('profiles')
+                        .delete()
+                        .eq('id', user.id);
+                    if (!error) {
+                        row.remove();
+                    } else {
+                        alert('Error: ' + error.message);
+                    }
+                }
+            });
+            listEl.appendChild(row);
+        });
+    }
+
+    const originalMarkComplete = markAssignmentAsCompleted;
+    markAssignmentAsCompleted = function(assignmentId) {
+        originalMarkComplete(assignmentId);
+        syncProgress();
+    };
+
+});
