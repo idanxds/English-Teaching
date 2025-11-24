@@ -1060,3 +1060,226 @@ document.addEventListener('DOMContentLoaded', () => {
     showPage('home-page'); // Start on the home page
 
 });
+// ==========================================
+// === NEW FEATURES: AUTH & ADMIN SYSTEM ===
+// ==========================================
+
+// 1. Initialize Supabase
+// REPLACE THESE WITH YOUR ACTUAL KEYS
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+// 2. Auth State
+let currentUser = null;
+const adminEmails = ['Carl.d.rogers@gmail.com', 'Englishyourway0@gmail.com'];
+
+// 3. Connect Login Button on Home Page
+// (Modifying the existing listener logic by overwriting the behavior safely)
+const originalLoginBtn = document.getElementById('login-button');
+if (originalLoginBtn) {
+    // Clone node to strip existing event listeners (cleanest way to replace functionality without editing old code)
+    const newLoginBtn = originalLoginBtn.cloneNode(true);
+    originalLoginBtn.parentNode.replaceChild(newLoginBtn, originalLoginBtn);
+    
+    newLoginBtn.addEventListener('click', () => {
+        if (currentUser) {
+            // If logged in, go to hub
+            showPage('assignment-hub-page');
+        } else {
+            // If not logged in, go to login page
+            showPage('login-page');
+        }
+    });
+    
+    // Update button text based on state
+    supabase.auth.onAuthStateChange((event, session) => {
+        currentUser = session?.user || null;
+        if (currentUser) {
+            newLoginBtn.textContent = 'המשך ללמידה';
+            handleAdminCheck();
+            loadUserProgress();
+        } else {
+            newLoginBtn.textContent = 'כניסה';
+            document.getElementById('admin-switch-btn')?.remove(); // Remove admin btn if exists
+        }
+    });
+}
+
+// 4. Login Logic
+document.getElementById('perform-login-btn').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const errorEl = document.getElementById('login-error');
+    
+    errorEl.textContent = 'מתחבר...';
+    
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        errorEl.textContent = 'שגיאה: ' + error.message;
+    } else {
+        errorEl.textContent = '';
+        showPage('assignment-hub-page');
+    }
+});
+
+// 5. Signup Logic
+document.getElementById('perform-signup-btn').addEventListener('click', async () => {
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const username = document.getElementById('signup-username').value;
+    const errorEl = document.getElementById('signup-error');
+
+    if (!username) {
+        errorEl.textContent = 'נא להזין שם משתמש';
+        return;
+    }
+
+    errorEl.textContent = 'נרשם...';
+
+    // Check username uniqueness via Supabase Select
+    const { data: existingUser } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('username', username)
+        .single();
+
+    if (existingUser) {
+        errorEl.textContent = 'שם המשתמש תפוס.';
+        return;
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+            data: { username: username }
+        }
+    });
+
+    if (error) {
+        errorEl.textContent = 'שגיאה: ' + error.message;
+    } else {
+        errorEl.textContent = 'הרשמה הצליחה! אנא התחבר.';
+        setTimeout(() => showPage('login-page'), 1500);
+    }
+});
+
+// 6. Data Sync Logic
+async function loadUserProgress() {
+    if (!currentUser) return;
+
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('progress')
+        .eq('id', currentUser.id)
+        .single();
+
+    if (data && data.progress) {
+        // Merge DB progress with App progress
+        appState.completedAssignments = data.progress;
+        localStorage.setItem('completedAssignments', JSON.stringify(appState.completedAssignments));
+        updateAssignmentHub(); // Refresh UI
+    }
+}
+
+async function syncProgress() {
+    if (!currentUser) return;
+    
+    await supabase
+        .from('profiles')
+        .update({ progress: appState.completedAssignments })
+        .eq('id', currentUser.id);
+}
+
+// 7. Admin Logic
+function handleAdminCheck() {
+    if (currentUser && adminEmails.includes(currentUser.email)) {
+        if (!document.getElementById('admin-switch-btn')) {
+            const btn = document.createElement('button');
+            btn.id = 'admin-switch-btn';
+            btn.className = 'action-button small';
+            btn.textContent = 'Admin Panel';
+            btn.onclick = () => {
+                loadAdminUsers();
+                showPage('admin-page');
+            };
+            document.body.appendChild(btn);
+        }
+    }
+}
+
+async function loadAdminUsers() {
+    const listEl = document.getElementById('admin-users-list');
+    listEl.innerHTML = 'טוען...';
+
+    const { data: users, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('email', { ascending: true });
+
+    if (error) {
+        listEl.innerHTML = 'שגיאה בטעינת נתונים';
+        return;
+    }
+
+    listEl.innerHTML = '';
+    
+    if (users.length === 0) {
+        listEl.innerHTML = '<p>אין משתמשים רשומים.</p>';
+        return;
+    }
+
+    users.forEach(user => {
+        // Calculate progress percentage or count
+        const progressCount = Array.isArray(user.progress) ? user.progress.length : 0;
+        
+        const row = document.createElement('div');
+        row.className = 'admin-user-row';
+        row.innerHTML = `
+            <div class="admin-user-info">
+                <strong>${user.username || 'No Name'}</strong>
+                <span>${user.email}</span>
+                <br>
+                <span style="font-size:0.8em; color:#7f8c8d;">Progress: ${progressCount} tasks</span>
+            </div>
+            <div class="admin-controls">
+                <button class="action-button small admin-btn-delete">Disable</button>
+            </div>
+        `;
+
+        // Delete/Disable Logic
+        row.querySelector('.admin-btn-delete').addEventListener('click', async () => {
+            if(confirm('האם אתה בטוח שברצונך למחוק/להשבית משתמש זה?')) {
+                // We delete from profiles table as requested (logic proxy for disable)
+                const { error } = await supabase
+                    .from('profiles')
+                    .delete()
+                    .eq('id', user.id);
+                
+                if (!error) {
+                    row.remove();
+                } else {
+                    alert('Error: ' + error.message);
+                }
+            }
+        });
+
+        listEl.appendChild(row);
+    });
+}
+
+// 8. Hook into Completion (Strictly required modification)
+// We save the original function reference
+const originalMarkComplete = markAssignmentAsCompleted;
+// We overwrite it to add the sync capability while keeping original logic
+markAssignmentAsCompleted = function(assignmentId) {
+    // Run original logic exactly as is
+    originalMarkComplete(assignmentId);
+    // Add new sync logic
+    syncProgress();
+};
