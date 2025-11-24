@@ -989,45 +989,68 @@ document.addEventListener('DOMContentLoaded', () => {
     initPresentationsPage();
     showPage('home-page'); 
 
-    // ==========================================
+// ==========================================
     // === NEW FEATURES: AUTH & ADMIN SYSTEM ===
     // ==========================================
 
     const supabaseUrl = 'https://pzbgdyakdckojstksyfd.supabase.co';
-    const supabaseKey = 'sb_publishable__0qnbB7wyd2XNk7tFV7vAA_cu9h5Q9r'; // NOTE: This looks like a weird key format but leaving as provided
+    const supabaseKey = 'sb_publishable__0qnbB7wyd2XNk7tFV7vAA_cu9h5Q9r'; 
     
     // FIX: Using window.supabase to avoid ReferenceError
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     let currentUser = null;
     const adminEmails = ['Carl.d.rogers@gmail.com', 'Englishyourway0@gmail.com'];
+    const logoutBtn = document.getElementById('logout-btn');
 
-    const originalLoginBtn = document.getElementById('login-button');
-    if (originalLoginBtn) {
-        const newLoginBtn = originalLoginBtn.cloneNode(true);
-        originalLoginBtn.parentNode.replaceChild(newLoginBtn, originalLoginBtn);
+    // 1. Handle Auth State Changes (The Gatekeeper)
+    supabase.auth.onAuthStateChange((event, session) => {
+        currentUser = session?.user || null;
         
-        newLoginBtn.addEventListener('click', () => {
-            if (currentUser) {
-                showPage('assignment-hub-page');
-            } else {
-                showPage('login-page');
-            }
-        });
+        if (currentUser) {
+            // --- USER IS LOGGED IN ---
+            // 1. Hide Login/Signup Overlays
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('signup-page').classList.add('hidden');
+            
+            // 2. Show Logout Button
+            if(logoutBtn) logoutBtn.classList.remove('hidden');
 
-        supabase.auth.onAuthStateChange((event, session) => {
-            currentUser = session?.user || null;
-            if (currentUser) {
-                newLoginBtn.textContent = 'המשך ללמידה';
-                handleAdminCheck();
-                loadUserProgress();
-            } else {
-                newLoginBtn.textContent = 'כניסה';
-                document.getElementById('admin-switch-btn')?.remove(); 
+            // 3. Load Data
+            handleAdminCheck();
+            loadUserProgress();
+            
+            // 4. Ensure we are on a valid page (if we were stuck on login)
+            if(appState.currentPage === 'login-page' || appState.currentPage === 'signup-page') {
+                showPage('home-page');
+            }
+
+        } else {
+            // --- USER IS LOGGED OUT ---
+            // 1. Force show Login Overlay
+            showPage('login-page'); 
+            
+            // 2. Hide Logout Button
+            if(logoutBtn) logoutBtn.classList.add('hidden');
+            
+            // 3. Remove Admin button
+            document.getElementById('admin-switch-btn')?.remove(); 
+        }
+    });
+
+    // 2. Logout Logic
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            const { error } = await supabase.auth.signOut();
+            if (!error) {
+                // The onAuthStateChange listener above will handle the redirection to login
+                // and hiding of the button automatically.
+                alert('התנתקת בהצלחה');
             }
         });
     }
 
+    // 3. Login Logic
     document.getElementById('perform-login-btn').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
@@ -1044,10 +1067,11 @@ document.addEventListener('DOMContentLoaded', () => {
             errorEl.textContent = 'שגיאה: ' + error.message;
         } else {
             errorEl.textContent = '';
-            showPage('assignment-hub-page');
+            // Success is handled by onAuthStateChange
         }
     });
 
+    // 4. Signup Logic
     document.getElementById('perform-signup-btn').addEventListener('click', async () => {
         const email = document.getElementById('signup-email').value;
         const password = document.getElementById('signup-password').value;
@@ -1065,7 +1089,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .from('profiles')
             .select('username')
             .eq('username', username)
-            .single();
+            .maybeSingle();
 
         if (existingUser) {
             errorEl.textContent = 'שם המשתמש תפוס.';
@@ -1094,7 +1118,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .from('profiles')
             .select('progress')
             .eq('id', currentUser.id)
-            .single();
+            .maybeSingle();
+            
         if (data && data.progress) {
             appState.completedAssignments = data.progress;
             localStorage.setItem('completedAssignments', JSON.stringify(appState.completedAssignments));
@@ -1186,4 +1211,4 @@ document.addEventListener('DOMContentLoaded', () => {
         syncProgress();
     };
 
-});
+}); // END OF DOMContentLoaded
