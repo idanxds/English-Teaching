@@ -47,10 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
         "2": { title: "מצגת 2", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_2" },
         "12": { title: "מצגת 12", url: "YOUR_GOOGLE_SLIDES_EMBED_URL_12" },
     };
-
-    // --- STATE MANAGEMENT ---
+// --- STATE MANAGEMENT ---
     let appState = {
-        currentPage: 'home-page',
+        // Change this line to load from memory:
+        currentPage: localStorage.getItem('lastPage') || 'home-page', 
         completedAssignments: JSON.parse(localStorage.getItem('completedAssignments')) || []
     };
     
@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pageToShow) {
             pageToShow.classList.remove('hidden');
             appState.currentPage = pageId;
+            localStorage.setItem('lastPage', pageId);
             window.scrollTo(0, 0);
         }
         
@@ -979,10 +980,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- INITIALIZE ---
+    // --- INITIALIZE & RESTORE SESSION ---
     initYouTubePage();
     initPresentationsPage();
-    showPage('home-page'); 
+    
+    // Logic to restore the last page or handle broken pages
+    const savedPage = appState.currentPage;
+    const dynamicPages = ['task-page', 'quiz-page', 'video-player-page', 'presentation-viewer-page', 'abc-audio-page', 'sentence-builder-page'];
+    
+    if (dynamicPages.includes(savedPage)) {
+        // If user was inside a specific lesson, go back to the main menu for that section
+        // (We do this because we lost the specific video/quiz data on refresh)
+        if (savedPage === 'video-player-page') showPage('youtube-page');
+        else if (savedPage === 'presentation-viewer-page') showPage('presentations-page');
+        else showPage('assignment-hub-page'); 
+    } else {
+        // Safe pages (Home, Hub, YouTube list) can be restored directly
+        showPage(savedPage);
+    } 
 
     // ==========================================
     // === NEW FEATURES: AUTH & ADMIN SYSTEM ===
