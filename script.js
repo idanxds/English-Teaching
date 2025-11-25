@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
             playerDiv.innerHTML = `
                 <h3>האות ${letter.toUpperCase()}</h3>
                 <audio controls>
-                    <source src="ABC%20sounds%20-%20english%20project/${letter}.mp3" type="audio/mpeg">
+                    <source src="ABC%20sounds%20-%20english%20project/alphasounds-${letter}.mp3" type="audio/mpeg">
                   Your browser does not support the audio element.
                 </audio>
             `;
